@@ -1,4 +1,5 @@
 
+import { useNavigate } from "react-router-dom";
 import NavBar from "@/components/NavBar";
 import DashboardMetrics from "@/components/DashboardMetrics";
 import DashboardChart from "@/components/DashboardChart";
@@ -8,6 +9,15 @@ import { Button } from "@/components/ui/button";
 import { ArrowUpRight } from "lucide-react";
 
 const Dashboard = () => {
+  const navigate = useNavigate();
+
+  const handleDetailedAnalysis = () => {
+    // Aqui você pode implementar a navegação para uma página de análise detalhada
+    // Por enquanto, vamos apenas mostrar uma mensagem de console
+    console.log("Botão de Análise Detalhada clicado");
+    navigate("/detailed-analysis"); // Esta rota precisa ser criada
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <NavBar />
@@ -19,7 +29,7 @@ const Dashboard = () => {
           </div>
           <div className="mt-4 md:mt-0 space-x-2">
             <Button variant="outline">Exportar Relatório</Button>
-            <Button>
+            <Button onClick={handleDetailedAnalysis}>
               <span className="mr-1">Análise Detalhada</span>
               <ArrowUpRight className="h-4 w-4" />
             </Button>
