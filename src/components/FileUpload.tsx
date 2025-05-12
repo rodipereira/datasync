@@ -1,11 +1,10 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { X, Upload } from "lucide-react";
-import { toast } from "@/components/ui/sonner";
+import { toast } from "sonner";
 
 const FileUpload = () => {
   const [files, setFiles] = useState<File[]>([]);
@@ -83,8 +82,7 @@ const FileUpload = () => {
     } catch (error) {
       setUploading(false);
       toast("Erro no upload", {
-        description: error instanceof Error ? error.message : "Ocorreu um erro durante o upload.",
-        variant: "destructive"
+        description: error instanceof Error ? error.message : "Ocorreu um erro durante o upload."
       });
       console.error("Erro de upload:", error);
     }

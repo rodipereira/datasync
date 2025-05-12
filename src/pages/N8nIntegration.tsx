@@ -1,10 +1,9 @@
-
 import NavBar from "@/components/NavBar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { toast } from "@/components/ui/sonner";
+import { toast } from "sonner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const N8nIntegration = () => {
@@ -15,10 +14,8 @@ const N8nIntegration = () => {
     e.preventDefault();
     
     if (!webhookUrl) {
-      toast({
-        title: "Erro",
-        description: "Por favor, insira a URL do seu webhook n8n",
-        variant: "destructive",
+      toast("Erro", {
+        description: "Por favor, insira a URL do seu webhook n8n"
       });
       return;
     }
@@ -41,16 +38,13 @@ const N8nIntegration = () => {
       });
 
       // Como estamos usando no-cors, não vamos receber um status de resposta adequado
-      toast({
-        title: "Requisição Enviada",
-        description: "O teste foi enviado para o n8n. Verifique a execução do seu workflow.",
+      toast("Requisição Enviada", {
+        description: "O teste foi enviado para o n8n. Verifique a execução do seu workflow."
       });
     } catch (error) {
       console.error("Erro ao acionar webhook:", error);
-      toast({
-        title: "Erro",
-        description: "Falha ao testar o webhook do n8n. Verifique a URL e tente novamente.",
-        variant: "destructive",
+      toast("Erro", {
+        description: "Falha ao testar o webhook do n8n. Verifique a URL e tente novamente."
       });
     } finally {
       setIsLoading(false);
@@ -148,7 +142,7 @@ const N8nIntegration = () => {
                         </p>
                       </div>
                       
-                      <Button type="submit" isLoading={isLoading} disabled={isLoading}>
+                      <Button type="submit" disabled={isLoading}>
                         {isLoading ? "Testando..." : "Testar Webhook"}
                       </Button>
                     </div>
