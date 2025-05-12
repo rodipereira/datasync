@@ -4,12 +4,14 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
-import { X } from "lucide-react";
+import { X, Upload } from "lucide-react";
+import { toast } from "@/components/ui/sonner";
 
 const FileUpload = () => {
   const [files, setFiles] = useState<File[]>([]);
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [uploadUrl, setUploadUrl] = useState("");
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -22,23 +24,70 @@ const FileUpload = () => {
     setFiles(files.filter((_, i) => i !== index));
   };
 
-  const handleUpload = () => {
-    if (files.length === 0) return;
+  const handleUpload = async () => {
+    if (files.length === 0) {
+      toast("Nenhum arquivo selecionado", {
+        description: "Por favor, selecione pelo menos um arquivo para enviar."
+      });
+      return;
+    }
+
+    if (!uploadUrl.trim()) {
+      toast("URL de destino não definida", {
+        description: "Por favor, informe uma URL de destino para o upload ou conecte ao Supabase."
+      });
+      return;
+    }
     
     setUploading(true);
     setProgress(0);
     
-    // Simulate upload progress
-    const interval = setInterval(() => {
-      setProgress(prev => {
-        if (prev >= 100) {
-          clearInterval(interval);
-          setUploading(false);
-          return 100;
+    // FormData para enviar arquivos
+    const formData = new FormData();
+    files.forEach((file, index) => {
+      formData.append(`file-${index}`, file);
+    });
+    
+    try {
+      // Simulação de upload com progresso real
+      const xhr = new XMLHttpRequest();
+      
+      xhr.upload.addEventListener("progress", (event) => {
+        if (event.lengthComputable) {
+          const percentComplete = Math.round((event.loaded / event.total) * 100);
+          setProgress(percentComplete);
         }
-        return prev + 5;
       });
-    }, 200);
+      
+      xhr.addEventListener("load", () => {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          setUploading(false);
+          toast("Upload completo", {
+            description: `${files.length} arquivo(s) enviado(s) com sucesso.`
+          });
+          // Limpar os arquivos após o upload bem-sucedido
+          setFiles([]);
+        } else {
+          throw new Error(`Erro ${xhr.status}: ${xhr.statusText}`);
+        }
+      });
+      
+      xhr.addEventListener("error", () => {
+        throw new Error("O upload falhou.");
+      });
+      
+      // Abrir e enviar a requisição
+      xhr.open("POST", uploadUrl);
+      xhr.send(formData);
+      
+    } catch (error) {
+      setUploading(false);
+      toast("Erro no upload", {
+        description: error instanceof Error ? error.message : "Ocorreu um erro durante o upload.",
+        variant: "destructive"
+      });
+      console.error("Erro de upload:", error);
+    }
   };
 
   return (
@@ -50,6 +99,22 @@ const FileUpload = () => {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
+        <div className="space-y-2">
+          <label htmlFor="upload-url" className="text-sm font-medium">
+            URL de Destino do Upload
+          </label>
+          <Input
+            id="upload-url"
+            placeholder="https://seu-backend.com/upload ou webhook do n8n"
+            value={uploadUrl}
+            onChange={(e) => setUploadUrl(e.target.value)}
+            disabled={uploading}
+          />
+          <p className="text-xs text-muted-foreground">
+            Informe a URL do seu backend Python ou um webhook do n8n para processar os arquivos
+          </p>
+        </div>
+
         <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-primary transition-colors">
           <Input
             type="file"
@@ -63,9 +128,7 @@ const FileUpload = () => {
           <label htmlFor="file-upload" className="cursor-pointer">
             <div className="space-y-2">
               <div className="mx-auto w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                </svg>
+                <Upload className="h-6 w-6 text-primary" />
               </div>
               <p className="text-sm font-medium">
                 Clique para selecionar ou arraste arquivos aqui
@@ -103,14 +166,17 @@ const FileUpload = () => {
           </div>
         )}
       </CardContent>
-      <CardFooter>
+      <CardFooter className="flex flex-col gap-2">
         <Button 
           className="w-full" 
           onClick={handleUpload} 
-          disabled={files.length === 0 || uploading}
+          disabled={files.length === 0 || uploading || !uploadUrl.trim()}
         >
           {uploading ? "Enviando..." : "Enviar Arquivos"}
         </Button>
+        <p className="text-xs text-center text-muted-foreground">
+          Os arquivos serão processados conforme as regras definidas no seu backend/fluxo do n8n
+        </p>
       </CardFooter>
     </Card>
   );

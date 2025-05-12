@@ -3,17 +3,26 @@ import NavBar from "@/components/NavBar";
 import FileUpload from "@/components/FileUpload";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const Upload = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <NavBar />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8">
-          <h1 className="text-2xl font-bold">Upload de Dados</h1>
-          <p className="text-gray-500">
-            Envie seus arquivos para análise automática
-          </p>
+        <div className="mb-8 flex justify-between items-center">
+          <div>
+            <h1 className="text-2xl font-bold">Upload de Dados</h1>
+            <p className="text-gray-500">
+              Envie seus arquivos para análise automática
+            </p>
+          </div>
+          <Button asChild variant="outline">
+            <Link to="/n8n">
+              Configurar Automação (n8n)
+            </Link>
+          </Button>
         </div>
         
         <Tabs defaultValue="upload" className="w-full">
@@ -64,6 +73,23 @@ const Upload = () => {
                       <li>Estoque: produto, quantidade, localização</li>
                       <li>Clientes: nome, contato, histórico de compras</li>
                     </ul>
+                  </div>
+
+                  <div className="rounded-md bg-yellow-50 p-4 mt-4">
+                    <div className="flex">
+                      <div className="ml-3">
+                        <h3 className="text-sm font-medium text-yellow-800">Dica de automação</h3>
+                        <div className="mt-2 text-sm text-yellow-700">
+                          <p>
+                            Para processar automaticamente seus arquivos, configure um fluxo no 
+                            <Link to="/n8n" className="text-primary font-medium hover:underline ml-1">
+                              n8n
+                            </Link> 
+                            e use a URL do webhook na página de upload.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
