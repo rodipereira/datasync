@@ -1,11 +1,24 @@
 
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { LogOut, Menu, User, X } from "lucide-react";
+import { LogOut, Menu, X } from "lucide-react";
+import { toast } from "sonner";
 
 const NavBar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    // Remover dados do usuário do localStorage
+    localStorage.removeItem("userData");
+    
+    // Mostrar mensagem de sucesso
+    toast.success("Logout realizado com sucesso!");
+    
+    // Redirecionar para a página de login
+    navigate("/login");
+  };
 
   return (
     <nav className="bg-white shadow-sm border-b">
@@ -27,7 +40,7 @@ const NavBar = () => {
             <Link to="/profile" className="text-gray-700 hover:text-primary px-3 py-2 rounded-md text-sm font-medium">
               Perfil
             </Link>
-            <Button variant="outline" size="sm" className="ml-4">
+            <Button variant="outline" size="sm" className="ml-4" onClick={handleLogout}>
               <LogOut className="h-4 w-4 mr-2" />
               Sair
             </Button>
@@ -54,7 +67,7 @@ const NavBar = () => {
             <Link to="/profile" className="text-gray-700 hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium">
               Perfil
             </Link>
-            <Button variant="outline" className="w-full mt-2">
+            <Button variant="outline" className="w-full mt-2" onClick={handleLogout}>
               <LogOut className="h-4 w-4 mr-2" />
               Sair
             </Button>

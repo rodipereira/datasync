@@ -1,4 +1,5 @@
 
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import AuthForm from "@/components/AuthForm";
@@ -6,11 +7,27 @@ import AuthForm from "@/components/AuthForm";
 const Login = () => {
   const navigate = useNavigate();
 
+  // Verificar se o usuário já está logado ao carregar a página
+  useEffect(() => {
+    const userData = localStorage.getItem("userData");
+    if (userData) {
+      // Se já estiver logado, redirecionar para o dashboard
+      navigate("/dashboard");
+    }
+  }, [navigate]);
+
   const handleLogin = (data: any) => {
     console.log("Login tentado com:", data);
     
     // Simular um login bem-sucedido (aqui você integraria com seu backend)
     setTimeout(() => {
+      // Salvar dados do usuário no localStorage
+      localStorage.setItem("userData", JSON.stringify({
+        email: data.email,
+        isLoggedIn: true,
+        loginTime: new Date().toISOString()
+      }));
+      
       toast.success("Login realizado com sucesso!");
       navigate("/dashboard");
     }, 1000);
