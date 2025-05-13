@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
-import { X, Upload, FileUp } from "lucide-react";
+import { X, FileUp } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { v4 as uuidv4 } from "uuid";
@@ -37,6 +37,13 @@ const FileUpload = () => {
     setProgress(0);
     
     try {
+      // Get the current user
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        throw new Error("Usuário não autenticado. Faça login para continuar.");
+      }
+      
       let uploadedCount = 0;
       const totalFiles = files.length;
       
@@ -69,6 +76,7 @@ const FileUpload = () => {
             file_type: file.type,
             file_size: file.size,
             analysis_path: null, // Will be updated when analysis is complete
+            user_id: user.id // Add the user_id field
           });
           
         if (dbError) {

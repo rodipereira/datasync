@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Download, File, FileText, FilePdf } from "lucide-react";
+import { Download, File, FileText } from "lucide-react";
 import { toast } from "sonner";
 
 interface UploadedFile {
@@ -65,7 +65,7 @@ const FileHistory = () => {
 
   const getFileIcon = (fileType: string) => {
     if (fileType.includes('pdf')) {
-      return <FilePdf className="h-6 w-6 text-red-500" />;
+      return <FileText className="h-6 w-6 text-red-500" />;
     } else if (fileType.includes('spreadsheet') || fileType.includes('excel') || fileType.includes('csv')) {
       return <FileText className="h-6 w-6 text-green-500" />;
     } else {
@@ -205,7 +205,7 @@ const FileHistory = () => {
                         disabled={!file.analysis_path}
                         title={file.analysis_path ? "Baixar análise em PDF" : "Análise indisponível"}
                       >
-                        <FilePdf className="h-4 w-4" />
+                        <FileText className="h-4 w-4" />
                       </Button>
                     </div>
                   </td>
