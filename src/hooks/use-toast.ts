@@ -31,4 +31,11 @@ export function useToast() {
   };
 }
 
+// Create a default toast function that can be imported directly
+const toast = ({ title, description, action, variant }: Omit<Toast, "id">) => {
+  // This is just a placeholder that will be properly initialized in a React component context
+  console.warn("Toast called outside of component context");
+  return "";
+};
+
 export { toast };
