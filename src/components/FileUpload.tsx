@@ -1,16 +1,18 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
-import { X, Upload } from "lucide-react";
+import { X, Upload, FileUp } from "lucide-react";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
+import { v4 as uuidv4 } from "uuid";
 
 const FileUpload = () => {
   const [files, setFiles] = useState<File[]>([]);
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [uploadUrl, setUploadUrl] = useState("");
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -30,61 +32,67 @@ const FileUpload = () => {
       });
       return;
     }
-
-    if (!uploadUrl.trim()) {
-      toast("URL de destino não definida", {
-        description: "Por favor, informe uma URL de destino para o upload ou conecte ao Supabase."
-      });
-      return;
-    }
     
     setUploading(true);
     setProgress(0);
     
-    // FormData para enviar arquivos
-    const formData = new FormData();
-    files.forEach((file, index) => {
-      formData.append(`file-${index}`, file);
-    });
-    
     try {
-      // Simulação de upload com progresso real
-      const xhr = new XMLHttpRequest();
+      let uploadedCount = 0;
+      const totalFiles = files.length;
       
-      xhr.upload.addEventListener("progress", (event) => {
-        if (event.lengthComputable) {
-          const percentComplete = Math.round((event.loaded / event.total) * 100);
-          setProgress(percentComplete);
+      for (const file of files) {
+        // Create a unique file path
+        const fileExt = file.name.split('.').pop();
+        const filePath = `${uuidv4()}.${fileExt}`;
+        const fullPath = `${filePath}`;
+        
+        // Upload file to Supabase Storage
+        const { error: uploadError } = await supabase.storage
+          .from('uploads')
+          .upload(fullPath, file);
+        
+        if (uploadError) {
+          throw new Error(`Erro ao fazer upload do arquivo ${file.name}: ${uploadError.message}`);
         }
-      });
-      
-      xhr.addEventListener("load", () => {
-        if (xhr.status >= 200 && xhr.status < 300) {
-          setUploading(false);
-          toast("Upload completo", {
-            description: `${files.length} arquivo(s) enviado(s) com sucesso.`
+        
+        // Get public URL for the file
+        const { data: publicUrlData } = supabase.storage
+          .from('uploads')
+          .getPublicUrl(fullPath);
+          
+        // Create record in uploaded_files table
+        const { error: dbError } = await supabase
+          .from('uploaded_files')
+          .insert({
+            filename: file.name,
+            file_path: fullPath,
+            file_type: file.type,
+            file_size: file.size,
+            analysis_path: null, // Will be updated when analysis is complete
           });
-          // Limpar os arquivos após o upload bem-sucedido
-          setFiles([]);
-        } else {
-          throw new Error(`Erro ${xhr.status}: ${xhr.statusText}`);
+          
+        if (dbError) {
+          throw new Error(`Erro ao registrar arquivo no banco de dados: ${dbError.message}`);
         }
+        
+        uploadedCount++;
+        setProgress(Math.round((uploadedCount / totalFiles) * 100));
+      }
+      
+      toast("Upload completo", {
+        description: `${files.length} arquivo(s) enviado(s) com sucesso.`
       });
       
-      xhr.addEventListener("error", () => {
-        throw new Error("O upload falhou.");
-      });
-      
-      // Abrir e enviar a requisição
-      xhr.open("POST", uploadUrl);
-      xhr.send(formData);
+      // Clear the files after successful upload
+      setFiles([]);
       
     } catch (error) {
-      setUploading(false);
       toast("Erro no upload", {
         description: error instanceof Error ? error.message : "Ocorreu um erro durante o upload."
       });
       console.error("Erro de upload:", error);
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -97,22 +105,6 @@ const FileUpload = () => {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="space-y-2">
-          <label htmlFor="upload-url" className="text-sm font-medium">
-            URL de Destino do Upload
-          </label>
-          <Input
-            id="upload-url"
-            placeholder="https://seu-backend.com/upload ou webhook do n8n"
-            value={uploadUrl}
-            onChange={(e) => setUploadUrl(e.target.value)}
-            disabled={uploading}
-          />
-          <p className="text-xs text-muted-foreground">
-            Informe a URL do seu backend Python ou um webhook do n8n para processar os arquivos
-          </p>
-        </div>
-
         <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-primary transition-colors">
           <Input
             type="file"
@@ -120,19 +112,19 @@ const FileUpload = () => {
             className="hidden"
             multiple
             onChange={handleFileChange}
-            accept=".csv,.xlsx,.xls"
+            accept=".csv,.xlsx,.xls,.pdf"
             disabled={uploading}
           />
           <label htmlFor="file-upload" className="cursor-pointer">
             <div className="space-y-2">
               <div className="mx-auto w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center">
-                <Upload className="h-6 w-6 text-primary" />
+                <FileUp className="h-6 w-6 text-primary" />
               </div>
               <p className="text-sm font-medium">
                 Clique para selecionar ou arraste arquivos aqui
               </p>
               <p className="text-xs text-gray-500">
-                Suporta arquivos Excel e CSV até 10MB
+                Suporta arquivos Excel, CSV e PDF até 10MB
               </p>
             </div>
           </label>
@@ -168,12 +160,12 @@ const FileUpload = () => {
         <Button 
           className="w-full" 
           onClick={handleUpload} 
-          disabled={files.length === 0 || uploading || !uploadUrl.trim()}
+          disabled={files.length === 0 || uploading}
         >
           {uploading ? "Enviando..." : "Enviar Arquivos"}
         </Button>
         <p className="text-xs text-center text-muted-foreground">
-          Os arquivos serão processados conforme as regras definidas no seu backend/fluxo do n8n
+          Os arquivos serão armazenados e processados para análise posterior
         </p>
       </CardFooter>
     </Card>

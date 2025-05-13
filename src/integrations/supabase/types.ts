@@ -33,6 +33,39 @@ export type Database = {
         }
         Relationships: []
       }
+      uploaded_files: {
+        Row: {
+          analysis_path: string | null
+          created_at: string
+          file_path: string
+          file_size: number
+          file_type: string
+          filename: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          analysis_path?: string | null
+          created_at?: string
+          file_path: string
+          file_size: number
+          file_type: string
+          filename: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          analysis_path?: string | null
+          created_at?: string
+          file_path?: string
+          file_size?: number
+          file_type?: string
+          filename?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
