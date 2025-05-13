@@ -9,9 +9,10 @@ import { Link } from "react-router-dom";
 interface AuthFormProps {
   type: "login" | "register";
   onSubmit: (data: any) => void;
+  isLoading?: boolean;
 }
 
-const AuthForm = ({ type, onSubmit }: AuthFormProps) => {
+const AuthForm = ({ type, onSubmit, isLoading = false }: AuthFormProps) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
@@ -39,6 +40,7 @@ const AuthForm = ({ type, onSubmit }: AuthFormProps) => {
               onChange={(e) => setName(e.target.value)} 
               placeholder="Digite seu nome completo" 
               required 
+              disabled={isLoading}
             />
           </div>
           
@@ -50,6 +52,7 @@ const AuthForm = ({ type, onSubmit }: AuthFormProps) => {
               onChange={(e) => setCompany(e.target.value)} 
               placeholder="Digite o nome da sua empresa" 
               required 
+              disabled={isLoading}
             />
           </div>
         </>
@@ -69,6 +72,7 @@ const AuthForm = ({ type, onSubmit }: AuthFormProps) => {
             className="pl-10" 
             placeholder="Digite seu email" 
             required 
+            disabled={isLoading}
           />
         </div>
       </div>
@@ -87,11 +91,13 @@ const AuthForm = ({ type, onSubmit }: AuthFormProps) => {
             className="pl-10" 
             placeholder="Digite sua senha" 
             required 
+            disabled={isLoading}
           />
           <button 
             type="button"
             className="absolute inset-y-0 right-0 flex items-center pr-3"
             onClick={() => setShowPassword(!showPassword)}
+            disabled={isLoading}
           >
             {showPassword ? (
               <EyeOff className="w-5 h-5 text-gray-400" />
@@ -110,8 +116,18 @@ const AuthForm = ({ type, onSubmit }: AuthFormProps) => {
         </div>
       )}
       
-      <Button type="submit" className="w-full">
-        {type === "login" ? "Entrar" : "Registrar"}
+      <Button type="submit" className="w-full" disabled={isLoading}>
+        {isLoading ? (
+          <span className="flex items-center justify-center">
+            <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            {type === "login" ? "Entrando..." : "Registrando..."}
+          </span>
+        ) : (
+          type === "login" ? "Entrar" : "Registrar"
+        )}
       </Button>
       
       <div className="text-center text-sm text-gray-500">

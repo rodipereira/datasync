@@ -1,19 +1,42 @@
 
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import AuthForm from "@/components/AuthForm";
+import { supabase } from "@/integrations/supabase/client";
 
 const Register = () => {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleRegister = (data: any) => {
-    console.log("Registro tentado com:", data);
+  const handleRegister = async (data: any) => {
+    setIsLoading(true);
     
-    // Simular um registro bem-sucedido (aqui você integraria com seu backend)
-    setTimeout(() => {
+    try {
+      // Register using Supabase authentication
+      const { data: authData, error } = await supabase.auth.signUp({
+        email: data.email,
+        password: data.password,
+        options: {
+          data: {
+            name: data.name,
+            company: data.company
+          },
+        },
+      });
+      
+      if (error) {
+        throw error;
+      }
+
+      // Success
       toast.success("Registro realizado com sucesso!");
       navigate("/login");
-    }, 1000);
+    } catch (error: any) {
+      toast.error(error.message || "Erro ao registrar usuário");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -29,7 +52,7 @@ const Register = () => {
           </p>
         </div>
         <div className="bg-white p-8 rounded-lg shadow">
-          <AuthForm type="register" onSubmit={handleRegister} />
+          <AuthForm type="register" onSubmit={handleRegister} isLoading={isLoading} />
         </div>
       </div>
     </div>

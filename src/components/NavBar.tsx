@@ -4,20 +4,29 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { LogOut, Menu, X } from "lucide-react";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 const NavBar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    // Remover dados do usuário do localStorage
-    localStorage.removeItem("userData");
-    
-    // Mostrar mensagem de sucesso
-    toast.success("Logout realizado com sucesso!");
-    
-    // Redirecionar para a página de login
-    navigate("/login");
+  const handleLogout = async () => {
+    try {
+      // Sign out using Supabase
+      const { error } = await supabase.auth.signOut();
+      
+      if (error) {
+        throw error;
+      }
+      
+      // Show success message
+      toast.success("Logout realizado com sucesso!");
+      
+      // Redirect to login page
+      navigate("/login");
+    } catch (error: any) {
+      toast.error(error.message || "Erro ao fazer logout");
+    }
   };
 
   return (

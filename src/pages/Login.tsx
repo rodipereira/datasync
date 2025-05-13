@@ -1,36 +1,48 @@
 
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import AuthForm from "@/components/AuthForm";
+import { supabase } from "@/integrations/supabase/client";
 
 const Login = () => {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Verificar se o usuário já está logado ao carregar a página
+  // Check if the user is already logged in
   useEffect(() => {
-    const userData = localStorage.getItem("userData");
-    if (userData) {
-      // Se já estiver logado, redirecionar para o dashboard
-      navigate("/dashboard");
-    }
+    const checkSession = async () => {
+      const { data } = await supabase.auth.getSession();
+      if (data.session) {
+        navigate("/dashboard");
+      }
+    };
+    
+    checkSession();
   }, [navigate]);
 
-  const handleLogin = (data: any) => {
-    console.log("Login tentado com:", data);
+  const handleLogin = async (data: any) => {
+    setIsLoading(true);
     
-    // Simular um login bem-sucedido (aqui você integraria com seu backend)
-    setTimeout(() => {
-      // Salvar dados do usuário no localStorage
-      localStorage.setItem("userData", JSON.stringify({
+    try {
+      // Login using Supabase authentication
+      const { data: authData, error } = await supabase.auth.signInWithPassword({
         email: data.email,
-        isLoggedIn: true,
-        loginTime: new Date().toISOString()
-      }));
+        password: data.password,
+      });
       
+      if (error) {
+        throw error;
+      }
+
+      // Success
       toast.success("Login realizado com sucesso!");
       navigate("/dashboard");
-    }, 1000);
+    } catch (error: any) {
+      toast.error(error.message || "Erro ao fazer login");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -46,7 +58,7 @@ const Login = () => {
           </p>
         </div>
         <div className="bg-white p-8 rounded-lg shadow">
-          <AuthForm type="login" onSubmit={handleLogin} />
+          <AuthForm type="login" onSubmit={handleLogin} isLoading={isLoading} />
         </div>
       </div>
     </div>
