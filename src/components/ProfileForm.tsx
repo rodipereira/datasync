@@ -35,14 +35,16 @@ const ProfileForm = () => {
         }
         
         if (user) {
+          console.log("User metadata:", user.user_metadata);
+          
           // Obter dados do perfil a partir da tabela de usuários
           setProfile({
             name: user.user_metadata?.name || "",
             email: user.email || "",
             company: user.user_metadata?.company || "",
-            phone: profile.phone, // Mantém o valor atual já que não está no registro
-            position: profile.position, // Mantém o valor atual já que não está no registro
-            bio: profile.bio // Mantém o valor atual já que não está no registro
+            phone: user.user_metadata?.phone || "",
+            position: user.user_metadata?.position || "",
+            bio: user.user_metadata?.bio || ""
           });
         }
       } catch (error) {
@@ -81,7 +83,10 @@ const ProfileForm = () => {
       const { error: updateError } = await supabase.auth.updateUser({
         data: {
           name: profile.name,
-          company: profile.company
+          company: profile.company,
+          phone: profile.phone,
+          position: profile.position,
+          bio: profile.bio
         }
       });
       
