@@ -12,7 +12,6 @@ import Upload from "./pages/Upload";
 import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 import DetailedAnalysis from "./pages/DetailedAnalysis";
-import N8nIntegration from "./pages/N8nIntegration";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 const queryClient = new QueryClient();
@@ -45,11 +44,6 @@ const App = () => (
           <Route path="/detailed-analysis" element={
             <ProtectedRoute>
               <DetailedAnalysis />
-            </ProtectedRoute>
-          } />
-          <Route path="/n8n" element={
-            <ProtectedRoute>
-              <N8nIntegration />
             </ProtectedRoute>
           } />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
