@@ -3,19 +3,21 @@ import { useNavigate } from "react-router-dom";
 import NavBar from "@/components/NavBar";
 import DashboardMetrics from "@/components/DashboardMetrics";
 import DashboardChart from "@/components/DashboardChart";
+import FileHistory from "@/components/FileHistory";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Upload } from "lucide-react";
 
 const Dashboard = () => {
   const navigate = useNavigate();
 
   const handleDetailedAnalysis = () => {
-    // Aqui você pode implementar a navegação para uma página de análise detalhada
-    // Por enquanto, vamos apenas mostrar uma mensagem de console
-    console.log("Botão de Análise Detalhada clicado");
-    navigate("/detailed-analysis"); // Esta rota precisa ser criada
+    navigate("/detailed-analysis");
+  };
+
+  const handleUpload = () => {
+    navigate("/upload");
   };
 
   return (
@@ -28,7 +30,10 @@ const Dashboard = () => {
             <p className="text-gray-500">Visualize e analise os dados do seu negócio</p>
           </div>
           <div className="mt-4 md:mt-0 space-x-2">
-            <Button variant="outline">Exportar Relatório</Button>
+            <Button variant="outline" onClick={handleUpload}>
+              <Upload className="h-4 w-4 mr-2" />
+              Upload de Arquivos
+            </Button>
             <Button onClick={handleDetailedAnalysis}>
               <span className="mr-1">Análise Detalhada</span>
               <ArrowUpRight className="h-4 w-4" />
@@ -75,18 +80,16 @@ const Dashboard = () => {
           </div>
           
           <Card>
-            <CardHeader>
-              <CardTitle>Atividade de Vendas</CardTitle>
-              <CardDescription>
-                Últimas transações e tendências de vendas
-              </CardDescription>
+            <CardHeader className="flex flex-row items-center justify-between">
+              <div>
+                <CardTitle>Histórico de Arquivos</CardTitle>
+                <CardDescription>
+                  Arquivos enviados e suas análises
+                </CardDescription>
+              </div>
             </CardHeader>
             <CardContent>
-              <div className="h-[300px] flex items-center justify-center">
-                <p className="text-muted-foreground text-center">
-                  Conecte seu backend para visualizar as transações de vendas em tempo real
-                </p>
-              </div>
+              <FileHistory />
             </CardContent>
           </Card>
         </div>

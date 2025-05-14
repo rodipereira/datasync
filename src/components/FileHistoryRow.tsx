@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { formatDate, formatFileSize } from "@/utils/fileUtils";
 import FileIcon from "@/components/FileIcon";
 import { supabase } from "@/integrations/supabase/client";
+import { exportToPDF } from "@/utils/exportUtils";
 
 interface UploadedFile {
   id: string;
@@ -31,7 +32,6 @@ const FileHistoryRow = ({ file }: FileHistoryRowProps) => {
         throw error;
       }
       
-      // Create a download link
       const url = URL.createObjectURL(data);
       const a = document.createElement('a');
       a.href = url;
@@ -43,43 +43,19 @@ const FileHistoryRow = ({ file }: FileHistoryRowProps) => {
       
     } catch (error) {
       console.error('Erro ao baixar arquivo:', error);
-      toast("Erro ao baixar arquivo", {
+      toast.error("Erro ao baixar arquivo", {
         description: "Não foi possível baixar o arquivo selecionado."
       });
     }
   };
 
-  const downloadAnalysis = async (path: string | null, filename: string) => {
-    if (!path) {
-      toast("Análise indisponível", {
-        description: "O relatório de análise ainda não está disponível para este arquivo."
-      });
-      return;
-    }
-    
+  const handleExportPDF = async () => {
     try {
-      const { data, error } = await supabase.storage
-        .from('uploads')
-        .download(path);
-        
-      if (error) {
-        throw error;
-      }
-      
-      // Create a download link for the PDF
-      const url = URL.createObjectURL(data);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `analise_${filename}.pdf`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-      
+      await exportToPDF(file);
+      toast.success("PDF exportado com sucesso!");
     } catch (error) {
-      console.error('Erro ao baixar análise:', error);
-      toast("Erro ao baixar análise", {
-        description: "Não foi possível baixar o relatório de análise."
+      toast.error("Erro ao exportar PDF", {
+        description: "Não foi possível gerar o PDF."
       });
     }
   };
@@ -106,11 +82,10 @@ const FileHistoryRow = ({ file }: FileHistoryRowProps) => {
           </Button>
           
           <Button
-            variant={file.analysis_path ? "default" : "outline"}
+            variant="outline"
             size="sm"
-            onClick={() => downloadAnalysis(file.analysis_path, file.filename)}
-            disabled={!file.analysis_path}
-            title={file.analysis_path ? "Baixar análise em PDF" : "Análise indisponível"}
+            onClick={handleExportPDF}
+            title="Exportar como PDF"
           >
             <FileText className="h-4 w-4" />
           </Button>
