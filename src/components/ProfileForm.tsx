@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -7,26 +7,95 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { User } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 const ProfileForm = () => {
   const [profile, setProfile] = useState({
-    name: "João Silva",
-    email: "joao.silva@empresa.com.br",
-    company: "Empresa ABC Ltda",
-    phone: "(11) 98765-4321",
-    position: "Analista de Dados",
-    bio: "Especialista em análise de dados empresariais com 5 anos de experiência em gestão de estoques e vendas."
+    name: "",
+    email: "",
+    company: "",
+    phone: "",
+    position: "",
+    bio: ""
   });
+  const [loading, setLoading] = useState(true);
+
+  // Carregar dados do usuário ao montar o componente
+  useEffect(() => {
+    async function loadUserProfile() {
+      try {
+        setLoading(true);
+        
+        // Obter o usuário atual
+        const { data: { user }, error: userError } = await supabase.auth.getUser();
+        
+        if (userError) {
+          throw userError;
+        }
+        
+        if (user) {
+          // Obter dados do perfil a partir da tabela de usuários
+          setProfile({
+            name: user.user_metadata?.name || "",
+            email: user.email || "",
+            company: user.user_metadata?.company || "",
+            phone: profile.phone, // Mantém o valor atual já que não está no registro
+            position: profile.position, // Mantém o valor atual já que não está no registro
+            bio: profile.bio // Mantém o valor atual já que não está no registro
+          });
+        }
+      } catch (error) {
+        console.error("Erro ao carregar perfil:", error);
+        toast.error("Erro ao carregar os dados do usuário");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadUserProfile();
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setProfile(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Aqui você enviaria os dados para o backend
-    console.log("Perfil atualizado:", profile);
+    try {
+      setLoading(true);
+      
+      // Obter o usuário atual
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      
+      if (userError) {
+        throw userError;
+      }
+      
+      if (!user) {
+        throw new Error("Usuário não autenticado");
+      }
+      
+      // Atualizar os metadados do usuário
+      const { error: updateError } = await supabase.auth.updateUser({
+        data: {
+          name: profile.name,
+          company: profile.company
+        }
+      });
+      
+      if (updateError) {
+        throw updateError;
+      }
+      
+      toast.success("Perfil atualizado com sucesso!");
+    } catch (error) {
+      console.error("Erro ao atualizar perfil:", error);
+      toast.error("Erro ao atualizar perfil");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -60,6 +129,7 @@ const ProfileForm = () => {
                   value={profile.name} 
                   onChange={handleChange} 
                   required 
+                  disabled={loading}
                 />
               </div>
               
@@ -72,6 +142,7 @@ const ProfileForm = () => {
                   value={profile.email} 
                   onChange={handleChange} 
                   required 
+                  disabled={true} // Email não pode ser alterado
                 />
               </div>
               
@@ -83,6 +154,7 @@ const ProfileForm = () => {
                   value={profile.company} 
                   onChange={handleChange} 
                   required 
+                  disabled={loading}
                 />
               </div>
               
@@ -92,7 +164,8 @@ const ProfileForm = () => {
                   id="phone" 
                   name="phone"
                   value={profile.phone} 
-                  onChange={handleChange} 
+                  onChange={handleChange}
+                  disabled={loading}
                 />
               </div>
               
@@ -102,7 +175,8 @@ const ProfileForm = () => {
                   id="position" 
                   name="position"
                   value={profile.position} 
-                  onChange={handleChange} 
+                  onChange={handleChange}
+                  disabled={loading}
                 />
               </div>
             </div>
@@ -115,11 +189,24 @@ const ProfileForm = () => {
                 value={profile.bio} 
                 onChange={handleChange} 
                 rows={3}
+                disabled={loading}
               />
             </div>
             
             <div className="flex justify-end">
-              <Button type="submit">Salvar alterações</Button>
+              <Button type="submit" disabled={loading}>
+                {loading ? (
+                  <span className="flex items-center gap-2">
+                    <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Salvando...
+                  </span>
+                ) : (
+                  "Salvar alterações"
+                )}
+              </Button>
             </div>
           </form>
         </div>
