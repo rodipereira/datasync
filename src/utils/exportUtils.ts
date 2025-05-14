@@ -4,6 +4,13 @@ import "jspdf-autotable";
 import { supabase } from "@/integrations/supabase/client";
 import * as XLSX from "xlsx";
 
+// Extend the jsPDF type with autoTable
+declare module "jspdf" {
+  interface jsPDF {
+    autoTable: (options: any) => jsPDF;
+  }
+}
+
 interface UploadedFile {
   id: string;
   filename: string;
