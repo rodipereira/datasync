@@ -1,97 +1,97 @@
 
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Download, FileText } from "lucide-react";
 import { toast } from "sonner";
-import { formatDate, formatFileSize } from "@/utils/fileUtils";
-import FileIcon from "@/components/FileIcon";
-import { supabase } from "@/integrations/supabase/client";
-import { exportToPDF } from "@/utils/exportUtils";
+import { formatDistanceToNow } from "date-fns";
+import { ptBR } from "date-fns/locale";
+import { formatFileSize } from "@/utils/fileUtils";
+import { exportReport } from "@/utils/exportUtils";
+import FileIcon from "./FileIcon";
 
-interface UploadedFile {
-  id: string;
-  filename: string;
-  file_path: string;
-  file_type: string;
-  file_size: number;
-  analysis_path: string | null;
-  created_at: string;
-}
-
-interface FileHistoryRowProps {
-  file: UploadedFile;
-}
-
-const FileHistoryRow = ({ file }: FileHistoryRowProps) => {
-  const downloadFile = async (path: string, filename: string) => {
-    try {
-      const { data, error } = await supabase.storage
-        .from('uploads')
-        .download(path);
-        
-      if (error) {
-        throw error;
-      }
-      
-      const url = URL.createObjectURL(data);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-      
-    } catch (error) {
-      console.error('Erro ao baixar arquivo:', error);
-      toast.error("Erro ao baixar arquivo", {
-        description: "Não foi possível baixar o arquivo selecionado."
-      });
-    }
+type FileHistoryRowProps = {
+  file: {
+    id: string;
+    filename: string;
+    file_path: string;
+    file_type?: string;
+    file_size?: number;
+    created_at: string;
+    status?: string;
+    processed?: boolean;
+    analysis_path?: string | null;
   };
+  onViewDetails: (fileId: string) => void;
+};
 
-  const handleExportPDF = async () => {
+const FileHistoryRow = ({ file, onViewDetails }: FileHistoryRowProps) => {
+  const [loading, setLoading] = useState(false);
+
+  const handleExportAnalysis = async () => {
+    setLoading(true);
     try {
-      await exportToPDF(file);
-      toast.success("PDF exportado com sucesso!");
+      // Mock data for demonstration purposes
+      const data = [
+        { id: 1, name: "Item 1", value: 100 },
+        { id: 2, name: "Item 2", value: 200 },
+        { id: 3, name: "Item 3", value: 300 },
+      ];
+      
+      await exportReport(data, `analise_${file.filename}`);
+      
+      toast.success("Relatório exportado com sucesso!");
     } catch (error) {
-      toast.error("Erro ao exportar PDF", {
-        description: "Não foi possível gerar o PDF."
-      });
+      console.error("Erro ao exportar análise:", error);
+      toast.error("Falha ao exportar o relatório");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <tr key={file.id} className="border-b hover:bg-gray-50">
-      <td className="py-4">
-        <div className="flex items-center space-x-2">
-          <FileIcon fileType={file.file_type} />
-          <span className="truncate max-w-[200px]">{file.filename}</span>
+    <div className="grid grid-cols-12 gap-4 py-4 px-4 items-center border-b last:border-b-0 hover:bg-slate-50">
+      {/* File Icon & Name */}
+      <div className="col-span-5 md:col-span-6 flex items-center space-x-3">
+        <FileIcon fileType={file.file_type || ""} />
+        <div>
+          <p className="font-medium line-clamp-1">{file.filename}</p>
+          <p className="text-xs text-muted-foreground">
+            {formatFileSize(file.file_size || 0)} • {formatDistanceToNow(new Date(file.created_at), { addSuffix: true, locale: ptBR })}
+          </p>
         </div>
-      </td>
-      <td className="py-4">{formatFileSize(file.file_size)}</td>
-      <td className="py-4">{formatDate(file.created_at)}</td>
-      <td className="py-4">
-        <div className="flex gap-2">
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={() => downloadFile(file.file_path, file.filename)}
-            title="Baixar arquivo original"
-          >
-            <Download className="h-4 w-4" />
-          </Button>
-          
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleExportPDF}
-            title="Exportar como PDF"
-          >
-            <FileText className="h-4 w-4" />
-          </Button>
-        </div>
-      </td>
-    </tr>
+      </div>
+
+      {/* Status */}
+      <div className="col-span-3 md:col-span-2">
+        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+          file.status === "concluído" || file.processed ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800"
+        }`}>
+          {file.status || (file.processed ? "Concluído" : "Pendente")}
+        </span>
+      </div>
+
+      {/* Analysis & Download buttons */}
+      <div className="col-span-4 md:col-span-4 flex justify-end space-x-2">
+        <Button 
+          size="sm" 
+          variant="ghost"
+          className="text-xs md:text-sm flex items-center gap-1"
+          onClick={() => onViewDetails(file.id)}>
+          <FileText className="h-3.5 w-3.5" />
+          <span className="hidden sm:inline">Detalhes</span>
+        </Button>
+        
+        <Button 
+          size="sm" 
+          variant="outline"
+          className="text-xs md:text-sm flex items-center gap-1"
+          disabled={loading || !file.processed}
+          onClick={handleExportAnalysis}>
+          <Download className="h-3.5 w-3.5" />
+          <span className="hidden sm:inline">Exportar</span>
+        </Button>
+      </div>
+    </div>
   );
 };
 

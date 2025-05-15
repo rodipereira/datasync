@@ -1,11 +1,33 @@
 
 import NavBar from "@/components/NavBar";
-import ProfileForm from "@/components/ProfileForm";
+import ProfileForm from "@/components/profile/ProfileForm";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { exportReport } from "@/utils/exportUtils";
+import { toast } from "sonner";
 
 const Profile = () => {
+  const handleExportData = async () => {
+    try {
+      // Mock data for demonstration purposes
+      const userData = [
+        { id: 1, name: "Perfil Pessoal", email: "usuario@exemplo.com" },
+        { id: 2, name: "Configurações", valor: "Tema escuro" },
+        { id: 3, name: "Preferências", valor: "Ativado" },
+      ];
+      
+      await exportReport(userData, "dados_usuario");
+      
+      toast.success("Dados exportados com sucesso!", {
+        description: "Seu arquivo foi baixado."
+      });
+    } catch (error) {
+      console.error("Erro ao exportar dados:", error);
+      toast.error("Falha ao exportar dados");
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <NavBar />
@@ -37,7 +59,10 @@ const Profile = () => {
                   <p className="text-sm text-gray-500">
                     Por razões de segurança, recomendamos que você altere sua senha periodicamente
                   </p>
-                  <Button variant="outline">Alterar senha</Button>
+                  <Button variant="outline" onClick={() => {
+                    const resetButton = document.querySelector("[aria-label='Reset Password']") as HTMLButtonElement;
+                    if (resetButton) resetButton.click();
+                  }}>Alterar senha</Button>
                 </div>
                 
                 <div className="space-y-4 pt-4 border-t">
@@ -73,7 +98,7 @@ const Profile = () => {
                   <p className="text-sm text-gray-500">
                     Baixe um relatório com todos os seus dados
                   </p>
-                  <Button variant="outline">Exportar dados</Button>
+                  <Button variant="outline" onClick={handleExportData}>Exportar dados</Button>
                 </div>
               </CardContent>
             </Card>
