@@ -4,6 +4,7 @@ import ProfileForm from "@/components/profile/ProfileForm";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import PasswordReset from "@/components/profile/PasswordReset";
 import { exportReport } from "@/utils/exportUtils";
 import { toast } from "sonner";
 
@@ -59,10 +60,7 @@ const Profile = () => {
                   <p className="text-sm text-gray-500">
                     Por razões de segurança, recomendamos que você altere sua senha periodicamente
                   </p>
-                  <Button variant="outline" onClick={() => {
-                    const resetButton = document.querySelector("[aria-label='Reset Password']") as HTMLButtonElement;
-                    if (resetButton) resetButton.click();
-                  }}>Alterar senha</Button>
+                  <PasswordReset />
                 </div>
                 
                 <div className="space-y-4 pt-4 border-t">

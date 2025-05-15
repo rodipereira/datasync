@@ -8,7 +8,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import ProfileAvatar from "./ProfileAvatar";
-import PasswordReset from "./PasswordReset";
 
 const ProfileForm = () => {
   const [profile, setProfile] = useState({
@@ -122,7 +121,6 @@ const ProfileForm = () => {
               avatarUrl={avatarUrl} 
               onAvatarChange={(url) => setAvatarUrl(url)} 
             />
-            <PasswordReset />
           </div>
           
           <form onSubmit={handleSubmit} className="space-y-4 md:w-3/4">
