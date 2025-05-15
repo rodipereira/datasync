@@ -1,14 +1,15 @@
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { User } from "lucide-react";
+import { User, Key } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { v4 as uuidv4 } from "uuid";
 
 const ProfileForm = () => {
   const [profile, setProfile] = useState({
@@ -19,7 +20,10 @@ const ProfileForm = () => {
     position: "",
     bio: ""
   });
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Carregar dados do usuário ao montar o componente
   useEffect(() => {
@@ -46,6 +50,11 @@ const ProfileForm = () => {
             position: user.user_metadata?.position || "",
             bio: user.user_metadata?.bio || ""
           });
+
+          // Verificar se há avatar_url nos metadados
+          if (user.user_metadata?.avatar_url) {
+            setAvatarUrl(user.user_metadata.avatar_url);
+          }
         }
       } catch (error) {
         console.error("Erro ao carregar perfil:", error);
@@ -86,7 +95,8 @@ const ProfileForm = () => {
           company: profile.company,
           phone: profile.phone,
           position: profile.position,
-          bio: profile.bio
+          bio: profile.bio,
+          avatar_url: avatarUrl
         }
       });
       
@@ -103,6 +113,93 @@ const ProfileForm = () => {
     }
   };
 
+  const handleAvatarClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    try {
+      const file = e.target.files?.[0];
+      if (!file) return;
+
+      // Validar tipo de arquivo
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/webp'];
+      if (!allowedTypes.includes(file.type)) {
+        toast.error("Tipo de arquivo não suportado. Use JPG, PNG, GIF ou WebP.");
+        return;
+      }
+
+      // Validar tamanho (max 2MB)
+      if (file.size > 2 * 1024 * 1024) {
+        toast.error("Arquivo muito grande. Tamanho máximo: 2MB.");
+        return;
+      }
+
+      setUploading(true);
+
+      // Obter o usuário atual
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) throw new Error("Usuário não autenticado");
+
+      // Criar caminho único para a imagem
+      const fileExt = file.name.split('.').pop();
+      const filePath = `${user.id}/${uuidv4()}.${fileExt}`;
+
+      // Fazer upload da imagem para o bucket
+      const { error: uploadError } = await supabase.storage
+        .from('profile_images')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      // Obter a URL pública da imagem
+      const { data: publicUrlData } = supabase.storage
+        .from('profile_images')
+        .getPublicUrl(filePath);
+
+      const avatarUrl = publicUrlData.publicUrl;
+      setAvatarUrl(avatarUrl);
+
+      // Atualizar os metadados do usuário com a nova URL do avatar
+      await supabase.auth.updateUser({
+        data: { avatar_url: avatarUrl }
+      });
+
+      toast.success("Foto de perfil atualizada com sucesso!");
+    } catch (error) {
+      console.error("Erro ao atualizar foto:", error);
+      toast.error("Erro ao atualizar foto de perfil");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleResetPassword = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user || !user.email) {
+        throw new Error("Usuário não possui email cadastrado");
+      }
+      
+      const { error } = await supabase.auth.resetPasswordForEmail(user.email, {
+        redirectTo: window.location.origin + '/profile'
+      });
+      
+      if (error) throw error;
+      
+      toast.success("Email de redefinição de senha enviado com sucesso!", {
+        description: "Verifique sua caixa de entrada e siga as instruções."
+      });
+    } catch (error) {
+      console.error("Erro ao solicitar redefinição de senha:", error);
+      toast.error("Não foi possível enviar o email de redefinição de senha");
+    }
+  };
+
   return (
     <Card>
       <CardHeader className="pb-3">
@@ -112,14 +209,35 @@ const ProfileForm = () => {
         <div className="flex flex-col md:flex-row space-y-6 md:space-y-0 md:space-x-6">
           <div className="text-center md:w-1/4">
             <div className="flex flex-col items-center space-y-4">
-              <Avatar className="h-24 w-24">
-                <AvatarImage alt="Foto de perfil" />
+              <Avatar className="h-24 w-24 cursor-pointer" onClick={handleAvatarClick}>
+                <AvatarImage alt="Foto de perfil" src={avatarUrl || ""} />
                 <AvatarFallback className="bg-primary text-primary-foreground">
                   <User className="h-12 w-12" />
                 </AvatarFallback>
               </Avatar>
-              <Button variant="outline" size="sm">
-                Alterar foto
+              <input 
+                type="file"
+                ref={fileInputRef}
+                onChange={handleFileChange}
+                accept="image/*"
+                className="hidden"
+              />
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={handleAvatarClick}
+                disabled={uploading}
+              >
+                {uploading ? "Enviando..." : "Alterar foto"}
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm"
+                className="flex items-center gap-2 mt-2"
+                onClick={handleResetPassword}
+              >
+                <Key className="h-4 w-4" />
+                Alterar senha
               </Button>
             </div>
           </div>

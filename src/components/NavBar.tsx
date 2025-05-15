@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -49,6 +48,10 @@ const NavBar = () => {
             <Link to="/profile" className="text-gray-700 hover:text-primary px-3 py-2 rounded-md text-sm font-medium">
               Perfil
             </Link>
+            <Link to="/employees" className="flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-primary/10">
+              <Users className="h-4 w-4" />
+              Funcionários
+            </Link>
             <Button variant="outline" size="sm" className="ml-4" onClick={handleLogout}>
               <LogOut className="h-4 w-4 mr-2" />
               Sair
@@ -75,6 +78,10 @@ const NavBar = () => {
             </Link>
             <Link to="/profile" className="text-gray-700 hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium">
               Perfil
+            </Link>
+            <Link to="/employees" className="flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-primary/10">
+              <Users className="h-4 w-4" />
+              Funcionários
             </Link>
             <Button variant="outline" className="w-full mt-2" onClick={handleLogout}>
               <LogOut className="h-4 w-4 mr-2" />

@@ -9,6 +9,77 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      employee_metrics: {
+        Row: {
+          clients_acquired: number
+          created_at: string
+          employee_id: string
+          employees_hired: number
+          id: string
+          month: string
+          revenue: number
+          updated_at: string
+        }
+        Insert: {
+          clients_acquired?: number
+          created_at?: string
+          employee_id: string
+          employees_hired?: number
+          id?: string
+          month: string
+          revenue?: number
+          updated_at?: string
+        }
+        Update: {
+          clients_acquired?: number
+          created_at?: string
+          employee_id?: string
+          employees_hired?: number
+          id?: string
+          month?: string
+          revenue?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "employee_metrics_employee_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: false
+            referencedRelation: "employees"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      employees: {
+        Row: {
+          created_at: string
+          hire_date: string
+          id: string
+          name: string
+          position: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          hire_date?: string
+          id?: string
+          name: string
+          position: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          hire_date?: string
+          id?: string
+          name?: string
+          position?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
