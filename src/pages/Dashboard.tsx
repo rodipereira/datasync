@@ -7,7 +7,7 @@ import FileHistory from "@/components/FileHistory";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { ArrowUpRight, Upload } from "lucide-react";
+import { ArrowUpRight, Bot, Upload } from "lucide-react";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -18,6 +18,10 @@ const Dashboard = () => {
 
   const handleUpload = () => {
     navigate("/upload");
+  };
+  
+  const handleAIAssistant = () => {
+    navigate("/ai-assistant");
   };
 
   return (
@@ -33,6 +37,10 @@ const Dashboard = () => {
             <Button variant="outline" onClick={handleUpload}>
               <Upload className="h-4 w-4 mr-2" />
               Upload de Arquivos
+            </Button>
+            <Button variant="outline" onClick={handleAIAssistant}>
+              <Bot className="h-4 w-4 mr-2" />
+              Assistente IA
             </Button>
             <Button onClick={handleDetailedAnalysis}>
               <span className="mr-1">Análise Detalhada</span>

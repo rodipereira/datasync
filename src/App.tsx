@@ -13,6 +13,7 @@ import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 import DetailedAnalysis from "./pages/DetailedAnalysis";
 import EmployeeManagement from "./pages/EmployeeManagement";
+import AIAssistant from "./pages/AIAssistant";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 const queryClient = new QueryClient();
@@ -50,6 +51,11 @@ const App = () => (
           <Route path="/employees" element={
             <ProtectedRoute>
               <EmployeeManagement />
+            </ProtectedRoute>
+          } />
+          <Route path="/ai-assistant" element={
+            <ProtectedRoute>
+              <AIAssistant />
             </ProtectedRoute>
           } />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
