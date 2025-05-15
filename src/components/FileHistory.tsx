@@ -13,6 +13,7 @@ import {
   TableBody, 
   TableRow 
 } from "@/components/ui/table";
+import { useNavigate } from "react-router-dom";
 
 interface UploadedFile {
   id: string;
@@ -27,6 +28,7 @@ interface UploadedFile {
 const FileHistory = () => {
   const [files, setFiles] = useState<UploadedFile[]>([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchFiles();
@@ -56,6 +58,10 @@ const FileHistory = () => {
     }
   };
 
+  const handleViewDetails = (fileId: string) => {
+    navigate(`/analysis/${fileId}`);
+  };
+
   if (loading) {
     return <FileHistoryLoading />;
   }
@@ -79,7 +85,11 @@ const FileHistory = () => {
             </TableHeader>
             <TableBody>
               {files.map((file) => (
-                <FileHistoryRow key={file.id} file={file} />
+                <FileHistoryRow 
+                  key={file.id} 
+                  file={file} 
+                  onViewDetails={handleViewDetails} 
+                />
               ))}
             </TableBody>
           </Table>
