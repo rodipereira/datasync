@@ -116,7 +116,7 @@ const ProfileForm = () => {
       </CardHeader>
       <CardContent>
         <div className="flex flex-col md:flex-row space-y-6 md:space-y-0 md:space-x-6">
-          <div className="space-y-4">
+          <div className="md:w-1/4 flex justify-center">
             <ProfileAvatar 
               avatarUrl={avatarUrl} 
               onAvatarChange={(url) => setAvatarUrl(url)} 

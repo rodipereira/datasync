@@ -81,30 +81,29 @@ const ProfileAvatar = ({ avatarUrl, onAvatarChange }: ProfileAvatarProps) => {
   };
 
   return (
-    <div className="text-center md:w-1/4">
-      <div className="flex flex-col items-center space-y-4">
-        <Avatar className="h-24 w-24 cursor-pointer" onClick={handleAvatarClick}>
-          <AvatarImage alt="Foto de perfil" src={avatarUrl || ""} />
-          <AvatarFallback className="bg-primary text-primary-foreground">
-            <User className="h-12 w-12" />
-          </AvatarFallback>
-        </Avatar>
-        <input 
-          type="file"
-          ref={fileInputRef}
-          onChange={handleFileChange}
-          accept="image/*"
-          className="hidden"
-        />
-        <Button 
-          variant="outline" 
-          size="sm" 
-          onClick={handleAvatarClick}
-          disabled={uploading}
-        >
-          {uploading ? "Enviando..." : "Alterar foto"}
-        </Button>
-      </div>
+    <div className="flex flex-col items-center space-y-4 w-full">
+      <Avatar className="h-24 w-24 cursor-pointer" onClick={handleAvatarClick}>
+        <AvatarImage alt="Foto de perfil" src={avatarUrl || ""} />
+        <AvatarFallback className="bg-primary text-primary-foreground">
+          <User className="h-12 w-12" />
+        </AvatarFallback>
+      </Avatar>
+      <input 
+        type="file"
+        ref={fileInputRef}
+        onChange={handleFileChange}
+        accept="image/*"
+        className="hidden"
+      />
+      <Button 
+        variant="outline" 
+        size="sm" 
+        onClick={handleAvatarClick}
+        disabled={uploading}
+        className="w-full max-w-[150px]"
+      >
+        {uploading ? "Enviando..." : "Alterar foto"}
+      </Button>
     </div>
   );
 };
