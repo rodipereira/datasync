@@ -50,6 +50,8 @@ serve(async (req) => {
     // Adicionar a nova mensagem do usuário
     messages.push({ role: "user", content: prompt })
 
+    console.log("Enviando requisição para OpenAI:", JSON.stringify({ messages }))
+
     // Chamar a API do OpenAI
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
@@ -61,16 +63,20 @@ serve(async (req) => {
         model: 'gpt-4o-mini',
         messages: messages,
         temperature: 0.7,
+        top_p: 0.9,
         max_tokens: 1000
       })
     })
 
     if (!response.ok) {
-      const error = await response.text()
-      throw new Error(`Erro na API OpenAI: ${error}`)
+      const errorText = await response.text()
+      console.error('Erro na API OpenAI:', errorText)
+      throw new Error(`Erro na API OpenAI: ${errorText}`)
     }
 
     const data = await response.json()
+    console.log("Resposta da OpenAI recebida:", JSON.stringify(data))
+    
     const assistantResponse = data.choices[0]?.message?.content || "Desculpe, não consegui processar sua solicitação."
 
     return new Response(

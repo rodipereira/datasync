@@ -4,7 +4,6 @@ import NavBar from "@/components/NavBar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAIAssistant } from '@/hooks/useAIAssistant';
 import { Bot, Send, Trash2, User, MessagesSquare, BarChart4 } from 'lucide-react';
@@ -41,22 +40,18 @@ const AIAssistant = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       <NavBar />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
-          <div>
-            <h1 className="text-2xl font-bold">Assistente de IA</h1>
-            <p className="text-gray-500">
-              Análise inteligente e assistência para seus dados
-            </p>
-          </div>
-        </div>
+        <h1 className="text-2xl font-bold mb-1">Assistente de IA</h1>
+        <p className="text-muted-foreground mb-6">
+          Análise inteligente e assistência para seus dados
+        </p>
 
         <div className="grid gap-6 md:grid-cols-3">
           {/* Painel de chat */}
-          <Card className="col-span-3 md:col-span-2 h-[calc(100vh-250px)] flex flex-col">
-            <CardHeader className="border-b">
+          <Card className="col-span-3 md:col-span-2 h-[calc(100vh-250px)] flex flex-col bg-sidebar">
+            <CardHeader className="border-b border-sidebar-border">
               <div className="flex items-center">
                 <Bot className="h-5 w-5 mr-2 text-primary" />
                 <CardTitle>Conversar com IA</CardTitle>
@@ -68,7 +63,7 @@ const AIAssistant = () => {
             <CardContent className="flex-1 flex flex-col p-0">
               <ScrollArea className="flex-1 p-4">
                 {messages.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center h-full text-center text-gray-500 p-8">
+                  <div className="flex flex-col items-center justify-center h-full text-center text-muted-foreground p-8">
                     <MessagesSquare className="h-12 w-12 mb-4 opacity-30" />
                     <p className="text-lg font-medium mb-2">Assistente de IA</p>
                     <p className="max-w-md">
@@ -101,11 +96,11 @@ const AIAssistant = () => {
                           <div
                             className={`rounded-lg px-4 py-2 ${
                               msg.role === 'user'
-                                ? 'bg-blue-50 border border-blue-100'
-                                : 'bg-gray-100 border border-gray-200'
+                                ? 'bg-accent text-accent-foreground'
+                                : 'bg-muted text-foreground'
                             }`}
                           >
-                            <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
+                            <p className="text-sm break-words whitespace-pre-wrap">{msg.content}</p>
                           </div>
                         </div>
                       </div>
@@ -114,14 +109,14 @@ const AIAssistant = () => {
                   </div>
                 )}
               </ScrollArea>
-              <div className="p-4 border-t">
+              <div className="p-4 border-t border-sidebar-border">
                 <form onSubmit={handleSubmit} className="flex gap-2">
                   <Input
                     value={input}
                     onChange={e => setInput(e.target.value)}
                     placeholder="Digite sua pergunta..."
                     disabled={isLoading}
-                    className="flex-1"
+                    className="flex-1 bg-sidebar-accent text-sidebar-accent-foreground border-sidebar-border"
                   />
                   <Button 
                     type="submit" 
@@ -140,7 +135,7 @@ const AIAssistant = () => {
                       type="button" 
                       variant="outline" 
                       onClick={clearMessages}
-                      className="shrink-0"
+                      className="shrink-0 border-sidebar-border"
                     >
                       <Trash2 className="h-4 w-4" />
                       <span className="sr-only">Limpar</span>
@@ -152,7 +147,7 @@ const AIAssistant = () => {
           </Card>
 
           {/* Painel lateral */}
-          <Card className="col-span-3 md:col-span-1">
+          <Card className="col-span-3 md:col-span-1 bg-sidebar">
             <CardHeader>
               <CardTitle>Sugestões</CardTitle>
               <CardDescription>
@@ -165,13 +160,13 @@ const AIAssistant = () => {
                   <Button
                     key={index}
                     variant="outline"
-                    className="w-full justify-start text-left h-auto py-3"
+                    className="w-full justify-start text-left h-auto py-3 border-sidebar-border bg-sidebar-accent text-sidebar-accent-foreground"
                     onClick={() => handleSuggestionClick(suggestion)}
                     disabled={isLoading}
                   >
                     <div className="flex items-center gap-2">
                       <BarChart4 className="h-4 w-4 text-primary shrink-0" />
-                      <span>{suggestion}</span>
+                      <span className="truncate">{suggestion}</span>
                     </div>
                   </Button>
                 ))}
@@ -179,7 +174,7 @@ const AIAssistant = () => {
 
               <div className="mt-8">
                 <h4 className="text-sm font-semibold mb-2">Sobre este assistente</h4>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-muted-foreground">
                   Este assistente de IA pode analisar seus dados, identificar tendências,
                   e fornecer insights para melhorar a tomada de decisões no seu negócio.
                   As respostas são baseadas nos dados disponíveis na plataforma.

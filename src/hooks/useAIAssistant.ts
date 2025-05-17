@@ -39,12 +39,21 @@ export const useAIAssistant = () => {
       if (error) throw new Error(error.message);
 
       // Adiciona a resposta do assistente ao histórico
-      const assistantMessage: Message = { role: 'assistant', content: data.response };
+      const assistantMessage: Message = { 
+        role: 'assistant', 
+        content: data?.response || "Desculpe, ocorreu um erro ao processar sua solicitação." 
+      };
       setMessages([...updatedMessages, assistantMessage]);
 
     } catch (error) {
       console.error('Erro ao enviar mensagem:', error);
       toast.error('Erro ao se comunicar com o assistente de IA');
+      // Adiciona uma mensagem de erro ao histórico para feedback visual ao usuário
+      const errorMessage: Message = { 
+        role: 'assistant', 
+        content: "Desculpe, tive um problema ao processar sua solicitação. Por favor, tente novamente mais tarde."
+      };
+      setMessages([...messages, errorMessage]);
     } finally {
       setIsLoading(false);
     }

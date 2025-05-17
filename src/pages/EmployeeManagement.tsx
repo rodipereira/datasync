@@ -1,11 +1,8 @@
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import NavBar from "@/components/NavBar";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
 import EmployeeList from "@/components/EmployeeList";
 import EmployeeForm from "@/components/EmployeeForm";
 import EmployeeMetrics from "@/components/EmployeeMetrics";
@@ -22,12 +19,12 @@ const EmployeeManagement = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       <NavBar />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
           <h1 className="text-2xl font-bold">Gerenciamento de Funcionários</h1>
-          <p className="text-gray-500">
+          <p className="text-muted-foreground">
             Cadastre, gerencie e acompanhe o desempenho dos seus funcionários
           </p>
         </div>
