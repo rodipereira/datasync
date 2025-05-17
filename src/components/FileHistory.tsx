@@ -23,6 +23,7 @@ interface UploadedFile {
   file_size: number;
   analysis_path: string | null;
   created_at: string;
+  processed: boolean;
 }
 
 const FileHistory = () => {
@@ -47,7 +48,13 @@ const FileHistory = () => {
         throw error;
       }
       
-      setFiles(data || []);
+      // Simulate some files being processed and others pending
+      const processedFiles = data?.map((file, index) => ({
+        ...file,
+        processed: index % 2 === 0 // Alternate between processed and pending for demonstration
+      })) || [];
+      
+      setFiles(processedFiles);
     } catch (error) {
       console.error('Erro ao buscar arquivos:', error);
       toast("Erro ao carregar histórico", {
@@ -71,16 +78,17 @@ const FileHistory = () => {
   }
 
   return (
-    <Card>
+    <Card className="dashboard-chart">
       <CardContent className="p-6">
         <div className="overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Arquivo</TableHead>
-                <TableHead>Tamanho</TableHead>
-                <TableHead>Data de Upload</TableHead>
-                <TableHead>Ações</TableHead>
+                <TableHead className="text-muted-foreground">Arquivo</TableHead>
+                <TableHead className="text-muted-foreground">Tamanho</TableHead>
+                <TableHead className="text-muted-foreground">Data de Upload</TableHead>
+                <TableHead className="text-muted-foreground">Status</TableHead>
+                <TableHead className="text-right text-muted-foreground">Ações</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
