@@ -16,10 +16,15 @@ import {
   XAxis,
   YAxis,
   CartesianGrid,
-  Tooltip,
-  Legend,
   ResponsiveContainer,
 } from "recharts";
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+  ChartLegend,
+  ChartLegendContent,
+} from "@/components/ui/chart";
 
 const data = [
   { name: "Jan", vendas: 4000, lucro: 2400, estoque: 2400 },
@@ -35,6 +40,22 @@ const data = [
   { name: "Nov", vendas: 2780, lucro: 3908, estoque: 2000 },
   { name: "Dez", vendas: 1890, lucro: 4800, estoque: 2181 },
 ];
+
+// Chart configuration for shadcn/ui chart components
+const chartConfig = {
+  vendas: {
+    label: "Vendas",
+    color: "#3b82f6" // Blue
+  },
+  lucro: {
+    label: "Lucro",
+    color: "#10b981" // Green
+  },
+  estoque: {
+    label: "Estoque",
+    color: "#f59e0b" // Amber
+  }
+};
 
 const DashboardChart = () => {
   const [period, setPeriod] = useState("anual");
@@ -68,48 +89,63 @@ const DashboardChart = () => {
               <TabsTrigger value="bar">Barras</TabsTrigger>
             </TabsList>
             <TabsContent value="line" className="h-[300px]">
-              <ResponsiveContainer width="100%" height="100%">
+              <ChartContainer config={chartConfig}>
                 <LineChart data={data}>
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
+                  <XAxis 
+                    dataKey="name" 
+                    fontSize={12}
+                    tickLine={false}
+                    axisLine={false}
+                  />
+                  <YAxis 
+                    fontSize={12}
+                    tickLine={false}
+                    axisLine={false}
+                  />
+                  <ChartTooltip content={<ChartTooltipContent />} />
+                  <ChartLegend content={<ChartLegendContent />} />
                   <Line
                     type="monotone"
                     dataKey="vendas"
-                    stroke="#3b82f6"
                     strokeWidth={2}
                     activeDot={{ r: 8 }}
                   />
                   <Line
                     type="monotone"
                     dataKey="lucro"
-                    stroke="#10b981"
                     strokeWidth={2}
                   />
                   <Line
                     type="monotone"
                     dataKey="estoque"
-                    stroke="#f59e0b"
                     strokeWidth={2}
                   />
                 </LineChart>
-              </ResponsiveContainer>
+              </ChartContainer>
             </TabsContent>
             <TabsContent value="bar" className="h-[300px]">
-              <ResponsiveContainer width="100%" height="100%">
+              <ChartContainer config={chartConfig}>
                 <BarChart data={data}>
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Bar dataKey="vendas" fill="#3b82f6" />
-                  <Bar dataKey="lucro" fill="#10b981" />
-                  <Bar dataKey="estoque" fill="#f59e0b" />
+                  <XAxis 
+                    dataKey="name" 
+                    fontSize={12}
+                    tickLine={false}
+                    axisLine={false}
+                  />
+                  <YAxis 
+                    fontSize={12}
+                    tickLine={false}
+                    axisLine={false}
+                  />
+                  <ChartTooltip content={<ChartTooltipContent />} />
+                  <ChartLegend content={<ChartLegendContent />} />
+                  <Bar dataKey="vendas" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="lucro" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="estoque" radius={[4, 4, 0, 0]} />
                 </BarChart>
-              </ResponsiveContainer>
+              </ChartContainer>
             </TabsContent>
           </Tabs>
         </div>
