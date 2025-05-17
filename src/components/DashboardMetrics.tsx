@@ -37,14 +37,14 @@ const DashboardMetrics = () => {
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       {metrics.map((metric, index) => (
-        <Card key={index} className="metrics-card">
+        <Card key={index} className="dashboard-card overflow-hidden">
           <CardHeader className="pb-2">
-            <CardTitle className="text-lg font-medium">{metric.title}</CardTitle>
+            <CardTitle className="text-lg font-medium text-white">{metric.title}</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{metric.value}</div>
+            <div className="text-2xl font-bold text-white">{metric.value}</div>
             <div className="flex items-center pt-1">
-              <span className={`flex items-center ${metric.positive ? 'text-green-600' : 'text-red-600'}`}>
+              <span className={`flex items-center ${metric.positive ? 'text-green-400' : 'text-red-400'}`}>
                 {metric.positive ? (
                   <ArrowUpIcon className="h-4 w-4 mr-1" />
                 ) : (
@@ -52,7 +52,7 @@ const DashboardMetrics = () => {
                 )}
                 {metric.change}
               </span>
-              <CardDescription className="ml-2">{metric.description}</CardDescription>
+              <CardDescription className="ml-2 text-gray-400">{metric.description}</CardDescription>
             </div>
           </CardContent>
         </Card>

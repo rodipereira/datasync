@@ -45,7 +45,7 @@ const data = [
 const chartConfig = {
   vendas: {
     label: "Vendas",
-    color: "#3b82f6" // Blue
+    color: "#2563eb" // Blue
   },
   lucro: {
     label: "Lucro",
@@ -53,7 +53,7 @@ const chartConfig = {
   },
   estoque: {
     label: "Estoque",
-    color: "#f59e0b" // Amber
+    color: "#8b5cf6" // Purple
   }
 };
 
@@ -61,21 +61,40 @@ const DashboardChart = () => {
   const [period, setPeriod] = useState("anual");
 
   return (
-    <Card className="w-full">
+    <Card className="dashboard-chart">
       <CardHeader>
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-2 sm:space-y-0">
           <div>
-            <CardTitle>Análise de Desempenho</CardTitle>
-            <CardDescription>
+            <CardTitle className="text-lg font-semibold text-white">Análise de Desempenho</CardTitle>
+            <CardDescription className="text-gray-300">
               Visualize os principais indicadores de desempenho
             </CardDescription>
           </div>
           <div>
-            <Tabs defaultValue="anual" className="w-[260px]" onValueChange={setPeriod}>
-              <TabsList>
-                <TabsTrigger value="mensal">Mensal</TabsTrigger>
-                <TabsTrigger value="trimestral">Trimestral</TabsTrigger>
-                <TabsTrigger value="anual">Anual</TabsTrigger>
+            <Tabs 
+              defaultValue="anual" 
+              className="w-[260px]" 
+              onValueChange={setPeriod}
+            >
+              <TabsList className="bg-secondary/50">
+                <TabsTrigger 
+                  value="mensal" 
+                  className="data-[state=active]:bg-primary/80"
+                >
+                  Mensal
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="trimestral"
+                  className="data-[state=active]:bg-primary/80"
+                >
+                  Trimestral
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="anual"
+                  className="data-[state=active]:bg-primary/80"
+                >
+                  Anual
+                </TabsTrigger>
               </TabsList>
             </Tabs>
           </div>
@@ -84,24 +103,39 @@ const DashboardChart = () => {
       <CardContent>
         <div className="h-[300px] mt-4">
           <Tabs defaultValue="line">
-            <TabsList className="mb-4">
-              <TabsTrigger value="line">Linha</TabsTrigger>
-              <TabsTrigger value="bar">Barras</TabsTrigger>
+            <TabsList className="mb-4 bg-secondary/50">
+              <TabsTrigger 
+                value="line"
+                className="data-[state=active]:bg-primary/80"
+              >
+                Linha
+              </TabsTrigger>
+              <TabsTrigger 
+                value="bar"
+                className="data-[state=active]:bg-primary/80"  
+              >
+                Barras
+              </TabsTrigger>
             </TabsList>
             <TabsContent value="line" className="h-[300px]">
               <ChartContainer config={chartConfig}>
                 <LineChart data={data}>
-                  <CartesianGrid strokeDasharray="3 3" />
+                  <CartesianGrid 
+                    strokeDasharray="3 3" 
+                    stroke="rgba(255,255,255,0.1)" 
+                  />
                   <XAxis 
                     dataKey="name" 
                     fontSize={12}
                     tickLine={false}
                     axisLine={false}
+                    stroke="rgba(255,255,255,0.5)"
                   />
                   <YAxis 
                     fontSize={12}
                     tickLine={false}
                     axisLine={false}
+                    stroke="rgba(255,255,255,0.5)"
                   />
                   <ChartTooltip content={<ChartTooltipContent />} />
                   <ChartLegend content={<ChartLegendContent />} />
@@ -109,17 +143,20 @@ const DashboardChart = () => {
                     type="monotone"
                     dataKey="vendas"
                     strokeWidth={2}
-                    activeDot={{ r: 8 }}
+                    activeDot={{ r: 8, fill: "#2563eb" }}
+                    stroke="#2563eb"
                   />
                   <Line
                     type="monotone"
                     dataKey="lucro"
                     strokeWidth={2}
+                    stroke="#10b981"
                   />
                   <Line
                     type="monotone"
                     dataKey="estoque"
                     strokeWidth={2}
+                    stroke="#8b5cf6"
                   />
                 </LineChart>
               </ChartContainer>
@@ -127,23 +164,28 @@ const DashboardChart = () => {
             <TabsContent value="bar" className="h-[300px]">
               <ChartContainer config={chartConfig}>
                 <BarChart data={data}>
-                  <CartesianGrid strokeDasharray="3 3" />
+                  <CartesianGrid 
+                    strokeDasharray="3 3" 
+                    stroke="rgba(255,255,255,0.1)"
+                  />
                   <XAxis 
                     dataKey="name" 
                     fontSize={12}
                     tickLine={false}
                     axisLine={false}
+                    stroke="rgba(255,255,255,0.5)"
                   />
                   <YAxis 
                     fontSize={12}
                     tickLine={false}
                     axisLine={false}
+                    stroke="rgba(255,255,255,0.5)"
                   />
                   <ChartTooltip content={<ChartTooltipContent />} />
                   <ChartLegend content={<ChartLegendContent />} />
-                  <Bar dataKey="vendas" radius={[4, 4, 0, 0]} />
-                  <Bar dataKey="lucro" radius={[4, 4, 0, 0]} />
-                  <Bar dataKey="estoque" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="vendas" radius={[4, 4, 0, 0]} fill="#2563eb" />
+                  <Bar dataKey="lucro" radius={[4, 4, 0, 0]} fill="#10b981" />
+                  <Bar dataKey="estoque" radius={[4, 4, 0, 0]} fill="#8b5cf6" />
                 </BarChart>
               </ChartContainer>
             </TabsContent>

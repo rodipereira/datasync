@@ -25,24 +25,35 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       <NavBar />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
           <div>
-            <h1 className="text-2xl font-bold">Dashboard</h1>
-            <p className="text-gray-500">Visualize e analise os dados do seu negócio</p>
+            <h1 className="text-2xl font-bold accent-text">Dashboard</h1>
+            <p className="text-gray-400">Visualize e analise os dados do seu negócio</p>
           </div>
           <div className="mt-4 md:mt-0 space-x-2">
-            <Button variant="outline" onClick={handleUpload}>
+            <Button 
+              variant="outline" 
+              onClick={handleUpload}
+              className="border-primary/30 bg-primary/10 hover:bg-primary/20"
+            >
               <Upload className="h-4 w-4 mr-2" />
               Upload de Arquivos
             </Button>
-            <Button variant="outline" onClick={handleAIAssistant}>
+            <Button 
+              variant="outline" 
+              onClick={handleAIAssistant}
+              className="border-primary/30 bg-primary/10 hover:bg-primary/20"
+            >
               <Bot className="h-4 w-4 mr-2" />
               Assistente IA
             </Button>
-            <Button onClick={handleDetailedAnalysis}>
+            <Button 
+              onClick={handleDetailedAnalysis}
+              className="bg-primary hover:bg-primary/90"
+            >
               <span className="mr-1">Análise Detalhada</span>
               <ArrowUpRight className="h-4 w-4" />
             </Button>
@@ -55,18 +66,28 @@ const Dashboard = () => {
           <div className="grid gap-6 md:grid-cols-2">
             <DashboardChart />
             
-            <Card>
+            <Card className="dashboard-chart">
               <CardHeader>
-                <CardTitle>Análise de Estoque</CardTitle>
-                <CardDescription>
+                <CardTitle className="text-lg font-semibold text-white">Análise de Estoque</CardTitle>
+                <CardDescription className="text-gray-300">
                   Visão geral da situação atual do estoque
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <Tabs defaultValue="niveis">
-                  <TabsList className="mb-4">
-                    <TabsTrigger value="niveis">Níveis</TabsTrigger>
-                    <TabsTrigger value="categorias">Categorias</TabsTrigger>
+                  <TabsList className="mb-4 bg-secondary/50">
+                    <TabsTrigger
+                      value="niveis"
+                      className="data-[state=active]:bg-primary/80"
+                    >
+                      Níveis
+                    </TabsTrigger>
+                    <TabsTrigger
+                      value="categorias"
+                      className="data-[state=active]:bg-primary/80"
+                    >
+                      Categorias
+                    </TabsTrigger>
                   </TabsList>
                   <TabsContent value="niveis">
                     <div className="h-[320px] flex items-center justify-center">
@@ -87,11 +108,11 @@ const Dashboard = () => {
             </Card>
           </div>
           
-          <Card>
+          <Card className="dashboard-chart">
             <CardHeader className="flex flex-row items-center justify-between">
               <div>
-                <CardTitle>Histórico de Arquivos</CardTitle>
-                <CardDescription>
+                <CardTitle className="text-lg font-semibold text-white">Histórico de Arquivos</CardTitle>
+                <CardDescription className="text-gray-300">
                   Arquivos enviados e suas análises
                 </CardDescription>
               </div>
