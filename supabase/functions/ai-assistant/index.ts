@@ -40,7 +40,8 @@ serve(async (req) => {
                  "Você ajuda a interpretar dados, identificar tendências e fornecer insights para o usuário. " +
                  "Use linguagem simples e objetiva, mas com precisão técnica. " + 
                  "Quando possível, sugira ações baseadas em dados. " +
-                 "Sempre responda em português do Brasil."
+                 "Sempre responda em português do Brasil. " +
+                 "Mantenha suas respostas concisas e diretas, evitando textos muito longos."
       }
     ]
 
@@ -54,7 +55,7 @@ serve(async (req) => {
 
     console.log("Enviando requisição para OpenAI:", JSON.stringify({ messages: messages.length }))
 
-    // Chamar a API do OpenAI
+    // Chamar a API do OpenAI com um modelo mais leve e limitação de tokens
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -62,11 +63,11 @@ serve(async (req) => {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',
+        model: 'gpt-4o-mini', // Usando um modelo mais leve
         messages: messages,
         temperature: 0.7,
         top_p: 0.9,
-        max_tokens: 1000
+        max_tokens: 500  // Limitando o tamanho da resposta
       })
     })
 
@@ -76,6 +77,20 @@ serve(async (req) => {
     if (!response.ok) {
       console.error('Erro na API OpenAI. Status:', response.status);
       console.error('Corpo da resposta:', responseText);
+      
+      // Se for erro de cota, forneça uma resposta mais específica
+      if (response.status === 429) {
+        return new Response(
+          JSON.stringify({ 
+            response: "Desculpe, o limite de uso da API foi excedido. Por favor, tente novamente mais tarde ou entre em contato com o administrador do sistema para atualizar a cota da API.",
+            status: 429
+          }),
+          { 
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+          }
+        )
+      }
+      
       throw new Error(`Erro na API OpenAI: ${response.status} - ${responseText}`);
     }
 

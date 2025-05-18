@@ -98,9 +98,9 @@ const AIAssistant = () => {
                               msg.role === 'user'
                                 ? 'bg-accent text-accent-foreground'
                                 : 'bg-muted text-foreground'
-                            }`}
+                            } max-w-full`}
                           >
-                            <p className="text-sm break-words whitespace-pre-wrap overflow-hidden">{msg.content}</p>
+                            <p className="text-sm whitespace-pre-wrap break-words overflow-hidden">{msg.content}</p>
                           </div>
                         </div>
                       </div>

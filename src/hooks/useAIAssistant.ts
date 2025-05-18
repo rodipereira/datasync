@@ -30,11 +30,11 @@ export const useAIAssistant = () => {
 
       console.log("Enviando requisição para a edge function com histórico:", historyToSend.length, "mensagens");
 
-      // Chama a edge function do Supabase
+      // Tenta enviar uma mensagem simples sem histórico primeiro, para reduzir custo de tokens
       const { data, error } = await supabase.functions.invoke('ai-assistant', {
         body: {
           prompt,
-          history: historyToSend
+          history: historyToSend.length > 2 ? historyToSend.slice(-2) : historyToSend // Envia apenas as últimas 2 mensagens
         }
       });
 
@@ -65,7 +65,7 @@ export const useAIAssistant = () => {
         role: 'assistant', 
         content: "Desculpe, tive um problema ao processar sua solicitação. Por favor, tente novamente mais tarde."
       };
-      setMessages([...messages, errorMessage]);
+      setMessages([...messages, { role: 'user', content: prompt }, errorMessage]);
     } finally {
       setIsLoading(false);
     }
