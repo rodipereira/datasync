@@ -28,6 +28,8 @@ export const useAIAssistant = () => {
         .filter(msg => msg.role === 'user' || msg.role === 'assistant')
         .slice(-10);
 
+      console.log("Enviando requisição para a edge function com histórico:", historyToSend.length, "mensagens");
+
       // Chama a edge function do Supabase
       const { data, error } = await supabase.functions.invoke('ai-assistant', {
         body: {
@@ -36,12 +38,22 @@ export const useAIAssistant = () => {
         }
       });
 
-      if (error) throw new Error(error.message);
+      if (error) {
+        console.error('Erro da edge function:', error);
+        throw new Error(`Erro ao chamar o assistente: ${error.message}`);
+      }
+
+      if (!data || !data.response) {
+        console.error('Resposta inválida da API:', data);
+        throw new Error('Resposta inválida recebida do assistente');
+      }
+
+      console.log("Resposta recebida da edge function:", data);
 
       // Adiciona a resposta do assistente ao histórico
       const assistantMessage: Message = { 
         role: 'assistant', 
-        content: data?.response || "Desculpe, ocorreu um erro ao processar sua solicitação." 
+        content: data.response
       };
       setMessages([...updatedMessages, assistantMessage]);
 

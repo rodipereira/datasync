@@ -100,7 +100,7 @@ const AIAssistant = () => {
                                 : 'bg-muted text-foreground'
                             }`}
                           >
-                            <p className="text-sm break-words whitespace-pre-wrap">{msg.content}</p>
+                            <p className="text-sm break-words whitespace-pre-wrap overflow-hidden">{msg.content}</p>
                           </div>
                         </div>
                       </div>

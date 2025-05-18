@@ -18,6 +18,7 @@ serve(async (req) => {
     const openAIApiKey = Deno.env.get('OPENAI_API_KEY')
     
     if (!openAIApiKey) {
+      console.error("OPENAI_API_KEY não está configurada nos segredos do Supabase");
       throw new Error('OPENAI_API_KEY não está configurada')
     }
 
@@ -38,7 +39,8 @@ serve(async (req) => {
         content: "Você é um assistente de análise de dados especializado em ajudar com dados de negócios. " +
                  "Você ajuda a interpretar dados, identificar tendências e fornecer insights para o usuário. " +
                  "Use linguagem simples e objetiva, mas com precisão técnica. " + 
-                 "Quando possível, sugira ações baseadas em dados."
+                 "Quando possível, sugira ações baseadas em dados. " +
+                 "Sempre responda em português do Brasil."
       }
     ]
 
@@ -50,7 +52,7 @@ serve(async (req) => {
     // Adicionar a nova mensagem do usuário
     messages.push({ role: "user", content: prompt })
 
-    console.log("Enviando requisição para OpenAI:", JSON.stringify({ messages }))
+    console.log("Enviando requisição para OpenAI:", JSON.stringify({ messages: messages.length }))
 
     // Chamar a API do OpenAI
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -68,16 +70,31 @@ serve(async (req) => {
       })
     })
 
+    const responseText = await response.text();
+    console.log("Resposta bruta da OpenAI:", responseText.substring(0, 500) + (responseText.length > 500 ? "..." : ""));
+
     if (!response.ok) {
-      const errorText = await response.text()
-      console.error('Erro na API OpenAI:', errorText)
-      throw new Error(`Erro na API OpenAI: ${errorText}`)
+      console.error('Erro na API OpenAI. Status:', response.status);
+      console.error('Corpo da resposta:', responseText);
+      throw new Error(`Erro na API OpenAI: ${response.status} - ${responseText}`);
     }
 
-    const data = await response.json()
-    console.log("Resposta da OpenAI recebida:", JSON.stringify(data))
+    let data;
+    try {
+      data = JSON.parse(responseText);
+    } catch (error) {
+      console.error('Erro ao parsear a resposta da OpenAI:', error);
+      throw new Error('Resposta inválida da OpenAI');
+    }
+
+    console.log("Resposta da OpenAI processada:", JSON.stringify({
+      model: data.model,
+      object: data.object,
+      usage: data.usage,
+      choices_length: data.choices?.length
+    }))
     
-    const assistantResponse = data.choices[0]?.message?.content || "Desculpe, não consegui processar sua solicitação."
+    const assistantResponse = data.choices?.[0]?.message?.content || "Desculpe, não consegui processar sua solicitação.";
 
     return new Response(
       JSON.stringify({ 
@@ -89,7 +106,7 @@ serve(async (req) => {
       }
     )
   } catch (error) {
-    console.error('Erro:', error)
+    console.error('Erro no processamento da edge function:', error)
     return new Response(
       JSON.stringify({ error: error.message }),
       { 
