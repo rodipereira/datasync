@@ -53,7 +53,8 @@ serve(async (req) => {
     // Adicionar a nova mensagem do usuário
     messages.push({ role: "user", content: prompt })
 
-    console.log("Enviando requisição para OpenAI:", JSON.stringify({ messages: messages.length }))
+    console.log("Enviando requisição para OpenAI com", messages.length, "mensagens")
+    console.log("Conteúdo do prompt:", prompt.substring(0, 100))
 
     // Chamar a API do OpenAI com um modelo mais leve e limitação de tokens
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -63,11 +64,11 @@ serve(async (req) => {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini', // Usando um modelo mais leve
+        model: 'gpt-3.5-turbo', // Usando um modelo mais leve
         messages: messages,
         temperature: 0.7,
         top_p: 0.9,
-        max_tokens: 500  // Limitando o tamanho da resposta
+        max_tokens: 300  // Limitando ainda mais o tamanho da resposta
       })
     })
 

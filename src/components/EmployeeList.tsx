@@ -6,8 +6,18 @@ import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from "@
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { format } from "date-fns";
-import { Download, ChevronRight, Loader2 } from "lucide-react";
+import { Download, ChevronRight, Loader2, Trash2, Pencil } from "lucide-react";
 import { exportToExcel } from "@/utils/exportUtils";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface Employee {
   id: string;
@@ -25,6 +35,8 @@ const EmployeeList = ({ onSelectEmployee }: EmployeeListProps) => {
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [loading, setLoading] = useState(true);
   const [exporting, setExporting] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [employeeToDelete, setEmployeeToDelete] = useState<string | null>(null);
 
   useEffect(() => {
     fetchEmployees();
@@ -43,6 +55,7 @@ const EmployeeList = ({ onSelectEmployee }: EmployeeListProps) => {
         throw error;
       }
       
+      console.log("Funcionários carregados:", data);
       setEmployees(data || []);
     } catch (error) {
       console.error('Erro ao buscar funcionários:', error);
@@ -73,6 +86,33 @@ const EmployeeList = ({ onSelectEmployee }: EmployeeListProps) => {
       toast.error("Erro ao exportar dados");
     } finally {
       setExporting(false);
+    }
+  };
+
+  const confirmDelete = (id: string) => {
+    setEmployeeToDelete(id);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteEmployee = async () => {
+    if (!employeeToDelete) return;
+    
+    try {
+      const { error } = await supabase
+        .from('employees')
+        .delete()
+        .eq('id', employeeToDelete);
+        
+      if (error) throw error;
+      
+      toast.success("Funcionário removido com sucesso");
+      fetchEmployees(); // Recarregar lista
+    } catch (error) {
+      console.error("Erro ao deletar funcionário:", error);
+      toast.error("Erro ao remover funcionário");
+    } finally {
+      setDeleteDialogOpen(false);
+      setEmployeeToDelete(null);
     }
   };
   
@@ -127,15 +167,25 @@ const EmployeeList = ({ onSelectEmployee }: EmployeeListProps) => {
                     <TableCell>{employee.position}</TableCell>
                     <TableCell>{format(new Date(employee.hire_date), 'dd/MM/yyyy')}</TableCell>
                     <TableCell>
-                      <Button 
-                        variant="ghost" 
-                        size="sm"
-                        className="flex items-center gap-1" 
-                        onClick={() => onSelectEmployee(employee.id)}
-                      >
-                        Ver Métricas
-                        <ChevronRight className="h-4 w-4" />
-                      </Button>
+                      <div className="flex items-center gap-2">
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          className="flex items-center gap-1" 
+                          onClick={() => onSelectEmployee(employee.id)}
+                        >
+                          Ver Métricas
+                          <ChevronRight className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => confirmDelete(employee.id)}
+                          className="text-destructive hover:text-destructive/90 hover:bg-destructive/10"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -143,6 +193,23 @@ const EmployeeList = ({ onSelectEmployee }: EmployeeListProps) => {
             </Table>
           </div>
         )}
+
+        <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Confirmação de exclusão</AlertDialogTitle>
+              <AlertDialogDescription>
+                Tem certeza que deseja excluir este funcionário? Esta ação não pode ser desfeita.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancelar</AlertDialogCancel>
+              <AlertDialogAction onClick={handleDeleteEmployee} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                Excluir
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </CardContent>
     </Card>
   );
