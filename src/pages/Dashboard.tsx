@@ -6,6 +6,7 @@ import DashboardChart from "@/components/DashboardChart";
 import FileHistory from "@/components/FileHistory";
 import EmployeeList from "@/components/EmployeeList";
 import EmployeeForm from "@/components/EmployeeForm";
+import EmployeeMetrics from "@/components/EmployeeMetrics";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -27,6 +28,13 @@ const Dashboard = () => {
   
   const handleAIAssistant = () => {
     navigate("/ai-assistant");
+  };
+
+  const handleSelectEmployee = (id: string | null) => {
+    setSelectedEmployeeId(id);
+    if (id) {
+      setActiveEmployeeTab("metrics");
+    }
   };
 
   return (
@@ -136,9 +144,16 @@ const Dashboard = () => {
                   >
                     Adicionar
                   </TabsTrigger>
+                  <TabsTrigger
+                    value="metrics"
+                    className="data-[state=active]:bg-primary/80"
+                    disabled={!selectedEmployeeId}
+                  >
+                    Métricas
+                  </TabsTrigger>
                 </TabsList>
                 <TabsContent value="list" className="pt-4">
-                  <EmployeeList onSelectEmployee={setSelectedEmployeeId} />
+                  <EmployeeList onSelectEmployee={handleSelectEmployee} />
                 </TabsContent>
                 <TabsContent value="add" className="pt-4">
                   <div className="max-w-md mx-auto">
@@ -148,6 +163,11 @@ const Dashboard = () => {
                       }}
                     />
                   </div>
+                </TabsContent>
+                <TabsContent value="metrics" className="pt-4">
+                  {selectedEmployeeId && (
+                    <EmployeeMetrics employeeId={selectedEmployeeId} />
+                  )}
                 </TabsContent>
               </Tabs>
             </CardContent>
