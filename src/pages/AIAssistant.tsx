@@ -5,13 +5,14 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Send, Loader2, Bot, Trash, AlertCircle } from "lucide-react";
 import NavBar from "@/components/NavBar";
-import { useAIAssistant } from "@/hooks/useAIAssistant";
+import { useLocalAssistant } from "@/hooks/useLocalAssistant";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { toast } from "sonner";
 
 const AIAssistant = () => {
   const [prompt, setPrompt] = useState("");
-  const { messages, sendMessage, isLoading, clearMessages, error } = useAIAssistant();
+  const { messages, sendMessage, isLoading, clearMessages, error } = useLocalAssistant();
+  const [useLocalAI, setUseLocalAI] = useState(true);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,11 +22,6 @@ const AIAssistant = () => {
     setPrompt("");
   };
 
-  const handleClearAndTryAgain = () => {
-    clearMessages();
-    toast.info("Histórico limpo. Tentando nova sessão.");
-  };
-
   return (
     <div className="min-h-screen bg-background">
       <NavBar />
@@ -33,29 +29,15 @@ const AIAssistant = () => {
         <div className="mb-6">
           <h1 className="text-3xl font-bold">Assistente de IA</h1>
           <p className="text-muted-foreground">
-            Tire dúvidas e obtenha insights sobre seus dados e negócio
+            Assistente local que responde com base em conhecimento pre-definido
           </p>
         </div>
 
-        {error && error.includes("limite de uso") && (
+        {error && (
           <Alert variant="destructive" className="mb-6">
             <AlertCircle className="h-4 w-4" />
-            <AlertTitle>Limite de uso da API excedido</AlertTitle>
-            <AlertDescription>
-              <p className="mb-2">O limite de uso da API OpenAI foi excedido. Isso pode ocorrer porque:</p>
-              <ul className="list-disc pl-5 space-y-1">
-                <li>A chave da API atingiu seu limite de créditos gratuitos</li>
-                <li>A cota mensal foi excedida</li>
-                <li>Há algum problema com a faturamento da conta OpenAI</li>
-              </ul>
-              <Button 
-                variant="outline" 
-                className="mt-3" 
-                onClick={handleClearAndTryAgain}
-              >
-                Limpar histórico e tentar novamente
-              </Button>
-            </AlertDescription>
+            <AlertTitle>Erro</AlertTitle>
+            <AlertDescription>{error}</AlertDescription>
           </Alert>
         )}
 
@@ -63,10 +45,10 @@ const AIAssistant = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Bot className="h-5 w-5" />
-              Assistente de Dados
+              Assistente Local
             </CardTitle>
             <CardDescription>
-              Nosso assistente de IA especializado em análise de dados e insights para negócios.
+              Nosso assistente de IA local especializado em análise de dados e insights para negócios.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -77,7 +59,7 @@ const AIAssistant = () => {
                   <h3 className="font-medium text-lg mb-1">Como posso ajudar?</h3>
                   <p className="text-muted-foreground text-sm max-w-md mx-auto">
                     Pergunte sobre análise de dados, tendências de mercado, ou solicite insights 
-                    baseados nos seus dados.
+                    sobre seu negócio.
                   </p>
                 </div>
               ) : (
@@ -132,12 +114,12 @@ const AIAssistant = () => {
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
               placeholder="Digite sua pergunta aqui..."
-              disabled={isLoading || (error && error.includes("limite de uso"))}
+              disabled={isLoading}
               className="flex-1"
             />
             <Button 
               type="submit" 
-              disabled={isLoading || !prompt.trim() || (error && error.includes("limite de uso"))}
+              disabled={isLoading || !prompt.trim()}
             >
               {isLoading ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
