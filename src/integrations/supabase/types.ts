@@ -9,6 +9,42 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      dashboard_metrics: {
+        Row: {
+          created_at: string | null
+          id: string
+          inventory_count: number | null
+          net_profit: number | null
+          new_customers: number | null
+          period_end: string
+          period_start: string
+          total_sales: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          inventory_count?: number | null
+          net_profit?: number | null
+          new_customers?: number | null
+          period_end: string
+          period_start: string
+          total_sales?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          inventory_count?: number | null
+          net_profit?: number | null
+          new_customers?: number | null
+          period_end?: string
+          period_start?: string
+          total_sales?: number | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       employee_metrics: {
         Row: {
           clients_acquired: number
