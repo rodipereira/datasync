@@ -23,6 +23,7 @@ interface FileDetails {
   file_size: number;
   created_at: string;
   analysis_path: string | null;
+  user_id: string;
   processing_status?: string;
   processed?: boolean;
 }

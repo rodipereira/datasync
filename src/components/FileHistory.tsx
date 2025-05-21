@@ -25,6 +25,7 @@ interface UploadedFile {
   created_at: string;
   processed?: boolean;
   processing_status?: string;
+  user_id: string;
 }
 
 const FileHistory = () => {
