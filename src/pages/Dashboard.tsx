@@ -48,17 +48,15 @@ const Dashboard = () => {
           </div>
           <div className="mt-4 md:mt-0 space-x-2">
             <Button 
-              variant="outline" 
               onClick={handleUpload}
-              className="border-primary/30 bg-primary/10 hover:bg-primary/20"
+              className="bg-primary hover:bg-primary/90"
             >
               <Upload className="h-4 w-4 mr-2" />
               Upload de Arquivos
             </Button>
             <Button 
-              variant="outline" 
               onClick={handleAIAssistant}
-              className="border-primary/30 bg-primary/10 hover:bg-primary/20"
+              className="bg-primary hover:bg-primary/90"
             >
               <Bot className="h-4 w-4 mr-2" />
               Assistente IA
