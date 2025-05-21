@@ -48,24 +48,24 @@ const Dashboard = () => {
             <h1 className="text-2xl font-bold accent-text">Dashboard</h1>
             <p className="text-gray-400">Visualize e analise os dados do seu negócio</p>
           </div>
-          <div className="mt-4 md:mt-0 space-x-2">
+          <div className="mt-4 md:mt-0 flex space-x-2">
             <Button 
               onClick={handleUpload}
-              className="bg-primary hover:bg-primary/90"
+              className="bg-primary hover:bg-primary/90 flex items-center"
             >
               <Upload className="h-4 w-4 mr-2" />
-              Upload de Arquivos
+              <span>Upload de Arquivos</span>
             </Button>
             <Button 
               onClick={handleAIAssistant}
-              className="bg-primary hover:bg-primary/90"
+              className="bg-primary hover:bg-primary/90 flex items-center"
             >
               <Bot className="h-4 w-4 mr-2" />
-              Assistente IA
+              <span>Assistente IA</span>
             </Button>
             <Button 
               onClick={handleDetailedAnalysis}
-              className="bg-primary hover:bg-primary/90"
+              className="bg-primary hover:bg-primary/90 flex items-center"
             >
               <span className="mr-1">Análise Detalhada</span>
               <ArrowUpRight className="h-4 w-4" />
