@@ -34,7 +34,7 @@ const StockStateDisplay: React.FC<StockStateDisplayProps> = ({
   if (isEmpty) {
     return (
       <div className="text-center py-12">
-        <p className="text-gray-500">
+        <p className="text-gray-400">
           Nenhum dado de estoque encontrado. Comece adicionando produtos ao seu inventário.
         </p>
       </div>

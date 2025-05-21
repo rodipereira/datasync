@@ -39,18 +39,18 @@ const StockAnalysis: React.FC<StockAnalysisProps> = ({ className }) => {
   const isEmpty = !isLoading && (!stockData || stockData.length === 0);
   
   return (
-    <div className="w-full">
-      <Tabs defaultValue="niveis" className={`w-full ${className}`}>
+    <div className="w-full h-full text-white">
+      <Tabs defaultValue="niveis" className={`w-full h-full ${className}`}>
         <TabsList className="mb-4 w-full bg-secondary/50">
           <TabsTrigger
             value="niveis"
-            className="data-[state=active]:bg-primary/80"
+            className="text-white data-[state=active]:bg-primary/80"
           >
             Níveis
           </TabsTrigger>
           <TabsTrigger
             value="categorias"
-            className="data-[state=active]:bg-primary/80"
+            className="text-white data-[state=active]:bg-primary/80"
           >
             Categorias
           </TabsTrigger>
