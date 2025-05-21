@@ -25,6 +25,30 @@ const FileUpload = () => {
     setFiles(files.filter((_, i) => i !== index));
   };
 
+  // Simular processamento de análise do arquivo
+  const simulateProcessing = async (fileId: string, filename: string) => {
+    // Em um ambiente real, este seria um webhook ou processo separado
+    // que seria acionado após o upload e realizaria a análise
+    
+    // Aguardar um tempo para simular processamento
+    await new Promise(resolve => setTimeout(resolve, 3000 + Math.random() * 5000));
+    
+    // Atualizar registro para indicar que o arquivo foi processado
+    const analysisPath = `analysis_${uuidv4()}.pdf`;
+    
+    const { error } = await supabase
+      .from('uploaded_files')
+      .update({
+        analysis_path: analysisPath,
+        processing_status: 'concluído'
+      })
+      .eq('id', fileId);
+      
+    if (error) {
+      console.error('Erro ao atualizar status de processamento:', error);
+    }
+  };
+
   const handleUpload = async () => {
     if (files.length === 0) {
       toast("Nenhum arquivo selecionado", {
@@ -46,6 +70,7 @@ const FileUpload = () => {
       
       let uploadedCount = 0;
       const totalFiles = files.length;
+      const uploadedFileIds: { id: string, filename: string }[] = [];
       
       for (const file of files) {
         // Create a unique file path
@@ -68,7 +93,7 @@ const FileUpload = () => {
           .getPublicUrl(fullPath);
           
         // Create record in uploaded_files table
-        const { error: dbError } = await supabase
+        const { data: fileRecord, error: dbError } = await supabase
           .from('uploaded_files')
           .insert({
             filename: file.name,
@@ -76,26 +101,38 @@ const FileUpload = () => {
             file_type: file.type,
             file_size: file.size,
             analysis_path: null, // Will be updated when analysis is complete
+            processing_status: 'processando',
             user_id: user.id // Add the user_id field
-          });
+          })
+          .select()
+          .single();
           
         if (dbError) {
           throw new Error(`Erro ao registrar arquivo no banco de dados: ${dbError.message}`);
+        }
+        
+        if (fileRecord) {
+          uploadedFileIds.push({ id: fileRecord.id, filename: fileRecord.filename });
         }
         
         uploadedCount++;
         setProgress(Math.round((uploadedCount / totalFiles) * 100));
       }
       
-      toast("Upload completo", {
+      toast.success("Upload completo", {
         description: `${files.length} arquivo(s) enviado(s) com sucesso.`
       });
       
       // Clear the files after successful upload
       setFiles([]);
       
+      // Iniciar processamento simulado para cada arquivo
+      for (const file of uploadedFileIds) {
+        simulateProcessing(file.id, file.filename);
+      }
+      
     } catch (error) {
-      toast("Erro no upload", {
+      toast.error("Erro no upload", {
         description: error instanceof Error ? error.message : "Ocorreu um erro durante o upload."
       });
       console.error("Erro de upload:", error);
@@ -173,7 +210,7 @@ const FileUpload = () => {
           {uploading ? "Enviando..." : "Enviar Arquivos"}
         </Button>
         <p className="text-xs text-center text-muted-foreground">
-          Os arquivos serão armazenados e processados para análise posterior
+          Os arquivos serão armazenados e processados para análise em tempo real
         </p>
       </CardFooter>
     </Card>

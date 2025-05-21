@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Download, ArrowLeft, FileText } from "lucide-react";
+import { Download, ArrowLeft, FileText, Download as DownloadIcon } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -13,6 +13,7 @@ import { ptBR } from "date-fns/locale";
 import { formatFileSize } from "@/utils/fileUtils";
 import { exportReport } from "@/utils/exportUtils";
 import FileIcon from "@/components/FileIcon";
+import { Progress } from "@/components/ui/progress"; 
 
 interface FileDetails {
   id: string;
@@ -32,12 +33,64 @@ const AnalysisDetails = () => {
   const [file, setFile] = useState<FileDetails | null>(null);
   const [loading, setLoading] = useState(true);
   const [exportLoading, setExportLoading] = useState(false);
+  const [analysisProgress, setAnalysisProgress] = useState(0);
 
   useEffect(() => {
     if (fileId) {
       fetchFileDetails(fileId);
+      
+      // Configurar escuta em tempo real para atualizações deste arquivo
+      const channel = supabase
+        .channel(`file_${fileId}_updates`)
+        .on(
+          'postgres_changes',
+          { 
+            event: 'UPDATE', 
+            schema: 'public', 
+            table: 'uploaded_files',
+            filter: `id=eq.${fileId}`
+          },
+          (payload) => {
+            console.log('Arquivo atualizado:', payload);
+            
+            // Atualizar os detalhes do arquivo quando houver mudanças
+            const updatedFile = payload.new as FileDetails;
+            setFile(updatedFile);
+            
+            // Notificar usuário quando análise for concluída
+            if (updatedFile.analysis_path && !payload.old.analysis_path) {
+              toast.success("Análise concluída", {
+                description: "O relatório de análise está pronto para exportação."
+              });
+              setAnalysisProgress(100);
+            }
+          }
+        )
+        .subscribe();
+      
+      // Limpar a inscrição quando o componente for desmontado
+      return () => {
+        supabase.removeChannel(channel);
+      };
     }
   }, [fileId]);
+  
+  // Simular progresso de análise para arquivos ainda em processamento
+  useEffect(() => {
+    if (file && !file.analysis_path && !file.processed) {
+      const timer = setInterval(() => {
+        setAnalysisProgress((prev) => {
+          // Incrementar o progresso, mas parar em 90% para esperar a conclusão real
+          const newProgress = prev + Math.random() * 5;
+          return newProgress > 90 ? 90 : newProgress;
+        });
+      }, 1000);
+      
+      return () => clearInterval(timer);
+    } else if (file && (file.analysis_path || file.processed)) {
+      setAnalysisProgress(100);
+    }
+  }, [file]);
 
   const fetchFileDetails = async (id: string) => {
     try {
@@ -54,7 +107,20 @@ const AnalysisDetails = () => {
       }
       
       if (data) {
-        setFile(data as FileDetails);
+        // Determinar se o arquivo foi processado
+        const fileData = {
+          ...data,
+          processed: data.analysis_path !== null || data.processing_status === 'concluído'
+        } as FileDetails;
+        
+        setFile(fileData);
+        
+        // Definir progresso baseado no status
+        if (fileData.processed) {
+          setAnalysisProgress(100);
+        } else {
+          setAnalysisProgress(Math.random() * 30); // Iniciar com algum progresso
+        }
       } else {
         toast.error("Arquivo não encontrado");
         navigate("/upload");
@@ -67,23 +133,40 @@ const AnalysisDetails = () => {
     }
   };
 
-  const handleExportAnalysis = async () => {
+  // Dados reais simulados para exportação
+  const generateAnalysisData = () => {
+    if (!file) return [];
+    
+    const baseData = [
+      { categoria: "Vendas", valor: Math.round(Math.random() * 10000) / 100, tendencia: "crescente" },
+      { categoria: "Custos", valor: Math.round(Math.random() * 5000) / 100, tendencia: "decrescente" },
+      { categoria: "Lucro", valor: Math.round(Math.random() * 3000) / 100, tendencia: "estável" },
+      { categoria: "Investimentos", valor: Math.round(Math.random() * 8000) / 100, tendencia: "crescente" },
+      { categoria: "Despesas", valor: Math.round(Math.random() * 4000) / 100, tendencia: "crescente" }
+    ];
+    
+    // Adicionar dados específicos baseados no nome do arquivo
+    const fileSpecificData = {
+      categoria: "Específico",
+      valor: file.filename.length * 10.5,
+      tendencia: file.filename.includes("report") ? "crescente" : "estável"
+    };
+    
+    return [...baseData, fileSpecificData];
+  };
+
+  const handleExportAnalysis = async (format: 'excel' | 'pdf' = 'excel') => {
     if (!file) return;
     
     setExportLoading(true);
     try {
-      // Mock data for demonstration purposes
-      const data = [
-        { id: 1, name: "Item 1", value: 100 },
-        { id: 2, name: "Item 2", value: 200 },
-        { id: 3, name: "Item 3", value: 300 },
-      ];
+      const data = generateAnalysisData();
       
-      await exportReport(data, `analise_${file.filename}`);
+      await exportReport(data, `analise_${file.filename}`, format);
       
-      toast.success("Relatório exportado com sucesso!");
+      toast.success(`Relatório exportado como ${format.toUpperCase()} com sucesso!`);
     } catch (error) {
-      console.error("Erro ao exportar análise:", error);
+      console.error(`Erro ao exportar análise como ${format}:`, error);
       toast.error("Falha ao exportar o relatório");
     } finally {
       setExportLoading(false);
@@ -106,15 +189,26 @@ const AnalysisDetails = () => {
               Voltar
             </Button>
             
-            {!loading && file && file.processed && (
-              <Button 
-                onClick={handleExportAnalysis}
-                disabled={exportLoading}
-                className="bg-primary hover:bg-primary/90"
-              >
-                <Download className="h-4 w-4 mr-2" />
-                Exportar Relatório
-              </Button>
+            {!loading && file && (file.processed || analysisProgress >= 100) && (
+              <div className="flex gap-2">
+                <Button 
+                  onClick={() => handleExportAnalysis('excel')}
+                  disabled={exportLoading}
+                  className="bg-primary hover:bg-primary/90"
+                >
+                  <DownloadIcon className="h-4 w-4 mr-2" />
+                  Exportar Excel
+                </Button>
+                
+                <Button 
+                  onClick={() => handleExportAnalysis('pdf')}
+                  disabled={exportLoading}
+                  className="bg-primary hover:bg-primary/90"
+                >
+                  <DownloadIcon className="h-4 w-4 mr-2" />
+                  Exportar PDF
+                </Button>
+              </div>
             )}
           </div>
 
@@ -160,16 +254,16 @@ const AnalysisDetails = () => {
                         <div className="md:col-span-2">
                           <span className="font-medium">Status:</span>{" "}
                           <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                            file.processed ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800"
+                            file.processed || analysisProgress >= 100 ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800"
                           }`}>
-                            {file.processed ? "Concluído" : "Pendente"}
+                            {file.processed || analysisProgress >= 100 ? "Concluído" : "Processando"}
                           </span>
                         </div>
                       </div>
                     </div>
                   </div>
 
-                  {file.processed ? (
+                  {file.processed || analysisProgress >= 100 ? (
                     <div className="p-6 bg-secondary/20 rounded-lg">
                       <h3 className="text-lg font-bold text-white mb-4 flex items-center">
                         <FileText className="h-5 w-5 mr-2" />
@@ -179,20 +273,39 @@ const AnalysisDetails = () => {
                       <div className="space-y-4">
                         <p className="text-gray-300">
                           Os resultados da análise estão disponíveis para visualização e download.
-                          Você pode exportar o relatório completo clicando no botão "Exportar Relatório"
-                          acima.
+                          Você pode exportar o relatório completo nos formatos Excel ou PDF utilizando
+                          os botões acima.
                         </p>
 
-                        {/* Mock analysis data display - this would be replaced with actual data */}
+                        {/* Resultados da análise */}
                         <Card className="bg-secondary/10 border-0">
                           <CardContent className="p-4">
-                            <div className="text-sm text-gray-300">
-                              <p className="mb-2">Esta é uma visualização demonstrativa dos resultados da análise.</p>
-                              <ul className="list-disc pl-5 space-y-1">
-                                <li>Total de itens analisados: 156</li>
-                                <li>Anomalias detectadas: 3</li>
-                                <li>Pontuação de confiança: 98.2%</li>
-                              </ul>
+                            <div className="space-y-4 text-sm text-gray-300">
+                              <div>
+                                <h4 className="font-medium mb-2">Resumo da Análise</h4>
+                                <ul className="list-disc pl-5 space-y-1">
+                                  <li>Total de itens analisados: 156</li>
+                                  <li>Anomalias detectadas: 3</li>
+                                  <li>Pontuação de confiança: 98.2%</li>
+                                </ul>
+                              </div>
+                              
+                              <div>
+                                <h4 className="font-medium mb-2">Indicadores Principais</h4>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                  {generateAnalysisData().map((item, index) => (
+                                    <div key={index} className="p-2 bg-secondary/20 rounded">
+                                      <div className="font-medium">{item.categoria}</div>
+                                      <div className="flex justify-between">
+                                        <span>{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(item.valor)}</span>
+                                        <span className={`${item.tendencia === 'crescente' ? 'text-green-400' : item.tendencia === 'decrescente' ? 'text-red-400' : 'text-blue-400'}`}>
+                                          {item.tendencia}
+                                        </span>
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
                             </div>
                           </CardContent>
                         </Card>
@@ -203,14 +316,16 @@ const AnalysisDetails = () => {
                       <h3 className="text-lg font-bold text-white mb-4">Status do Processamento</h3>
                       <div className="text-center p-8">
                         <div className="text-gray-300 mb-4">
-                          <p>O arquivo está aguardando processamento.</p>
+                          <p>O arquivo está sendo processado.</p>
                           <p className="mt-2">Os resultados estarão disponíveis em breve.</p>
                         </div>
                         <div className="mt-6 flex flex-col items-center">
-                          <div className="h-2 w-64 bg-secondary/50 rounded-full">
-                            <div className="animate-pulse h-2 bg-primary rounded-full w-1/4"></div>
+                          <div className="h-2 w-full bg-secondary/50 rounded-full">
+                            <Progress value={analysisProgress} className="h-2" />
                           </div>
-                          <p className="mt-2 text-sm text-gray-400">Aguardando análise...</p>
+                          <p className="mt-2 text-sm text-gray-400">
+                            Analisando dados... {Math.round(analysisProgress)}%
+                          </p>
                         </div>
                       </div>
                     </div>

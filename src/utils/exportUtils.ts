@@ -1,5 +1,7 @@
 
 import * as XLSX from 'xlsx';
+import { jsPDF } from 'jspdf';
+import 'jspdf-autotable';
 
 /**
  * Exporta dados para um arquivo Excel
@@ -36,14 +38,35 @@ export const exportToExcel = async (data: any[], fileName: string): Promise<void
 };
 
 /**
- * Exporta dados para PDF (usando jsPDF)
- * Esta função será implementada posteriormente com jsPDF
+ * Exporta dados para PDF usando jsPDF
+ * @param data Array de objetos para exportar
+ * @param fileName Nome do arquivo sem extensão
  */
 export const exportToPDF = async (data: any[], fileName: string): Promise<void> => {
-  // Implementação de exportação para PDF será adicionada posteriormente
+  const doc = new jsPDF();
   
-  // Por enquanto, usamos o Excel como fallback
-  return exportToExcel(data, fileName);
+  // Adicionar título
+  doc.setFontSize(18);
+  doc.text(fileName, 14, 22);
+  doc.setFontSize(11);
+  doc.text(`Gerado em ${new Date().toLocaleDateString('pt-BR')}`, 14, 30);
+  
+  // Preparar dados para tabela
+  const headers = Object.keys(data[0] || {});
+  const rows = data.map(item => headers.map(key => item[key]));
+  
+  // @ts-ignore - jspdf-autotable não tem tipagem correta
+  doc.autoTable({
+    head: [headers],
+    body: rows,
+    startY: 40,
+    styles: { fontSize: 10, cellPadding: 3 },
+    headStyles: { fillColor: [41, 128, 185], textColor: 255 },
+    alternateRowStyles: { fillColor: [240, 240, 240] }
+  });
+  
+  // Salvar o PDF
+  doc.save(`${fileName}.pdf`);
 };
 
 /**

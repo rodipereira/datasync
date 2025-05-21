@@ -24,6 +24,7 @@ interface UploadedFile {
   analysis_path: string | null;
   created_at: string;
   processed: boolean;
+  processing_status?: string;
 }
 
 const FileHistory = () => {
@@ -33,6 +34,52 @@ const FileHistory = () => {
 
   useEffect(() => {
     fetchFiles();
+    
+    // Inscrever-se em atualizações em tempo real
+    const channel = supabase
+      .channel('uploaded_files_changes')
+      .on(
+        'postgres_changes',
+        { 
+          event: '*', 
+          schema: 'public', 
+          table: 'uploaded_files' 
+        },
+        (payload) => {
+          console.log('Alteração em tempo real:', payload);
+          
+          if (payload.eventType === 'INSERT') {
+            // Adicionar novo arquivo à lista
+            const newFile = payload.new as UploadedFile;
+            setFiles(prev => [newFile, ...prev]);
+          } else if (payload.eventType === 'UPDATE') {
+            // Atualizar arquivo existente
+            const updatedFile = payload.new as UploadedFile;
+            setFiles(prev => 
+              prev.map(file => 
+                file.id === updatedFile.id ? { ...updatedFile } : file
+              )
+            );
+            
+            // Mostrar notificação quando um arquivo for processado
+            if (updatedFile.processed && !payload.old.processed) {
+              toast.success(`Arquivo "${updatedFile.filename}" foi processado`, {
+                description: "O relatório de análise está disponível para download."
+              });
+            }
+          } else if (payload.eventType === 'DELETE') {
+            // Remover arquivo da lista
+            const deletedFileId = payload.old.id;
+            setFiles(prev => prev.filter(file => file.id !== deletedFileId));
+          }
+        }
+      )
+      .subscribe();
+    
+    // Limpar inscrição quando componente for desmontado
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   const fetchFiles = async () => {
@@ -48,10 +95,10 @@ const FileHistory = () => {
         throw error;
       }
       
-      // Simulate some files being processed and others pending
-      const processedFiles = data?.map((file, index) => ({
+      // Mapear arquivos com status de processamento
+      const processedFiles = data?.map(file => ({
         ...file,
-        processed: index % 2 === 0 // Alternate between processed and pending for demonstration
+        processed: file.analysis_path !== null
       })) || [];
       
       setFiles(processedFiles);
