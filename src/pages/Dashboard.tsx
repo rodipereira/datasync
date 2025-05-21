@@ -1,4 +1,3 @@
-
 import { useNavigate } from "react-router-dom";
 import NavBar from "@/components/NavBar";
 import DashboardMetrics from "@/components/DashboardMetrics";
@@ -7,6 +6,7 @@ import FileHistory from "@/components/FileHistory";
 import EmployeeList from "@/components/EmployeeList";
 import EmployeeForm from "@/components/EmployeeForm";
 import EmployeeMetrics from "@/components/EmployeeMetrics";
+import StockAnalysis from "@/components/stock/StockAnalysis";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -87,36 +87,7 @@ const Dashboard = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <Tabs defaultValue="niveis">
-                  <TabsList className="mb-4 bg-secondary/50">
-                    <TabsTrigger
-                      value="niveis"
-                      className="data-[state=active]:bg-primary/80"
-                    >
-                      Níveis
-                    </TabsTrigger>
-                    <TabsTrigger
-                      value="categorias"
-                      className="data-[state=active]:bg-primary/80"
-                    >
-                      Categorias
-                    </TabsTrigger>
-                  </TabsList>
-                  <TabsContent value="niveis">
-                    <div className="h-[320px] flex items-center justify-center">
-                      <p className="text-muted-foreground text-center">
-                        Conecte seu backend para visualizar dados do estoque em tempo real
-                      </p>
-                    </div>
-                  </TabsContent>
-                  <TabsContent value="categorias">
-                    <div className="h-[320px] flex items-center justify-center">
-                      <p className="text-muted-foreground text-center">
-                        Conecte seu backend para visualizar categorias do estoque em tempo real
-                      </p>
-                    </div>
-                  </TabsContent>
-                </Tabs>
+                <StockAnalysis />
               </CardContent>
             </Card>
           </div>
