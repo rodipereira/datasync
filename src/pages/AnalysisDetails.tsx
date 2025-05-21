@@ -107,7 +107,7 @@ const AnalysisDetails = () => {
       }
       
       if (data) {
-        // Determinar se o arquivo foi processado
+        // Determine if the file was processed
         const fileData = {
           ...data,
           processed: data.analysis_path !== null || data.processing_status === 'concluído'
@@ -115,7 +115,7 @@ const AnalysisDetails = () => {
         
         setFile(fileData);
         
-        // Definir progresso baseado no status
+        // Define progresso baseado no status
         if (fileData.processed) {
           setAnalysisProgress(100);
         } else {

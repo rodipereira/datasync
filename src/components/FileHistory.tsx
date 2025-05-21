@@ -23,7 +23,7 @@ interface UploadedFile {
   file_size: number;
   analysis_path: string | null;
   created_at: string;
-  processed: boolean;
+  processed?: boolean;
   processing_status?: string;
 }
 
