@@ -7,6 +7,14 @@ import StockLevels from "./StockLevels";
 import StockCategories from "./StockCategories";
 import StockStateDisplay from "./StockStateDisplay";
 
+interface StockItem {
+  id: string;
+  product_name: string;
+  quantity: number;
+  minimum_level: number;
+  category: string;
+}
+
 interface StockAnalysisProps {
   className?: string;
 }
@@ -16,9 +24,10 @@ const StockAnalysis: React.FC<StockAnalysisProps> = ({ className }) => {
   const { data: stockData, isLoading, error } = useQuery({
     queryKey: ["stockData"],
     queryFn: async () => {
+      // Usamos supabase.from com type assertion para informar o TypeScript sobre o formato da tabela
       const { data, error } = await supabase
         .from("inventory")
-        .select("*");
+        .select("*") as { data: StockItem[] | null, error: Error | null };
       
       if (error) {
         throw new Error(`Erro ao buscar dados do estoque: ${error.message}`);
@@ -52,10 +61,10 @@ const StockAnalysis: React.FC<StockAnalysisProps> = ({ className }) => {
       {!isLoading && !isEmpty && (
         <>
           <TabsContent value="niveis">
-            <StockLevels stockData={stockData} />
+            <StockLevels stockData={stockData as StockItem[]} />
           </TabsContent>
           <TabsContent value="categorias">
-            <StockCategories stockData={stockData} />
+            <StockCategories stockData={stockData as StockItem[]} />
           </TabsContent>
         </>
       )}
