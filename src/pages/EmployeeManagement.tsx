@@ -1,5 +1,6 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import NavBar from "@/components/NavBar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -8,8 +9,23 @@ import EmployeeForm from "@/components/EmployeeForm";
 import EmployeeMetrics from "@/components/EmployeeMetrics";
 
 const EmployeeManagement = () => {
-  const [activeTab, setActiveTab] = useState("list");
-  const [selectedEmployee, setSelectedEmployee] = useState<string | null>(null);
+  const [searchParams] = useSearchParams();
+  const tabFromUrl = searchParams.get("tab");
+  const employeeIdFromUrl = searchParams.get("id");
+  
+  const [activeTab, setActiveTab] = useState(tabFromUrl || "list");
+  const [selectedEmployee, setSelectedEmployee] = useState<string | null>(employeeIdFromUrl);
+
+  // Update state when URL parameters change
+  useEffect(() => {
+    if (tabFromUrl) {
+      setActiveTab(tabFromUrl);
+    }
+    
+    if (employeeIdFromUrl) {
+      setSelectedEmployee(employeeIdFromUrl);
+    }
+  }, [tabFromUrl, employeeIdFromUrl]);
 
   const handleSelectEmployee = (id: string | null) => {
     setSelectedEmployee(id);

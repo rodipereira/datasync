@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -6,8 +5,9 @@ import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from "@
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { format } from "date-fns";
-import { Download, ChevronRight, Loader2, Trash2, Pencil } from "lucide-react";
+import { Download, ChevronRight, Loader2, Trash2 } from "lucide-react";
 import { exportToExcel } from "@/utils/exportUtils";
+import { useNavigate } from "react-router-dom";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -37,6 +37,7 @@ const EmployeeList = ({ onSelectEmployee }: EmployeeListProps) => {
   const [exporting, setExporting] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [employeeToDelete, setEmployeeToDelete] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchEmployees();
@@ -115,7 +116,21 @@ const EmployeeList = ({ onSelectEmployee }: EmployeeListProps) => {
       setEmployeeToDelete(null);
     }
   };
-  
+
+  const handleViewMetrics = (employeeId: string) => {
+    // Option 1: Use the provided callback
+    onSelectEmployee(employeeId);
+    
+    // Option 2: Use navigation to a dedicated route
+    if (window.location.pathname === '/dashboard') {
+      // In the dashboard, just change the active tab
+      onSelectEmployee(employeeId);
+    } else {
+      // On the employees page, navigate to the metrics tab with the ID
+      navigate(`/employees?tab=metrics&id=${employeeId}`);
+    }
+  };
+
   if (loading) {
     return (
       <Card className="w-full">
@@ -172,7 +187,7 @@ const EmployeeList = ({ onSelectEmployee }: EmployeeListProps) => {
                           variant="ghost" 
                           size="sm"
                           className="flex items-center gap-1" 
-                          onClick={() => onSelectEmployee(employee.id)}
+                          onClick={() => handleViewMetrics(employee.id)}
                         >
                           Ver Métricas
                           <ChevronRight className="h-4 w-4" />
