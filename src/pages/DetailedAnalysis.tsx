@@ -7,13 +7,19 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { AreaChart, Area, BarChart, Bar, PieChart, Pie, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell } from "recharts";
 
-const salesData = [
+const allSalesData = [
   { month: "Jan", vendas: 4000, clientes: 240, lucro: 2400 },
   { month: "Fev", vendas: 3000, clientes: 198, lucro: 1398 },
   { month: "Mar", vendas: 5000, clientes: 320, lucro: 3200 },
   { month: "Abr", vendas: 2780, clientes: 190, lucro: 2000 },
   { month: "Mai", vendas: 1890, clientes: 140, lucro: 1500 },
   { month: "Jun", vendas: 2390, clientes: 200, lucro: 2100 },
+  { month: "Jul", vendas: 3490, clientes: 210, lucro: 2300 },
+  { month: "Ago", vendas: 4000, clientes: 240, lucro: 2400 },
+  { month: "Set", vendas: 3000, clientes: 198, lucro: 1398 },
+  { month: "Out", vendas: 5000, clientes: 320, lucro: 3200 },
+  { month: "Nov", vendas: 2780, clientes: 190, lucro: 2000 },
+  { month: "Dez", vendas: 1890, clientes: 140, lucro: 1500 },
 ];
 
 const inventoryData = [
@@ -30,6 +36,43 @@ const DetailedAnalysis = () => {
   const navigate = useNavigate();
   const [activeCategory, setActiveCategory] = useState("vendas");
   const [timeRange, setTimeRange] = useState("mensal");
+
+  // Filter data based on the selected time range
+  const getFilteredData = () => {
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth(); // 0-11
+    const currentDay = currentDate.getDay(); // 0-6 (Sunday to Saturday)
+    
+    switch (timeRange) {
+      case "semanal":
+        // Last week data (simplification: just show the current month divided by 4)
+        return [allSalesData[currentMonth]].map(item => ({
+          ...item,
+          vendas: Math.round(item.vendas / 4),
+          clientes: Math.round(item.clientes / 4),
+          lucro: Math.round(item.lucro / 4)
+        }));
+      case "mensal":
+        // Last month data (just show the current month)
+        return [allSalesData[currentMonth]];
+      case "trimestral":
+        // Last 3 months data
+        const startMonth = currentMonth >= 2 ? currentMonth - 2 : (currentMonth + 12 - 2) % 12;
+        const quarterData = [];
+        
+        for (let i = 0; i < 3; i++) {
+          const monthIndex = (startMonth + i) % 12;
+          quarterData.push(allSalesData[monthIndex]);
+        }
+        return quarterData;
+      case "anual":
+      default:
+        // Full year data
+        return allSalesData;
+    }
+  };
+
+  const salesData = getFilteredData();
 
   return (
     <div className="min-h-screen bg-gray-50">

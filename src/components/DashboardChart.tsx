@@ -26,7 +26,8 @@ import {
   ChartLegendContent,
 } from "@/components/ui/chart";
 
-const data = [
+// Full year data
+const fullData = [
   { name: "Jan", vendas: 4000, lucro: 2400, estoque: 2400 },
   { name: "Fev", vendas: 3000, lucro: 1398, estoque: 2210 },
   { name: "Mar", vendas: 2000, lucro: 9800, estoque: 2290 },
@@ -59,6 +60,35 @@ const chartConfig = {
 
 const DashboardChart = () => {
   const [period, setPeriod] = useState("anual");
+  const [chartType, setChartType] = useState("line");
+
+  // Filter data based on the selected period
+  const getFilteredData = () => {
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth(); // 0-11
+    
+    switch (period) {
+      case "mensal":
+        // Last month data (just show the current month)
+        return [fullData[currentMonth]];
+      case "trimestral":
+        // Last 3 months data
+        const startMonth = currentMonth >= 2 ? currentMonth - 2 : (currentMonth + 12 - 2) % 12;
+        const quarterData = [];
+        
+        for (let i = 0; i < 3; i++) {
+          const monthIndex = (startMonth + i) % 12;
+          quarterData.push(fullData[monthIndex]);
+        }
+        return quarterData;
+      case "anual":
+      default:
+        // Full year data
+        return fullData;
+    }
+  };
+
+  const displayData = getFilteredData();
 
   return (
     <Card className="dashboard-chart">
@@ -72,7 +102,7 @@ const DashboardChart = () => {
           </div>
           <div>
             <Tabs 
-              defaultValue="anual" 
+              value={period} 
               className="w-[260px]" 
               onValueChange={setPeriod}
             >
@@ -102,7 +132,7 @@ const DashboardChart = () => {
       </CardHeader>
       <CardContent>
         <div className="h-[300px] mt-4">
-          <Tabs defaultValue="line">
+          <Tabs defaultValue="line" value={chartType} onValueChange={setChartType}>
             <TabsList className="mb-4 bg-secondary/50">
               <TabsTrigger 
                 value="line"
@@ -119,7 +149,7 @@ const DashboardChart = () => {
             </TabsList>
             <TabsContent value="line" className="h-[300px]">
               <ChartContainer config={chartConfig}>
-                <LineChart data={data}>
+                <LineChart data={displayData}>
                   <CartesianGrid 
                     strokeDasharray="3 3" 
                     stroke="rgba(255,255,255,0.1)" 
@@ -163,7 +193,7 @@ const DashboardChart = () => {
             </TabsContent>
             <TabsContent value="bar" className="h-[300px]">
               <ChartContainer config={chartConfig}>
-                <BarChart data={data}>
+                <BarChart data={displayData}>
                   <CartesianGrid 
                     strokeDasharray="3 3" 
                     stroke="rgba(255,255,255,0.1)"
