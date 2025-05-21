@@ -15,7 +15,7 @@ const StockStateDisplay: React.FC<StockStateDisplayProps> = ({
 }) => {
   if (loading) {
     return (
-      <div className="flex justify-center items-center py-12">
+      <div className="flex justify-center items-center py-12 text-white">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
@@ -24,7 +24,7 @@ const StockStateDisplay: React.FC<StockStateDisplayProps> = ({
   if (error) {
     return (
       <div className="text-center py-12">
-        <p className="text-red-500">
+        <p className="text-red-500 font-medium">
           Erro ao carregar dados do estoque. Tente novamente mais tarde.
         </p>
       </div>
@@ -34,7 +34,7 @@ const StockStateDisplay: React.FC<StockStateDisplayProps> = ({
   if (isEmpty) {
     return (
       <div className="text-center py-12">
-        <p className="text-gray-400">
+        <p className="text-white opacity-70 font-medium">
           Nenhum dado de estoque encontrado. Comece adicionando produtos ao seu inventário.
         </p>
       </div>

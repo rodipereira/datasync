@@ -1,3 +1,4 @@
+
 import { useNavigate } from "react-router-dom";
 import NavBar from "@/components/NavBar";
 import DashboardMetrics from "@/components/DashboardMetrics";
@@ -77,15 +78,15 @@ const Dashboard = () => {
           <div className="grid gap-6 md:grid-cols-2">
             <DashboardChart />
             
-            <Card className="dashboard-chart">
+            <Card className="dashboard-chart h-full">
               <CardHeader>
                 <CardTitle className="text-lg font-semibold text-white">Análise de Estoque</CardTitle>
                 <CardDescription className="text-gray-300">
                   Visão geral da situação atual do estoque
                 </CardDescription>
               </CardHeader>
-              <CardContent>
-                <StockAnalysis />
+              <CardContent className="h-[calc(100%-88px)]">
+                <StockAnalysis className="h-full" />
               </CardContent>
             </Card>
           </div>

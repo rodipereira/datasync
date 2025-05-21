@@ -39,8 +39,8 @@ const StockAnalysis: React.FC<StockAnalysisProps> = ({ className }) => {
   const isEmpty = !isLoading && (!stockData || stockData.length === 0);
   
   return (
-    <div className="w-full h-full text-white">
-      <Tabs defaultValue="niveis" className={`w-full h-full ${className}`}>
+    <div className="w-full h-full flex flex-col text-white">
+      <Tabs defaultValue="niveis" className={`w-full h-full flex-1 flex flex-col ${className}`}>
         <TabsList className="mb-4 w-full bg-secondary/50">
           <TabsTrigger
             value="niveis"
@@ -60,10 +60,10 @@ const StockAnalysis: React.FC<StockAnalysisProps> = ({ className }) => {
         
         {!isLoading && !isEmpty && (
           <>
-            <TabsContent value="niveis" className="text-white">
+            <TabsContent value="niveis" className="text-white flex-1">
               <StockLevels stockData={stockData as StockItem[]} />
             </TabsContent>
-            <TabsContent value="categorias" className="text-white">
+            <TabsContent value="categorias" className="text-white flex-1">
               <StockCategories stockData={stockData as StockItem[]} />
             </TabsContent>
           </>
