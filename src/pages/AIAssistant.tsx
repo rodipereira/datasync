@@ -3,13 +3,15 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Send, Loader2, Bot, Trash } from "lucide-react";
+import { Send, Loader2, Bot, Trash, AlertCircle } from "lucide-react";
 import NavBar from "@/components/NavBar";
 import { useAIAssistant } from "@/hooks/useAIAssistant";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
+import { toast } from "sonner";
 
 const AIAssistant = () => {
   const [prompt, setPrompt] = useState("");
-  const { messages, sendMessage, isLoading, clearMessages } = useAIAssistant();
+  const { messages, sendMessage, isLoading, clearMessages, error } = useAIAssistant();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -17,6 +19,11 @@ const AIAssistant = () => {
 
     await sendMessage(prompt);
     setPrompt("");
+  };
+
+  const handleClearAndTryAgain = () => {
+    clearMessages();
+    toast.info("Histórico limpo. Tentando nova sessão.");
   };
 
   return (
@@ -29,6 +36,28 @@ const AIAssistant = () => {
             Tire dúvidas e obtenha insights sobre seus dados e negócio
           </p>
         </div>
+
+        {error && error.includes("limite de uso") && (
+          <Alert variant="destructive" className="mb-6">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Limite de uso da API excedido</AlertTitle>
+            <AlertDescription>
+              <p className="mb-2">O limite de uso da API OpenAI foi excedido. Isso pode ocorrer porque:</p>
+              <ul className="list-disc pl-5 space-y-1">
+                <li>A chave da API atingiu seu limite de créditos gratuitos</li>
+                <li>A cota mensal foi excedida</li>
+                <li>Há algum problema com a faturamento da conta OpenAI</li>
+              </ul>
+              <Button 
+                variant="outline" 
+                className="mt-3" 
+                onClick={handleClearAndTryAgain}
+              >
+                Limpar histórico e tentar novamente
+              </Button>
+            </AlertDescription>
+          </Alert>
+        )}
 
         <Card className="mb-6">
           <CardHeader>
@@ -103,10 +132,13 @@ const AIAssistant = () => {
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
               placeholder="Digite sua pergunta aqui..."
-              disabled={isLoading}
+              disabled={isLoading || (error && error.includes("limite de uso"))}
               className="flex-1"
             />
-            <Button type="submit" disabled={isLoading || !prompt.trim()}>
+            <Button 
+              type="submit" 
+              disabled={isLoading || !prompt.trim() || (error && error.includes("limite de uso"))}
+            >
               {isLoading ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
               ) : (

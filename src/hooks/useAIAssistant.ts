@@ -11,12 +11,14 @@ type Message = {
 export const useAIAssistant = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
   const sendMessage = async (prompt: string) => {
     if (!prompt.trim()) return;
 
     try {
       setIsLoading(true);
+      setError(null);
       
       // Adiciona a mensagem do usuário ao histórico
       const userMessage: Message = { role: 'user', content: prompt };
@@ -43,12 +45,21 @@ export const useAIAssistant = () => {
         throw new Error(`Erro ao chamar o assistente: ${error.message}`);
       }
 
-      if (!data || !data.response) {
+      if (!data) {
         console.error('Resposta inválida da API:', data);
         throw new Error('Resposta inválida recebida do assistente');
       }
 
       console.log("Resposta recebida da edge function:", data);
+
+      // Verifica se há erro de cota excedida
+      if (data.status === 429) {
+        setError(data.response);
+        // Adiciona também como mensagem do assistente para ficar visível na conversa
+        const errorMessage: Message = { role: 'assistant', content: data.response };
+        setMessages([...updatedMessages, errorMessage]);
+        return;
+      }
 
       // Adiciona a resposta do assistente ao histórico
       const assistantMessage: Message = { 
@@ -57,8 +68,9 @@ export const useAIAssistant = () => {
       };
       setMessages([...updatedMessages, assistantMessage]);
 
-    } catch (error) {
+    } catch (error: any) {
       console.error('Erro ao enviar mensagem:', error);
+      setError(error.message || "Erro desconhecido ao se comunicar com o assistente");
       toast.error('Erro ao se comunicar com o assistente de IA');
       // Adiciona uma mensagem de erro ao histórico para feedback visual ao usuário
       const errorMessage: Message = { 
@@ -73,11 +85,13 @@ export const useAIAssistant = () => {
 
   const clearMessages = () => {
     setMessages([]);
+    setError(null);
   };
 
   return {
     messages,
     isLoading,
+    error,
     sendMessage,
     clearMessages
   };
