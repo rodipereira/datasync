@@ -46,16 +46,16 @@ const NavBar = () => {
             <Link to="/upload" className="text-gray-700 hover:text-primary px-3 py-2 rounded-md text-sm font-medium">
               Upload
             </Link>
+            <Link to="/employees" className="text-gray-700 hover:text-primary px-3 py-2 rounded-md text-sm font-medium flex items-center gap-2">
+              <Users className="h-4 w-4" />
+              Funcionários
+            </Link>
             <Link to="/inventory" className="text-gray-700 hover:text-primary px-3 py-2 rounded-md text-sm font-medium flex items-center gap-2">
               <Package className="h-4 w-4" />
               Inventário
             </Link>
             <Link to="/profile" className="text-gray-700 hover:text-primary px-3 py-2 rounded-md text-sm font-medium">
               Perfil
-            </Link>
-            <Link to="/employees" className="text-gray-700 hover:text-primary px-3 py-2 rounded-md text-sm font-medium flex items-center gap-2">
-              <Users className="h-4 w-4" />
-              Funcionários
             </Link>
             <Button variant="outline" size="sm" className="ml-4" onClick={handleLogout}>
               <LogOut className="h-4 w-4 mr-2" />
@@ -81,16 +81,16 @@ const NavBar = () => {
             <Link to="/upload" className="text-gray-700 hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium">
               Upload
             </Link>
+            <Link to="/employees" className="text-gray-700 hover:bg-gray-100 flex items-center gap-2 px-3 py-2 rounded-md text-base font-medium">
+              <Users className="h-4 w-4" />
+              Funcionários
+            </Link>
             <Link to="/inventory" className="text-gray-700 hover:bg-gray-100 flex items-center gap-2 px-3 py-2 rounded-md text-base font-medium">
               <Package className="h-4 w-4" />
               Inventário
             </Link>
             <Link to="/profile" className="text-gray-700 hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium">
               Perfil
-            </Link>
-            <Link to="/employees" className="text-gray-700 hover:bg-gray-100 flex items-center gap-2 px-3 py-2 rounded-md text-base font-medium">
-              <Users className="h-4 w-4" />
-              Funcionários
             </Link>
             <Button variant="outline" className="w-full mt-2" onClick={handleLogout}>
               <LogOut className="h-4 w-4 mr-2" />

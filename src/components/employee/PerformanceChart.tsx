@@ -41,7 +41,7 @@ const PerformanceChart = ({ metrics }: PerformanceChartProps) => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-lg">Evolução de Desempenho</CardTitle>
+        <CardTitle className="text-lg text-gray-800">Evolução de Desempenho</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="h-80">
@@ -56,15 +56,16 @@ const PerformanceChart = ({ metrics }: PerformanceChartProps) => {
               }}
             >
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis yAxisId="left" />
+              <XAxis dataKey="name" stroke="#333" />
+              <YAxis yAxisId="left" stroke="#333" />
               <YAxis
                 yAxisId="right"
                 orientation="right"
                 domain={[0, "dataMax + 1"]}
+                stroke="#333"
               />
-              <Tooltip />
-              <Legend />
+              <Tooltip contentStyle={{ backgroundColor: "#fff", color: "#333" }} />
+              <Legend wrapperStyle={{ color: "#333" }} />
               <Line
                 yAxisId="left"
                 type="monotone"

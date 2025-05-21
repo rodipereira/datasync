@@ -42,6 +42,17 @@ const fullData = [
   { name: "Dez", vendas: 1890, lucro: 4800, estoque: 2181 },
 ];
 
+// Daily data - sample for a week (simplified)
+const dailyData = [
+  { name: "Seg", vendas: 500, lucro: 300, estoque: 2400 },
+  { name: "Ter", vendas: 650, lucro: 420, estoque: 2350 },
+  { name: "Qua", vendas: 420, lucro: 280, estoque: 2300 },
+  { name: "Qui", vendas: 580, lucro: 350, estoque: 2280 },
+  { name: "Sex", vendas: 750, lucro: 480, estoque: 2220 },
+  { name: "Sáb", vendas: 850, lucro: 520, estoque: 2200 },
+  { name: "Dom", vendas: 300, lucro: 180, estoque: 2180 },
+];
+
 // Chart configuration for shadcn/ui chart components
 const chartConfig = {
   vendas: {
@@ -68,6 +79,9 @@ const DashboardChart = () => {
     const currentMonth = currentDate.getMonth(); // 0-11
     
     switch (period) {
+      case "diario":
+        // Daily data (show the week)
+        return dailyData;
       case "mensal":
         // Last month data (just show the current month)
         return [fullData[currentMonth]];
@@ -103,25 +117,31 @@ const DashboardChart = () => {
           <div>
             <Tabs 
               value={period} 
-              className="w-[260px]" 
+              className="w-[320px]" 
               onValueChange={setPeriod}
             >
               <TabsList className="bg-secondary/50">
                 <TabsTrigger 
+                  value="diario" 
+                  className="data-[state=active]:bg-primary/80 data-[state=active]:text-white"
+                >
+                  Diário
+                </TabsTrigger>
+                <TabsTrigger 
                   value="mensal" 
-                  className="data-[state=active]:bg-primary/80"
+                  className="data-[state=active]:bg-primary/80 data-[state=active]:text-white"
                 >
                   Mensal
                 </TabsTrigger>
                 <TabsTrigger 
                   value="trimestral"
-                  className="data-[state=active]:bg-primary/80"
+                  className="data-[state=active]:bg-primary/80 data-[state=active]:text-white"
                 >
                   Trimestral
                 </TabsTrigger>
                 <TabsTrigger 
                   value="anual"
-                  className="data-[state=active]:bg-primary/80"
+                  className="data-[state=active]:bg-primary/80 data-[state=active]:text-white"
                 >
                   Anual
                 </TabsTrigger>
@@ -136,13 +156,13 @@ const DashboardChart = () => {
             <TabsList className="mb-4 bg-secondary/50">
               <TabsTrigger 
                 value="line"
-                className="data-[state=active]:bg-primary/80"
+                className="data-[state=active]:bg-primary/80 data-[state=active]:text-white"
               >
                 Linha
               </TabsTrigger>
               <TabsTrigger 
                 value="bar"
-                className="data-[state=active]:bg-primary/80"  
+                className="data-[state=active]:bg-primary/80 data-[state=active]:text-white"  
               >
                 Barras
               </TabsTrigger>
