@@ -1,5 +1,5 @@
 
-import { TabsContent } from "@/components/ui/tabs";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { useChartData } from "@/hooks/useChartData";
 import { chartConfig } from "@/data/chartData";
 import { LineChartDisplay } from "@/components/charts/LineChartDisplay";
@@ -28,19 +28,21 @@ const DashboardChart = () => {
           onChartTypeChange={setChartType}
         />
         
-        <TabsContent value="line" className="h-[300px]">
-          <LineChartDisplay 
-            data={displayData} 
-            config={chartConfig} 
-          />
-        </TabsContent>
-        
-        <TabsContent value="bar" className="h-[300px]">
-          <BarChartDisplay 
-            data={displayData} 
-            config={chartConfig} 
-          />
-        </TabsContent>
+        <Tabs value={chartType}>
+          <TabsContent value="line" className="h-[300px]">
+            <LineChartDisplay 
+              data={displayData} 
+              config={chartConfig} 
+            />
+          </TabsContent>
+          
+          <TabsContent value="bar" className="h-[300px]">
+            <BarChartDisplay 
+              data={displayData} 
+              config={chartConfig} 
+            />
+          </TabsContent>
+        </Tabs>
       </div>
     </ChartContainer>
   );
