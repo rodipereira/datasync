@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { LogOut, Menu, X, Users } from "lucide-react";
+import { LogOut, Menu, X, Users, Box } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -46,6 +46,10 @@ const NavBar = () => {
             <Link to="/upload" className="text-gray-700 hover:text-primary px-3 py-2 rounded-md text-sm font-medium">
               Upload
             </Link>
+            <Link to="/inventory" className="flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-primary/10">
+              <Box className="h-4 w-4" />
+              Inventário
+            </Link>
             <Link to="/profile" className="text-gray-700 hover:text-primary px-3 py-2 rounded-md text-sm font-medium">
               Perfil
             </Link>
@@ -76,6 +80,10 @@ const NavBar = () => {
             </Link>
             <Link to="/upload" className="text-gray-700 hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium">
               Upload
+            </Link>
+            <Link to="/inventory" className="flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-primary/10">
+              <Box className="h-4 w-4" />
+              Inventário
             </Link>
             <Link to="/profile" className="text-gray-700 hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium">
               Perfil
