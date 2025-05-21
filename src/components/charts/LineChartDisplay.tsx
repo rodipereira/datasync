@@ -1,14 +1,9 @@
 
 import { ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend, ChartLegendContent } from "@/components/ui/chart";
 import { LineChart, Line, CartesianGrid, XAxis, YAxis } from "recharts";
-import { ChartDataPoint, ChartConfig } from "@/types/chartTypes";
+import { ChartDisplayProps } from "@/types/chartTypes";
 
-interface LineChartDisplayProps {
-  data: ChartDataPoint[];
-  config: ChartConfig;
-}
-
-export const LineChartDisplay = ({ data, config }: LineChartDisplayProps) => {
+export const LineChartDisplay = ({ data, config }: ChartDisplayProps) => {
   return (
     <ChartContainer config={config}>
       <LineChart data={data}>

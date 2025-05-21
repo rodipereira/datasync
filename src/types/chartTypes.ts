@@ -15,3 +15,8 @@ export type ChartConfig = {
     color: string;
   };
 };
+
+export interface ChartDisplayProps {
+  data: ChartDataPoint[];
+  config: ChartConfig;
+}

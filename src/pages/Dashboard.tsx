@@ -8,11 +8,12 @@ import EmployeeList from "@/components/EmployeeList";
 import EmployeeForm from "@/components/EmployeeForm";
 import EmployeeMetrics from "@/components/EmployeeMetrics";
 import StockAnalysis from "@/components/stock/StockAnalysis";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { ArrowUpRight, Bot, Upload } from "lucide-react";
 import { useState } from "react";
+import { ChartContainer } from "@/components/charts/ChartContainer";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -78,84 +79,70 @@ const Dashboard = () => {
           <div className="grid gap-6 md:grid-cols-2">
             <DashboardChart />
             
-            <Card className="dashboard-chart h-full">
-              <CardHeader>
-                <CardTitle className="text-lg font-semibold text-white">Análise de Estoque</CardTitle>
-                <CardDescription className="text-gray-300">
-                  Visão geral da situação atual do estoque
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="h-[calc(100%-88px)]">
+            <ChartContainer 
+              title="Análise de Estoque" 
+              description="Visão geral da situação atual do estoque"
+              className="h-full"
+            >
+              <div className="h-[calc(100%-88px)]">
                 <StockAnalysis className="h-full" />
-              </CardContent>
-            </Card>
+              </div>
+            </ChartContainer>
           </div>
           
-          {/* Adicionando o gerenciamento de funcionários ao Dashboard */}
-          <Card className="dashboard-chart">
-            <CardHeader>
-              <CardTitle className="text-lg font-semibold text-white">Gerenciamento de Funcionários</CardTitle>
-              <CardDescription className="text-gray-300">
-                Cadastre e gerencie a equipe
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Tabs value={activeEmployeeTab} onValueChange={setActiveEmployeeTab}>
-                <TabsList className="mb-4 bg-secondary/50">
-                  <TabsTrigger
-                    value="list"
-                    className="data-[state=active]:bg-primary/80"
-                  >
-                    Lista
-                  </TabsTrigger>
-                  <TabsTrigger
-                    value="add"
-                    className="data-[state=active]:bg-primary/80"
-                  >
-                    Adicionar
-                  </TabsTrigger>
-                  <TabsTrigger
-                    value="metrics"
-                    className="data-[state=active]:bg-primary/80"
-                    disabled={!selectedEmployeeId}
-                  >
-                    Métricas
-                  </TabsTrigger>
-                </TabsList>
-                <TabsContent value="list" className="pt-4">
-                  <EmployeeList onSelectEmployee={handleSelectEmployee} />
-                </TabsContent>
-                <TabsContent value="add" className="pt-4">
-                  <div className="max-w-md mx-auto">
-                    <EmployeeForm 
-                      onSaved={() => {
-                        setActiveEmployeeTab("list");
-                      }}
-                    />
-                  </div>
-                </TabsContent>
-                <TabsContent value="metrics" className="pt-4">
-                  {selectedEmployeeId && (
-                    <EmployeeMetrics employeeId={selectedEmployeeId} />
-                  )}
-                </TabsContent>
-              </Tabs>
-            </CardContent>
-          </Card>
+          {/* Gerenciamento de funcionários */}
+          <ChartContainer
+            title="Gerenciamento de Funcionários"
+            description="Cadastre e gerencie a equipe"
+          >
+            <Tabs value={activeEmployeeTab} onValueChange={setActiveEmployeeTab}>
+              <TabsList className="mb-4 bg-secondary/50">
+                <TabsTrigger
+                  value="list"
+                  className="data-[state=active]:bg-primary/80"
+                >
+                  Lista
+                </TabsTrigger>
+                <TabsTrigger
+                  value="add"
+                  className="data-[state=active]:bg-primary/80"
+                >
+                  Adicionar
+                </TabsTrigger>
+                <TabsTrigger
+                  value="metrics"
+                  className="data-[state=active]:bg-primary/80"
+                  disabled={!selectedEmployeeId}
+                >
+                  Métricas
+                </TabsTrigger>
+              </TabsList>
+              <TabsContent value="list" className="pt-4">
+                <EmployeeList onSelectEmployee={handleSelectEmployee} />
+              </TabsContent>
+              <TabsContent value="add" className="pt-4">
+                <div className="max-w-md mx-auto">
+                  <EmployeeForm 
+                    onSaved={() => {
+                      setActiveEmployeeTab("list");
+                    }}
+                  />
+                </div>
+              </TabsContent>
+              <TabsContent value="metrics" className="pt-4">
+                {selectedEmployeeId && (
+                  <EmployeeMetrics employeeId={selectedEmployeeId} />
+                )}
+              </TabsContent>
+            </Tabs>
+          </ChartContainer>
           
-          <Card className="dashboard-chart">
-            <CardHeader className="flex flex-row items-center justify-between">
-              <div>
-                <CardTitle className="text-lg font-semibold text-white">Histórico de Arquivos</CardTitle>
-                <CardDescription className="text-gray-300">
-                  Arquivos enviados e suas análises
-                </CardDescription>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <FileHistory />
-            </CardContent>
-          </Card>
+          <ChartContainer
+            title="Histórico de Arquivos"
+            description="Arquivos enviados e suas análises"
+          >
+            <FileHistory />
+          </ChartContainer>
         </div>
       </main>
     </div>

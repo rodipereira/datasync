@@ -1,14 +1,9 @@
 
 import { ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend, ChartLegendContent } from "@/components/ui/chart";
 import { BarChart, Bar, CartesianGrid, XAxis, YAxis } from "recharts";
-import { ChartDataPoint, ChartConfig } from "@/types/chartTypes";
+import { ChartDisplayProps } from "@/types/chartTypes";
 
-interface BarChartDisplayProps {
-  data: ChartDataPoint[];
-  config: ChartConfig;
-}
-
-export const BarChartDisplay = ({ data, config }: BarChartDisplayProps) => {
+export const BarChartDisplay = ({ data, config }: ChartDisplayProps) => {
   return (
     <ChartContainer config={config}>
       <BarChart data={data}>
