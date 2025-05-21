@@ -4,13 +4,18 @@ import NavBar from "@/components/NavBar";
 import DashboardMetrics from "@/components/DashboardMetrics";
 import DashboardChart from "@/components/DashboardChart";
 import FileHistory from "@/components/FileHistory";
+import EmployeeList from "@/components/EmployeeList";
+import EmployeeForm from "@/components/EmployeeForm";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { ArrowUpRight, Bot, Upload } from "lucide-react";
+import { useState } from "react";
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const [selectedEmployeeId, setSelectedEmployeeId] = useState<string | null>(null);
+  const [activeEmployeeTab, setActiveEmployeeTab] = useState("list");
 
   const handleDetailedAnalysis = () => {
     navigate("/detailed-analysis");
@@ -107,6 +112,46 @@ const Dashboard = () => {
               </CardContent>
             </Card>
           </div>
+          
+          {/* Adicionando o gerenciamento de funcionários ao Dashboard */}
+          <Card className="dashboard-chart">
+            <CardHeader>
+              <CardTitle className="text-lg font-semibold text-white">Gerenciamento de Funcionários</CardTitle>
+              <CardDescription className="text-gray-300">
+                Cadastre e gerencie a equipe
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Tabs value={activeEmployeeTab} onValueChange={setActiveEmployeeTab}>
+                <TabsList className="mb-4 bg-secondary/50">
+                  <TabsTrigger
+                    value="list"
+                    className="data-[state=active]:bg-primary/80"
+                  >
+                    Lista
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="add"
+                    className="data-[state=active]:bg-primary/80"
+                  >
+                    Adicionar
+                  </TabsTrigger>
+                </TabsList>
+                <TabsContent value="list" className="pt-4">
+                  <EmployeeList onSelectEmployee={setSelectedEmployeeId} />
+                </TabsContent>
+                <TabsContent value="add" className="pt-4">
+                  <div className="max-w-md mx-auto">
+                    <EmployeeForm 
+                      onSaved={() => {
+                        setActiveEmployeeTab("list");
+                      }}
+                    />
+                  </div>
+                </TabsContent>
+              </Tabs>
+            </CardContent>
+          </Card>
           
           <Card className="dashboard-chart">
             <CardHeader className="flex flex-row items-center justify-between">

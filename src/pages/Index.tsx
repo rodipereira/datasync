@@ -2,13 +2,9 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import EmployeeForm from "@/components/EmployeeForm";
-import EmployeeList from "@/components/EmployeeList";
-import { useState } from "react";
 
 const Index = () => {
   const navigate = useNavigate();
-  const [selectedEmployeeId, setSelectedEmployeeId] = useState<string | null>(null);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
@@ -37,15 +33,6 @@ const Index = () => {
             >
               Registrar
             </Button>
-          </div>
-        </div>
-        
-        {/* Seção de Funcionários adicionada à página inicial */}
-        <div className="mt-12 mb-8">
-          <h2 className="text-2xl font-bold text-center mb-8">Gerenciamento de Funcionários</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <EmployeeForm onSaved={() => setSelectedEmployeeId(null)} />
-            <EmployeeList onSelectEmployee={setSelectedEmployeeId} />
           </div>
         </div>
         
