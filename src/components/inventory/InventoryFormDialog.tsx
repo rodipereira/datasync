@@ -59,7 +59,15 @@ const InventoryFormDialog: React.FC<InventoryFormDialogProps> = ({ open, onClose
   }, [item, form]);
 
   const handleSubmit = (values: FormValues) => {
-    onSubmit(values);
+    // Garantindo que todos os campos estão presentes antes de enviar
+    const formData: Omit<InventoryItem, "id" | "created_at" | "updated_at"> = {
+      product_name: values.product_name,
+      quantity: values.quantity,
+      minimum_level: values.minimum_level,
+      category: values.category
+    };
+    
+    onSubmit(formData);
   };
 
   return (
