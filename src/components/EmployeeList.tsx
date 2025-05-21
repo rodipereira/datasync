@@ -101,37 +101,35 @@ const EmployeeList = ({ onSelectEmployee }: EmployeeListProps) => {
   };
 
   return (
-    <Card>
-      <CardContent className="p-6">
-        <div className="flex justify-between items-center mb-6">
-          <h3 className="text-lg font-medium">Lista de Funcionários</h3>
-          <Button 
-            variant="outline" 
-            size="sm"
-            disabled={employees.length === 0 || exporting}
-            onClick={handleExportData}
-            className="flex items-center gap-2"
-          >
-            {exporting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
-            Exportar Dados
-          </Button>
-        </div>
-        
-        <EmployeeTable
-          employees={employees}
-          loading={loading}
-          onViewMetrics={handleViewMetrics}
-          onDeleteClick={confirmDelete}
-        />
+    <div>
+      <div className="flex justify-between items-center mb-6">
+        <h3 className="text-lg font-medium">Lista de Funcionários</h3>
+        <Button 
+          variant="outline" 
+          size="sm"
+          disabled={employees.length === 0 || exporting}
+          onClick={handleExportData}
+          className="flex items-center gap-2"
+        >
+          {exporting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
+          Exportar Dados
+        </Button>
+      </div>
+      
+      <EmployeeTable
+        employees={employees}
+        loading={loading}
+        onViewMetrics={handleViewMetrics}
+        onDeleteClick={confirmDelete}
+      />
 
-        <EmployeeDeleteDialog
-          open={deleteDialogOpen}
-          onOpenChange={setDeleteDialogOpen}
-          employeeId={employeeToDelete}
-          onDeleteSuccess={fetchEmployees}
-        />
-      </CardContent>
-    </Card>
+      <EmployeeDeleteDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        employeeId={employeeToDelete}
+        onDeleteSuccess={fetchEmployees}
+      />
+    </div>
   );
 };
 

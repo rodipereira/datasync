@@ -55,21 +55,41 @@ const EmployeeManagement = () => {
           </TabsList>
           
           <TabsContent value="list">
-            <EmployeeList onSelectEmployee={handleSelectEmployee} />
+            <Card>
+              <CardContent className="p-6">
+                <EmployeeList onSelectEmployee={handleSelectEmployee} />
+              </CardContent>
+            </Card>
           </TabsContent>
           
           <TabsContent value="add">
-            <div className="max-w-2xl mx-auto">
-              <EmployeeForm 
-                onSaved={() => {
-                  setActiveTab("list");
-                }} 
-              />
-            </div>
+            <Card>
+              <CardHeader>
+                <CardTitle>Adicionar Novo Funcionário</CardTitle>
+                <CardDescription>Preencha os dados do funcionário para cadastrá-lo no sistema</CardDescription>
+              </CardHeader>
+              <CardContent className="pt-0">
+                <div className="max-w-2xl mx-auto">
+                  <EmployeeForm 
+                    onSaved={() => {
+                      setActiveTab("list");
+                    }} 
+                  />
+                </div>
+              </CardContent>
+            </Card>
           </TabsContent>
           
-          <TabsContent value="metrics">
-            {selectedEmployee && <EmployeeMetrics employeeId={selectedEmployee} />}
+          <TabsContent value="metrics" className="space-y-4">
+            {selectedEmployee ? (
+              <EmployeeMetrics employeeId={selectedEmployee} />
+            ) : (
+              <Card>
+                <CardContent className="p-6 text-center">
+                  <p>Selecione um funcionário para visualizar suas métricas de desempenho.</p>
+                </CardContent>
+              </Card>
+            )}
           </TabsContent>
         </Tabs>
       </div>
