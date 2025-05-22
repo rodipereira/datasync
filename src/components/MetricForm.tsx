@@ -133,7 +133,7 @@ const MetricForm = ({ employeeId, onSaved }: MetricFormProps) => {
               )}
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-auto p-0">
+          <PopoverContent className="w-auto p-0" align="start">
             <Calendar
               mode="single"
               selected={metric.month}
@@ -144,6 +144,8 @@ const MetricForm = ({ employeeId, onSaved }: MetricFormProps) => {
               fromYear={2020}
               toYear={2030}
               defaultMonth={metric.month}
+              locale={pt}
+              className="bg-background text-foreground"
             />
           </PopoverContent>
         </Popover>
