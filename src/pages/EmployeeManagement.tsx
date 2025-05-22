@@ -45,53 +45,80 @@ const EmployeeManagement = () => {
           </p>
         </div>
         
-        <Tabs defaultValue="list" value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="mb-8">
-            <TabsTrigger value="list">Funcionários</TabsTrigger>
-            <TabsTrigger value="add">Adicionar Funcionário</TabsTrigger>
-            <TabsTrigger value="metrics" disabled={!selectedEmployee}>
-              Métricas de Desempenho
-            </TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="list">
-            <Card>
-              <CardContent className="p-6">
-                <EmployeeList onSelectEmployee={handleSelectEmployee} />
-              </CardContent>
-            </Card>
-          </TabsContent>
-          
-          <TabsContent value="add">
-            <Card>
-              <CardHeader>
-                <CardTitle>Adicionar Novo Funcionário</CardTitle>
-                <CardDescription>Preencha os dados do funcionário para cadastrá-lo no sistema</CardDescription>
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          <div className="lg:col-span-1">
+            <Card className="bg-white shadow-sm">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-lg font-medium">Menu</CardTitle>
               </CardHeader>
               <CardContent className="pt-0">
-                <div className="max-w-2xl mx-auto">
-                  <EmployeeForm 
-                    onSaved={() => {
-                      setActiveTab("list");
-                    }} 
-                  />
-                </div>
+                <Tabs 
+                  defaultValue="list" 
+                  value={activeTab} 
+                  onValueChange={setActiveTab} 
+                  orientation="vertical" 
+                  className="w-full"
+                >
+                  <TabsList className="flex flex-col h-auto items-stretch bg-transparent space-y-1">
+                    <TabsTrigger 
+                      value="list" 
+                      className="justify-start text-left px-2 py-2 data-[state=active]:bg-blue-100 data-[state=active]:text-blue-800"
+                    >
+                      Funcionários
+                    </TabsTrigger>
+                    <TabsTrigger 
+                      value="add" 
+                      className="justify-start text-left px-2 py-2 data-[state=active]:bg-blue-100 data-[state=active]:text-blue-800"
+                    >
+                      Adicionar Funcionário
+                    </TabsTrigger>
+                    <TabsTrigger 
+                      value="metrics" 
+                      className="justify-start text-left px-2 py-2 data-[state=active]:bg-blue-100 data-[state=active]:text-blue-800"
+                      disabled={!selectedEmployee}
+                    >
+                      Métricas de Desempenho
+                    </TabsTrigger>
+                  </TabsList>
+                </Tabs>
               </CardContent>
             </Card>
-          </TabsContent>
+          </div>
           
-          <TabsContent value="metrics" className="space-y-4">
-            {selectedEmployee ? (
-              <EmployeeMetrics employeeId={selectedEmployee} />
-            ) : (
-              <Card>
-                <CardContent className="p-6 text-center">
-                  <p>Selecione um funcionário para visualizar suas métricas de desempenho.</p>
-                </CardContent>
-              </Card>
-            )}
-          </TabsContent>
-        </Tabs>
+          <div className="lg:col-span-3">
+            <Card className="bg-white shadow-sm">
+              <CardContent className="p-6">
+                <TabsContent value="list" className="mt-0">
+                  <EmployeeList onSelectEmployee={handleSelectEmployee} />
+                </TabsContent>
+                
+                <TabsContent value="add" className="mt-0">
+                  <CardHeader className="px-0 pt-0">
+                    <CardTitle>Adicionar Novo Funcionário</CardTitle>
+                    <CardDescription>Preencha os dados do funcionário para cadastrá-lo no sistema</CardDescription>
+                  </CardHeader>
+                  <div className="max-w-2xl">
+                    <EmployeeForm 
+                      onSaved={() => {
+                        setActiveTab("list");
+                      }} 
+                    />
+                  </div>
+                </TabsContent>
+                
+                <TabsContent value="metrics" className="mt-0">
+                  {selectedEmployee ? (
+                    <EmployeeMetrics employeeId={selectedEmployee} />
+                  ) : (
+                    <div className="text-center py-12">
+                      <p>Selecione um funcionário para visualizar suas métricas de desempenho.</p>
+                    </div>
+                  )}
+                </TabsContent>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
       </div>
     </div>
   );

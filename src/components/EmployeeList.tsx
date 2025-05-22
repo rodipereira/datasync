@@ -1,14 +1,14 @@
 
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Download, Loader2 } from "lucide-react";
+import { Download, Loader2, Search } from "lucide-react";
 import { exportToExcel } from "@/utils/exportUtils";
 import { useNavigate } from "react-router-dom";
 import EmployeeTable from "./employee/EmployeeTable";
 import EmployeeDeleteDialog from "./employee/EmployeeDeleteDialog";
+import { Input } from "./ui/input";
 
 interface Employee {
   id: string;
@@ -24,15 +24,31 @@ interface EmployeeListProps {
 
 const EmployeeList = ({ onSelectEmployee }: EmployeeListProps) => {
   const [employees, setEmployees] = useState<Employee[]>([]);
+  const [filteredEmployees, setFilteredEmployees] = useState<Employee[]>([]);
   const [loading, setLoading] = useState(true);
   const [exporting, setExporting] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [employeeToDelete, setEmployeeToDelete] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
     fetchEmployees();
   }, []);
+  
+  useEffect(() => {
+    if (searchTerm.trim() === '') {
+      setFilteredEmployees(employees);
+    } else {
+      const lowercaseSearch = searchTerm.toLowerCase();
+      const filtered = employees.filter(
+        employee => 
+          employee.name.toLowerCase().includes(lowercaseSearch) || 
+          employee.position.toLowerCase().includes(lowercaseSearch)
+      );
+      setFilteredEmployees(filtered);
+    }
+  }, [searchTerm, employees]);
 
   const fetchEmployees = async () => {
     try {
@@ -49,6 +65,7 @@ const EmployeeList = ({ onSelectEmployee }: EmployeeListProps) => {
       
       console.log("Funcionários carregados:", data);
       setEmployees(data || []);
+      setFilteredEmployees(data || []);
     } catch (error) {
       console.error('Erro ao buscar funcionários:', error);
       toast.error("Erro ao carregar lista de funcionários");
@@ -116,8 +133,20 @@ const EmployeeList = ({ onSelectEmployee }: EmployeeListProps) => {
         </Button>
       </div>
       
+      <div className="mb-4">
+        <div className="relative">
+          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Buscar por nome ou cargo..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-8"
+          />
+        </div>
+      </div>
+      
       <EmployeeTable
-        employees={employees}
+        employees={filteredEmployees}
         loading={loading}
         onViewMetrics={handleViewMetrics}
         onDeleteClick={confirmDelete}
