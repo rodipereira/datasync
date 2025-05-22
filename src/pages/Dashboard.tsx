@@ -1,5 +1,7 @@
 
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { DateRange } from "react-day-picker";
 import NavBar from "@/components/NavBar";
 import DashboardMetrics from "@/components/DashboardMetrics";
 import DashboardChart from "@/components/DashboardChart";
@@ -11,14 +13,23 @@ import StockAnalysis from "@/components/stock/StockAnalysis";
 import { CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { ArrowUpRight, Bot, Upload } from "lucide-react";
-import { useState } from "react";
+import { ArrowUpRight, Bot, Calendar, Upload } from "lucide-react";
 import { ChartContainer } from "@/components/charts/ChartContainer";
+import { PresetDateRangePicker } from "@/components/ui/date-range-picker";
+import { 
+  Sheet, 
+  SheetContent, 
+  SheetDescription, 
+  SheetHeader, 
+  SheetTitle, 
+  SheetTrigger 
+} from "@/components/ui/sheet";
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const [selectedEmployeeId, setSelectedEmployeeId] = useState<string | null>(null);
   const [activeEmployeeTab, setActiveEmployeeTab] = useState("list");
+  const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
 
   const handleDetailedAnalysis = () => {
     navigate("/detailed-analysis");
@@ -48,7 +59,30 @@ const Dashboard = () => {
             <h1 className="text-2xl font-bold accent-text">Dashboard</h1>
             <p className="text-gray-400">Visualize e analise os dados do seu negócio</p>
           </div>
-          <div className="mt-4 md:mt-0 flex space-x-2">
+          <div className="mt-4 md:mt-0 flex flex-wrap gap-2">
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="outline" className="flex items-center">
+                  <Calendar className="h-4 w-4 mr-2" />
+                  <span>Filtrar por Data</span>
+                </Button>
+              </SheetTrigger>
+              <SheetContent>
+                <SheetHeader>
+                  <SheetTitle>Filtro de Período</SheetTitle>
+                  <SheetDescription>
+                    Selecione um período para filtrar os dados do dashboard
+                  </SheetDescription>
+                </SheetHeader>
+                <div className="py-6">
+                  <PresetDateRangePicker
+                    dateRange={dateRange}
+                    onDateRangeChange={setDateRange}
+                  />
+                </div>
+              </SheetContent>
+            </Sheet>
+            
             <Button 
               onClick={handleUpload}
               className="bg-primary hover:bg-primary/90 flex items-center"
@@ -74,7 +108,7 @@ const Dashboard = () => {
         </div>
         
         <div className="space-y-6">
-          <DashboardMetrics />
+          <DashboardMetrics dateRange={dateRange} />
           
           <div className="grid gap-6 md:grid-cols-2">
             <DashboardChart />

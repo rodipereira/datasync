@@ -1,11 +1,15 @@
 
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { DateRange } from "react-day-picker";
 import NavBar from "@/components/NavBar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { AreaChart, Area, BarChart, Bar, PieChart, Pie, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell } from "recharts";
+import { ExportButton, ExportData } from "@/components/ui/export-button";
+import { DateRangePicker } from "@/components/ui/date-range-picker";
+import { CalendarRange } from "lucide-react";
 
 const allSalesData = [
   { month: "Jan", vendas: 4000, clientes: 240, lucro: 2400 },
@@ -36,12 +40,12 @@ const DetailedAnalysis = () => {
   const navigate = useNavigate();
   const [activeCategory, setActiveCategory] = useState("vendas");
   const [timeRange, setTimeRange] = useState("mensal");
+  const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
 
   // Filter data based on the selected time range
   const getFilteredData = () => {
     const currentDate = new Date();
     const currentMonth = currentDate.getMonth(); // 0-11
-    const currentDay = currentDate.getDay(); // 0-6 (Sunday to Saturday)
     
     switch (timeRange) {
       case "semanal":
@@ -73,30 +77,63 @@ const DetailedAnalysis = () => {
   };
 
   const salesData = getFilteredData();
+  
+  // Prepare export data
+  const getExportData = (): ExportData => {
+    const columns = ["month", activeCategory];
+    const title = `Relatório de ${activeCategory === "vendas" ? "Vendas" : 
+                    activeCategory === "lucro" ? "Lucro" : "Clientes"}`;
+                    
+    return {
+      columns,
+      data: salesData,
+      title
+    };
+  };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       <NavBar />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
           <div>
-            <h1 className="text-2xl font-bold">Análise Detalhada</h1>
-            <p className="text-gray-500">Métricas e tendências de desempenho</p>
+            <h1 className="text-2xl font-bold accent-text">Análise Detalhada</h1>
+            <p className="text-gray-400">Métricas e tendências de desempenho</p>
           </div>
-          <div className="mt-4 md:mt-0 space-x-2">
+          <div className="mt-4 md:mt-0 space-x-2 flex flex-wrap gap-2">
             <Button variant="outline" onClick={() => navigate("/dashboard")}>
               Voltar ao Dashboard
             </Button>
-            <Button variant="outline">Exportar PDF</Button>
+            <ExportButton exportData={getExportData()} />
           </div>
         </div>
 
+        <div className="grid gap-6 grid-cols-1 mb-6">
+          <Card className="overflow-hidden border border-primary/20 bg-gradient-to-br from-secondary/80 to-background">
+            <CardHeader>
+              <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center gap-4">
+                <div>
+                  <CardTitle className="text-xl">Filtrar por Período</CardTitle>
+                  <CardDescription>Selecione um intervalo de datas para análise</CardDescription>
+                </div>
+                <div className="w-full sm:w-auto">
+                  <DateRangePicker 
+                    dateRange={dateRange}
+                    onDateRangeChange={setDateRange}
+                    className="w-full sm:w-auto"
+                  />
+                </div>
+              </div>
+            </CardHeader>
+          </Card>
+        </div>
+
         <div className="grid gap-6 grid-cols-1">
-          <Card>
+          <Card className="shadow-lg border border-primary/20 bg-gradient-to-br from-secondary/80 to-background">
             <CardHeader className="pb-2">
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
                 <div>
-                  <CardTitle>Desempenho de Vendas</CardTitle>
+                  <CardTitle className="text-xl font-bold">Desempenho de Vendas</CardTitle>
                   <CardDescription>Análise de tendências e padrões</CardDescription>
                 </div>
                 <div className="mt-4 md:mt-0">
@@ -159,9 +196,9 @@ const DetailedAnalysis = () => {
           </Card>
           
           <div className="grid gap-6 md:grid-cols-2">
-            <Card>
+            <Card className="shadow-lg border border-primary/20 bg-gradient-to-br from-secondary/80 to-background">
               <CardHeader>
-                <CardTitle>Distribuição de Estoque</CardTitle>
+                <CardTitle className="text-lg font-bold">Distribuição de Estoque</CardTitle>
                 <CardDescription>Categorias de produtos</CardDescription>
               </CardHeader>
               <CardContent>
@@ -190,9 +227,9 @@ const DetailedAnalysis = () => {
               </CardContent>
             </Card>
           
-            <Card>
+            <Card className="shadow-lg border border-primary/20 bg-gradient-to-br from-secondary/80 to-background">
               <CardHeader>
-                <CardTitle>Comparação de Metas</CardTitle>
+                <CardTitle className="text-lg font-bold">Comparação de Metas</CardTitle>
                 <CardDescription>Performance vs. Projeções</CardDescription>
               </CardHeader>
               <CardContent>
