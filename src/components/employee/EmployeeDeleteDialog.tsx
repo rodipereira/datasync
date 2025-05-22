@@ -30,6 +30,17 @@ const EmployeeDeleteDialog = ({
     if (!employeeId) return;
     
     try {
+      // Primeiro, verificamos se há métricas relacionadas ao funcionário e as excluímos
+      const { error: metricsError } = await supabase
+        .from('employee_metrics')
+        .delete()
+        .eq('employee_id', employeeId);
+      
+      if (metricsError) {
+        console.error("Erro ao deletar métricas do funcionário:", metricsError);
+      }
+      
+      // Em seguida, excluímos o funcionário
       const { error } = await supabase
         .from('employees')
         .delete()
