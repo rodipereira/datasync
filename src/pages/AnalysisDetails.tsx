@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -10,7 +11,7 @@ import { Separator } from "@/components/ui/separator";
 import { Download, FileText, Loader2 } from "lucide-react";
 import NavBar from "@/components/NavBar";
 
-// Adicione esta definição de tipo no início do arquivo para incluir a propriedade 'processing_status'
+// Define the FileDetails interface with the processing_status property
 interface FileDetails {
   id: string;
   filename: string;
@@ -18,7 +19,7 @@ interface FileDetails {
   file_type: string;
   file_size: number;
   created_at: string;
-  analysis_path: string;
+  analysis_path: string | null;
   user_id: string;
   processing_status?: string;
 }
@@ -40,19 +41,20 @@ const AnalysisDetails = () => {
     try {
       setLoading(true);
       
-      // Fetch file details
+      // Fetch file details - using uploaded_files table instead of files
       const { data: fileData, error: fileError } = await supabase
-        .from('files')
+        .from('uploaded_files')
         .select('*')
         .eq('id', fileId)
         .single();
       
       if (fileError) throw fileError;
       
-      setFileDetails(fileData);
+      // Explicitly type the fileData as FileDetails to satisfy TypeScript
+      setFileDetails(fileData as FileDetails);
       
       // Fetch analysis data if available
-      if (fileData.analysis_path) {
+      if (fileData?.analysis_path) {
         const { data: analysisData, error: analysisError } = await supabase
           .storage
           .from('analyses')
@@ -138,7 +140,7 @@ const AnalysisDetails = () => {
       <NavBar />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
-          <h1 className="text-2xl font-bold">{fileDetails.filename}</h1>
+          <h1 className="text-2xl font-bold">{fileDetails?.filename}</h1>
           <p className="text-muted-foreground">
             Detalhes e análise do arquivo
           </p>
@@ -154,25 +156,25 @@ const AnalysisDetails = () => {
               <CardContent className="space-y-4">
                 <div className="space-y-1">
                   <p className="text-sm font-medium leading-none">Nome do arquivo</p>
-                  <p className="text-sm text-muted-foreground">{fileDetails.filename}</p>
+                  <p className="text-sm text-muted-foreground">{fileDetails?.filename}</p>
                 </div>
                 
                 <div className="space-y-1">
                   <p className="text-sm font-medium leading-none">Tipo</p>
-                  <p className="text-sm text-muted-foreground">{fileDetails.file_type}</p>
+                  <p className="text-sm text-muted-foreground">{fileDetails?.file_type}</p>
                 </div>
                 
                 <div className="space-y-1">
                   <p className="text-sm font-medium leading-none">Tamanho</p>
                   <p className="text-sm text-muted-foreground">
-                    {(fileDetails.file_size / 1024).toFixed(2)} KB
+                    {fileDetails && (fileDetails.file_size / 1024).toFixed(2)} KB
                   </p>
                 </div>
                 
                 <div className="space-y-1">
                   <p className="text-sm font-medium leading-none">Data de upload</p>
                   <p className="text-sm text-muted-foreground">
-                    {format(new Date(fileDetails.created_at), 'dd/MM/yyyy HH:mm')}
+                    {fileDetails && format(new Date(fileDetails.created_at), 'dd/MM/yyyy HH:mm')}
                   </p>
                 </div>
                 
