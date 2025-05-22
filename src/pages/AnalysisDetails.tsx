@@ -108,11 +108,12 @@ const AnalysisDetails = () => {
       }
       
       if (data) {
-        // Determine if the file was processed
-        const fileData = {
+        // Determine if the file was processed and add additional properties
+        const fileData: FileDetails = {
           ...data,
+          processing_status: data.processing_status || 'processando',
           processed: data.analysis_path !== null || data.processing_status === 'concluído'
-        } as FileDetails;
+        };
         
         setFile(fileData);
         

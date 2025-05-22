@@ -22,6 +22,7 @@ type FileHistoryRowProps = {
     processed?: boolean;
     analysis_path?: string | null;
     processing_status?: string;
+    user_id?: string;
   };
   onViewDetails: (fileId: string) => void;
 };
