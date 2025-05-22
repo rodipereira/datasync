@@ -4,6 +4,7 @@ import { format } from "date-fns";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ChevronRight, Trash2, User } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface EmployeeCardProps {
   employee: {
@@ -11,6 +12,7 @@ interface EmployeeCardProps {
     name: string;
     position: string;
     hire_date: string;
+    avatar_url?: string | null;
   };
   onViewMetrics: (id: string) => void;
   onDeleteClick: (id: string) => void;
@@ -25,9 +27,12 @@ const EmployeeCard = ({
     <Card className="bg-secondary/30 shadow-sm border border-primary/20 h-full flex flex-col justify-between transition-all hover:shadow-md hover:border-primary/40">
       <CardContent className="pt-6">
         <div className="flex justify-center mb-4">
-          <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center">
-            <User className="h-6 w-6 text-primary" />
-          </div>
+          <Avatar className="h-16 w-16">
+            <AvatarImage alt={employee.name} src={employee.avatar_url || ""} />
+            <AvatarFallback className="bg-primary/20 text-primary">
+              <User className="h-6 w-6" />
+            </AvatarFallback>
+          </Avatar>
         </div>
         <h3 className="font-medium text-foreground text-center mb-2">{employee.name}</h3>
         <div className="space-y-2 text-sm text-center">

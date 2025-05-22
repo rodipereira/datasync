@@ -1,10 +1,10 @@
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Camera, User } from "lucide-react";
 import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -15,6 +15,8 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { v4 as uuidv4 } from "uuid";
 
 interface EmployeeFormProps {
   onSaved?: () => void;
@@ -22,11 +24,14 @@ interface EmployeeFormProps {
 
 const EmployeeForm = ({ onSaved }: EmployeeFormProps) => {
   const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [employee, setEmployee] = useState({
     name: "",
     position: "",
     hire_date: new Date(),
+    avatar_url: "",
   });
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -36,6 +41,65 @@ const EmployeeForm = ({ onSaved }: EmployeeFormProps) => {
   const handleDateSelect = (date: Date | undefined) => {
     if (date) {
       setEmployee((prev) => ({ ...prev, hire_date: date }));
+    }
+  };
+
+  const handleAvatarClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    try {
+      const file = e.target.files?.[0];
+      if (!file) return;
+
+      // Validar tipo de arquivo
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/webp'];
+      if (!allowedTypes.includes(file.type)) {
+        toast.error("Tipo de arquivo não suportado. Use JPG, PNG, GIF ou WebP.");
+        return;
+      }
+
+      // Validar tamanho (max 2MB)
+      if (file.size > 2 * 1024 * 1024) {
+        toast.error("Arquivo muito grande. Tamanho máximo: 2MB.");
+        return;
+      }
+
+      setUploading(true);
+
+      // Obter o usuário atual
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) throw new Error("Usuário não autenticado");
+
+      // Criar caminho único para a imagem
+      const fileExt = file.name.split('.').pop();
+      const filePath = `employees/${uuidv4()}.${fileExt}`;
+
+      // Fazer upload da imagem para o bucket
+      const { error: uploadError } = await supabase.storage
+        .from('profile_images')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      // Obter a URL pública da imagem
+      const { data: publicUrlData } = supabase.storage
+        .from('profile_images')
+        .getPublicUrl(filePath);
+
+      const avatarUrl = publicUrlData.publicUrl;
+      setEmployee(prev => ({ ...prev, avatar_url: avatarUrl }));
+
+      toast.success("Foto adicionada com sucesso!");
+    } catch (error) {
+      console.error("Erro ao fazer upload da foto:", error);
+      toast.error("Erro ao fazer upload da foto");
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -64,7 +128,8 @@ const EmployeeForm = ({ onSaved }: EmployeeFormProps) => {
           name: employee.name,
           position: employee.position,
           hire_date: format(employee.hire_date, 'yyyy-MM-dd'),
-          user_id: user.id
+          user_id: user.id,
+          avatar_url: employee.avatar_url || null
         }
       ]);
       
@@ -76,7 +141,8 @@ const EmployeeForm = ({ onSaved }: EmployeeFormProps) => {
       setEmployee({
         name: "",
         position: "",
-        hire_date: new Date()
+        hire_date: new Date(),
+        avatar_url: ""
       });
       
       // Callback
@@ -99,6 +165,38 @@ const EmployeeForm = ({ onSaved }: EmployeeFormProps) => {
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="flex flex-col items-center mb-6">
+            <Avatar 
+              className="h-24 w-24 cursor-pointer mb-4" 
+              onClick={handleAvatarClick}
+            >
+              <AvatarImage alt="Foto do funcionário" src={employee.avatar_url || ""} />
+              <AvatarFallback className="bg-primary text-primary-foreground">
+                <User className="h-12 w-12" />
+              </AvatarFallback>
+            </Avatar>
+            <input 
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFileChange}
+              accept="image/*"
+              className="hidden"
+            />
+            <Button 
+              type="button"
+              variant="outline" 
+              size="sm" 
+              onClick={handleAvatarClick}
+              disabled={uploading}
+              className="flex items-center gap-2"
+            >
+              {uploading ? "Enviando..." : <>
+                <Camera className="h-4 w-4" />
+                Adicionar foto
+              </>}
+            </Button>
+          </div>
+          
           <div className="space-y-2">
             <Label htmlFor="name">Nome completo*</Label>
             <Input

@@ -18,6 +18,7 @@ interface Employee {
   position: string;
   hire_date: string;
   created_at: string;
+  avatar_url?: string | null;
 }
 
 interface EmployeeListProps {
@@ -58,7 +59,7 @@ const EmployeeList = ({ onSelectEmployee }: EmployeeListProps) => {
       
       const { data, error } = await supabase
         .from('employees')
-        .select('*')
+        .select('id, name, position, hire_date, created_at, avatar_url')
         .order('name', { ascending: true });
         
       if (error) {
