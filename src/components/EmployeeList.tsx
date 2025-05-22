@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import EmployeeTable from "./employee/EmployeeTable";
 import EmployeeDeleteDialog from "./employee/EmployeeDeleteDialog";
 import { Input } from "./ui/input";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 
 interface Employee {
   id: string;
@@ -118,39 +119,46 @@ const EmployeeList = ({ onSelectEmployee }: EmployeeListProps) => {
   };
 
   return (
-    <div>
-      <div className="flex justify-between items-center mb-6">
-        <h3 className="text-lg font-medium">Lista de Funcionários</h3>
-        <Button 
-          variant="outline" 
-          size="sm"
-          disabled={employees.length === 0 || exporting}
-          onClick={handleExportData}
-          className="flex items-center gap-2"
-        >
-          {exporting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
-          Exportar Dados
-        </Button>
-      </div>
-      
-      <div className="mb-4">
-        <div className="relative">
-          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Buscar por nome ou cargo..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-8"
-          />
-        </div>
-      </div>
-      
-      <EmployeeTable
-        employees={filteredEmployees}
-        loading={loading}
-        onViewMetrics={handleViewMetrics}
-        onDeleteClick={confirmDelete}
-      />
+    <div className="space-y-6">
+      <Card className="border border-gray-200 bg-white">
+        <CardHeader className="flex flex-row items-center justify-between pb-2 pt-6">
+          <CardTitle className="text-xl text-gray-800">Lista de Funcionários</CardTitle>
+          <Button 
+            variant="outline" 
+            size="sm"
+            disabled={employees.length === 0 || exporting}
+            onClick={handleExportData}
+            className="flex items-center gap-2 bg-white hover:bg-gray-50 text-gray-700 border-gray-200"
+          >
+            {exporting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
+            Exportar Dados
+          </Button>
+        </CardHeader>
+        <CardContent>
+          <div className="mb-4">
+            <div className="relative">
+              <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-500" />
+              <Input
+                placeholder="Buscar por nome ou cargo..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-8 border-gray-200 focus:border-gray-300 focus:ring focus:ring-gray-200 focus:ring-opacity-50"
+              />
+            </div>
+          </div>
+          
+          <Card className="border border-gray-100 shadow-sm">
+            <CardContent className="p-0">
+              <EmployeeTable
+                employees={filteredEmployees}
+                loading={loading}
+                onViewMetrics={handleViewMetrics}
+                onDeleteClick={confirmDelete}
+              />
+            </CardContent>
+          </Card>
+        </CardContent>
+      </Card>
 
       <EmployeeDeleteDialog
         open={deleteDialogOpen}
