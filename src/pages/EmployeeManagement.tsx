@@ -88,33 +88,35 @@ const EmployeeManagement = () => {
           <div className="lg:col-span-3">
             <Card className="bg-white shadow-sm">
               <CardContent className="p-6">
-                <TabsContent value="list" className="mt-0">
-                  <EmployeeList onSelectEmployee={handleSelectEmployee} />
-                </TabsContent>
-                
-                <TabsContent value="add" className="mt-0">
-                  <CardHeader className="px-0 pt-0">
-                    <CardTitle>Adicionar Novo Funcionário</CardTitle>
-                    <CardDescription>Preencha os dados do funcionário para cadastrá-lo no sistema</CardDescription>
-                  </CardHeader>
-                  <div className="max-w-2xl">
-                    <EmployeeForm 
-                      onSaved={() => {
-                        setActiveTab("list");
-                      }} 
-                    />
-                  </div>
-                </TabsContent>
-                
-                <TabsContent value="metrics" className="mt-0">
-                  {selectedEmployee ? (
-                    <EmployeeMetrics employeeId={selectedEmployee} />
-                  ) : (
-                    <div className="text-center py-12">
-                      <p>Selecione um funcionário para visualizar suas métricas de desempenho.</p>
+                <Tabs value={activeTab} onValueChange={setActiveTab}>
+                  <TabsContent value="list" className="mt-0">
+                    <EmployeeList onSelectEmployee={handleSelectEmployee} />
+                  </TabsContent>
+                  
+                  <TabsContent value="add" className="mt-0">
+                    <CardHeader className="px-0 pt-0">
+                      <CardTitle>Adicionar Novo Funcionário</CardTitle>
+                      <CardDescription>Preencha os dados do funcionário para cadastrá-lo no sistema</CardDescription>
+                    </CardHeader>
+                    <div className="max-w-2xl">
+                      <EmployeeForm 
+                        onSaved={() => {
+                          setActiveTab("list");
+                        }} 
+                      />
                     </div>
-                  )}
-                </TabsContent>
+                  </TabsContent>
+                  
+                  <TabsContent value="metrics" className="mt-0">
+                    {selectedEmployee ? (
+                      <EmployeeMetrics employeeId={selectedEmployee} />
+                    ) : (
+                      <div className="text-center py-12">
+                        <p>Selecione um funcionário para visualizar suas métricas de desempenho.</p>
+                      </div>
+                    )}
+                  </TabsContent>
+                </Tabs>
               </CardContent>
             </Card>
           </div>
