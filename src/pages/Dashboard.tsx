@@ -24,13 +24,6 @@ import {
   SheetTrigger 
 } from "@/components/ui/sheet";
 
-// Define a type for the DashboardMetrics component props
-declare module "@/components/DashboardMetrics" {
-  interface DashboardMetricsProps {
-    dateRange?: DateRange;
-  }
-}
-
 const Dashboard = () => {
   const navigate = useNavigate();
   const [selectedEmployeeId, setSelectedEmployeeId] = useState<string | null>(null);

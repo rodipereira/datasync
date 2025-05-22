@@ -5,6 +5,7 @@ import { ArrowDownIcon, ArrowUpIcon } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { formatCurrency } from "@/utils/formatUtils";
 import { toast } from "sonner";
+import { DateRange } from "react-day-picker";
 
 interface MetricData {
   title: string;
@@ -14,7 +15,11 @@ interface MetricData {
   description: string;
 }
 
-const DashboardMetrics = () => {
+interface DashboardMetricsProps {
+  dateRange?: DateRange;
+}
+
+const DashboardMetrics = ({ dateRange }: DashboardMetricsProps) => {
   const [metrics, setMetrics] = useState<MetricData[]>([
     {
       title: "Vendas Totais",
@@ -51,11 +56,19 @@ const DashboardMetrics = () => {
     const fetchMetrics = async () => {
       try {
         // Buscar os dois meses mais recentes para comparação
-        const { data, error } = await supabase
+        let query = supabase
           .from('dashboard_metrics')
           .select('*')
           .order('period_end', { ascending: false })
           .limit(2);
+          
+        // Adicionar filtro por data se dateRange estiver definido
+        if (dateRange?.from && dateRange?.to) {
+          query = query.gte('period_end', dateRange.from.toISOString().split('T')[0])
+            .lte('period_end', dateRange.to.toISOString().split('T')[0]);
+        }
+        
+        const { data, error } = await query;
 
         if (error) throw error;
 
@@ -112,7 +125,7 @@ const DashboardMetrics = () => {
     };
 
     fetchMetrics();
-  }, []);
+  }, [dateRange]);
 
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
