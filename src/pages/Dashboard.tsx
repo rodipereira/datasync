@@ -10,7 +10,6 @@ import EmployeeList from "@/components/EmployeeList";
 import EmployeeForm from "@/components/EmployeeForm";
 import EmployeeMetrics from "@/components/EmployeeMetrics";
 import StockAnalysis from "@/components/stock/StockAnalysis";
-import { CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { ArrowUpRight, Bot, Calendar, Upload } from "lucide-react";
@@ -24,6 +23,13 @@ import {
   SheetTitle, 
   SheetTrigger 
 } from "@/components/ui/sheet";
+
+// Define a type for the DashboardMetrics component props
+declare module "@/components/DashboardMetrics" {
+  interface DashboardMetricsProps {
+    dateRange?: DateRange;
+  }
+}
 
 const Dashboard = () => {
   const navigate = useNavigate();
