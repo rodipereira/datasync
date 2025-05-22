@@ -3,10 +3,10 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Download, Loader2, Search } from "lucide-react";
+import { Download, Loader2, Search, PlusCircle } from "lucide-react";
 import { exportToExcel } from "@/utils/exportUtils";
 import { useNavigate } from "react-router-dom";
-import EmployeeTable from "./employee/EmployeeTable";
+import EmployeeCard from "./employee/EmployeeCard";
 import EmployeeDeleteDialog from "./employee/EmployeeDeleteDialog";
 import { Input } from "./ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
@@ -124,19 +124,30 @@ const EmployeeList = ({ onSelectEmployee }: EmployeeListProps) => {
       <Card className="border border-primary/20 bg-secondary/30">
         <CardHeader className="flex flex-row items-center justify-between pb-2 pt-6">
           <CardTitle className="text-xl text-foreground">Lista de Funcionários</CardTitle>
-          <Button 
-            variant="outline" 
-            size="sm"
-            disabled={employees.length === 0 || exporting}
-            onClick={handleExportData}
-            className="flex items-center gap-2 bg-secondary/50 hover:bg-primary/80 hover:text-primary-foreground text-foreground border-primary/20"
-          >
-            {exporting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
-            Exportar Dados
-          </Button>
+          <div className="flex gap-2">
+            <Button 
+              variant="outline" 
+              size="sm"
+              disabled={employees.length === 0 || exporting}
+              onClick={handleExportData}
+              className="flex items-center gap-2 bg-secondary/50 hover:bg-primary/80 hover:text-primary-foreground text-foreground border-primary/20"
+            >
+              {exporting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
+              Exportar
+            </Button>
+            <Button
+              variant="default"
+              size="sm"
+              onClick={() => navigate('/employees?tab=add')}
+              className="flex items-center gap-2"
+            >
+              <PlusCircle className="h-4 w-4" />
+              Adicionar
+            </Button>
+          </div>
         </CardHeader>
         <CardContent>
-          <div className="mb-4">
+          <div className="mb-6">
             <div className="relative">
               <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
@@ -148,16 +159,26 @@ const EmployeeList = ({ onSelectEmployee }: EmployeeListProps) => {
             </div>
           </div>
           
-          <Card className="border border-primary/10 bg-secondary/50">
-            <CardContent className="p-0">
-              <EmployeeTable
-                employees={filteredEmployees}
-                loading={loading}
-                onViewMetrics={handleViewMetrics}
-                onDeleteClick={confirmDelete}
-              />
-            </CardContent>
-          </Card>
+          {loading ? (
+            <div className="flex justify-center items-center py-12">
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            </div>
+          ) : filteredEmployees.length === 0 ? (
+            <div className="text-center py-12 bg-secondary/50 rounded-lg border border-primary/10">
+              <p className="text-muted-foreground">Nenhum funcionário cadastrado</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+              {filteredEmployees.map((employee) => (
+                <EmployeeCard
+                  key={employee.id}
+                  employee={employee}
+                  onViewMetrics={handleViewMetrics}
+                  onDeleteClick={confirmDelete}
+                />
+              ))}
+            </div>
+          )}
         </CardContent>
       </Card>
 

@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import NavBar from "@/components/NavBar";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import EmployeeList from "@/components/EmployeeList";
 import EmployeeForm from "@/components/EmployeeForm";
@@ -49,7 +49,7 @@ const EmployeeManagement = () => {
         
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           <div className="lg:col-span-1">
-            <Card className="bg-secondary/30 shadow-sm border border-primary/20">
+            <Card className="bg-secondary/30 shadow-sm border border-primary/20 sticky top-20">
               <CardHeader className="pb-2 border-b border-primary/10">
                 <CardTitle className="text-lg font-medium text-foreground">Menu</CardTitle>
               </CardHeader>
