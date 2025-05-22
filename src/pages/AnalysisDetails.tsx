@@ -112,7 +112,7 @@ const AnalysisDetails = () => {
         const fileData: FileDetails = {
           ...data,
           processing_status: data.processing_status || 'processando',
-          processed: data.analysis_path !== null || data.processing_status === 'concluído'
+          processed: data.analysis_path !== null || (data.processing_status === 'concluído')
         };
         
         setFile(fileData);
