@@ -10,7 +10,7 @@
 
 ## 📋 Sobre o Projeto
 
-Este sistema foi desenvolvido como parte do Trabalho de Conclusão de Curso (TCC) por Rodrigo Pereira de Almeida. Trata-se de uma plataforma completa para gestão de negócios, integrando análise de dados, gestão de funcionários, controle de estoque e muito mais.
+Este sistema foi desenvolvido como parte do Trabalho de Conclusão de Curso (TCC) por Rodrigo Pereira de Almeida e Alvaro Nobrega. Trata-se de uma plataforma completa para gestão de negócios, integrando análise de dados, gestão de funcionários, controle de estoque e muito mais.
 
 ### 🔍 Funcionalidades Principais
 
