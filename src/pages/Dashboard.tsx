@@ -12,7 +12,7 @@ import EmployeeMetrics from "@/components/EmployeeMetrics";
 import StockAnalysis from "@/components/stock/StockAnalysis";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { ArrowUpRight, Bot, Calendar, Upload, Shield } from "lucide-react";
+import { ArrowUpRight, Bot, Calendar, Upload } from "lucide-react";
 import { ChartContainer } from "@/components/charts/ChartContainer";
 import { PresetDateRangePicker } from "@/components/ui/date-range-picker";
 import { 
@@ -40,10 +40,6 @@ const Dashboard = () => {
   
   const handleAIAssistant = () => {
     navigate("/ai-assistant");
-  };
-
-  const handleEdgeFunctionSecrets = () => {
-    navigate("/edge-function-secrets");
   };
 
   const handleSelectEmployee = (id: string | null) => {
@@ -99,14 +95,6 @@ const Dashboard = () => {
             >
               <Bot className="h-4 w-4 mr-2" />
               <span>Assistente IA</span>
-            </Button>
-            <Button 
-              onClick={handleEdgeFunctionSecrets}
-              variant="outline"
-              className="flex items-center"
-            >
-              <Shield className="h-4 w-4 mr-2" />
-              <span>Secrets</span>
             </Button>
             <Button 
               onClick={handleDetailedAnalysis}
