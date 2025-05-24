@@ -1,87 +1,134 @@
 
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
+import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { ThemeProvider } from "next-themes";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Upload from "./pages/Upload";
-import Profile from "./pages/Profile";
-import NotFound from "./pages/NotFound";
 import DetailedAnalysis from "./pages/DetailedAnalysis";
-import EmployeeManagement from "./pages/EmployeeManagement";
-import AIAssistant from "./pages/AIAssistant";
 import AnalysisDetails from "./pages/AnalysisDetails";
+import Profile from "./pages/Profile";
+import EmployeeManagement from "./pages/EmployeeManagement";
 import Inventory from "./pages/Inventory";
+import NotFound from "./pages/NotFound";
 import Notifications from "./pages/Notifications";
+import N8nIntegration from "./pages/N8nIntegration";
+import AIAssistant from "./pages/AIAssistant";
+import EdgeFunctionSecrets from "./pages/EdgeFunctionSecrets";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/dashboard" element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          } />
-          <Route path="/upload" element={
-            <ProtectedRoute>
-              <Upload />
-            </ProtectedRoute>
-          } />
-          <Route path="/profile" element={
-            <ProtectedRoute>
-              <Profile />
-            </ProtectedRoute>
-          } />
-          <Route path="/detailed-analysis" element={
-            <ProtectedRoute>
-              <DetailedAnalysis />
-            </ProtectedRoute>
-          } />
-          <Route path="/employees" element={
-            <ProtectedRoute>
-              <EmployeeManagement />
-            </ProtectedRoute>
-          } />
-          <Route path="/ai-assistant" element={
-            <ProtectedRoute>
-              <AIAssistant />
-            </ProtectedRoute>
-          } />
-          <Route path="/analysis/:fileId" element={
-            <ProtectedRoute>
-              <AnalysisDetails />
-            </ProtectedRoute>
-          } />
-          <Route path="/inventory" element={
-            <ProtectedRoute>
-              <Inventory />
-            </ProtectedRoute>
-          } />
-          <Route path="/notifications" element={
-            <ProtectedRoute>
-              <Notifications />
-            </ProtectedRoute>
-          } />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+function App() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+        <TooltipProvider>
+          <Toaster />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route
+                path="/dashboard"
+                element={
+                  <ProtectedRoute>
+                    <Dashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/upload"
+                element={
+                  <ProtectedRoute>
+                    <Upload />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/detailed-analysis"
+                element={
+                  <ProtectedRoute>
+                    <DetailedAnalysis />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/analysis-details/:id"
+                element={
+                  <ProtectedRoute>
+                    <AnalysisDetails />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/profile"
+                element={
+                  <ProtectedRoute>
+                    <Profile />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/employees"
+                element={
+                  <ProtectedRoute>
+                    <EmployeeManagement />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/inventory"
+                element={
+                  <ProtectedRoute>
+                    <Inventory />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/notifications"
+                element={
+                  <ProtectedRoute>
+                    <Notifications />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/n8n-integration"
+                element={
+                  <ProtectedRoute>
+                    <N8nIntegration />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/ai-assistant"
+                element={
+                  <ProtectedRoute>
+                    <AIAssistant />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/edge-function-secrets"
+                element={
+                  <ProtectedRoute>
+                    <EdgeFunctionSecrets />
+                  </ProtectedRoute>
+                }
+              />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </TooltipProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
+  );
+}
 
 export default App;
