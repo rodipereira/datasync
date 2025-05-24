@@ -11,15 +11,15 @@ const Upload = () => {
       <NavBar />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
-          <h1 className="text-2xl font-bold accent-text">Upload de Dados</h1>
+          <h1 className="text-2xl font-bold accent-text">Upload e Processamento de Dados</h1>
           <p className="text-gray-400">
-            Envie seus arquivos para análise automática
+            Envie seus arquivos para importação automática de dados de estoque e funcionários
           </p>
         </div>
         
         <Tabs defaultValue="upload" className="w-full">
           <TabsList className="mb-8 bg-secondary/50">
-            <TabsTrigger value="upload" className="data-[state=active]:bg-primary/80">Upload de Arquivos</TabsTrigger>
+            <TabsTrigger value="upload" className="data-[state=active]:bg-primary/80">Upload e Processamento</TabsTrigger>
             <TabsTrigger value="history" className="data-[state=active]:bg-primary/80">Histórico de Uploads</TabsTrigger>
           </TabsList>
           
@@ -29,51 +29,59 @@ const Upload = () => {
               
               <Card className="dashboard-card">
                 <CardHeader>
-                  <CardTitle>Instruções</CardTitle>
+                  <CardTitle>Como Funciona o Processamento</CardTitle>
                   <CardDescription>
-                    Como preparar seus arquivos para upload
+                    O sistema identifica automaticamente o tipo de dados e importa para as tabelas corretas
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="space-y-2">
-                    <h3 className="font-medium">Formatos aceitos</h3>
-                    <ul className="list-disc pl-5 text-sm text-foreground/70 space-y-1">
-                      <li>Excel (.xlsx, .xls)</li>
-                      <li>CSV (.csv)</li>
-                      <li>PDF (.pdf)</li>
-                    </ul>
+                <CardContent className="space-y-6">
+                  <div className="space-y-3">
+                    <h3 className="font-medium text-green-600">✅ Dados de Estoque</h3>
+                    <div className="bg-green-50 p-3 rounded-lg">
+                      <p className="text-sm text-green-800 mb-2">Colunas reconhecidas:</p>
+                      <ul className="text-xs text-green-700 space-y-1">
+                        <li>• <strong>product_name / produto:</strong> Nome do produto</li>
+                        <li>• <strong>quantity / quantidade:</strong> Quantidade em estoque</li>
+                        <li>• <strong>minimum / mínimo:</strong> Nível mínimo</li>
+                        <li>• <strong>category / categoria:</strong> Categoria do produto</li>
+                      </ul>
+                    </div>
                   </div>
                   
-                  <div className="space-y-2">
-                    <h3 className="font-medium">Tamanho máximo</h3>
-                    <p className="text-sm text-foreground/70">
-                      Os arquivos devem ter no máximo 10MB cada.
-                    </p>
+                  <div className="space-y-3">
+                    <h3 className="font-medium text-blue-600">👥 Dados de Funcionários</h3>
+                    <div className="bg-blue-50 p-3 rounded-lg">
+                      <p className="text-sm text-blue-800 mb-2">Colunas reconhecidas:</p>
+                      <ul className="text-xs text-blue-700 space-y-1">
+                        <li>• <strong>name / nome:</strong> Nome do funcionário</li>
+                        <li>• <strong>position / cargo:</strong> Cargo/posição</li>
+                        <li>• <strong>hire_date / contratação:</strong> Data de contratação</li>
+                      </ul>
+                    </div>
                   </div>
                   
-                  <div className="space-y-2">
-                    <h3 className="font-medium">Estrutura de dados</h3>
-                    <p className="text-sm text-foreground/70">
-                      Para melhor análise, seus arquivos devem conter cabeçalhos claros e dados organizados.
-                    </p>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <h3 className="font-medium">Após o Upload</h3>
-                    <p className="text-sm text-foreground/70">
-                      Cada arquivo enviado será processado automaticamente. O relatório de 
-                      análise em PDF estará disponível para download na aba "Histórico de Uploads".
-                    </p>
-                  </div>
-
-                  <div className="rounded-md bg-primary/10 p-4 mt-4">
+                  <div className="rounded-md bg-amber-50 p-4">
                     <div className="flex">
                       <div className="ml-3">
-                        <h3 className="text-sm font-medium text-primary">Importante</h3>
-                        <div className="mt-2 text-sm text-foreground/80">
+                        <h3 className="text-sm font-medium text-amber-800">Processamento Inteligente</h3>
+                        <div className="mt-2 text-sm text-amber-700">
                           <p>
-                            Os resultados da análise podem levar alguns minutos para serem gerados, dependendo
-                            do tamanho e complexidade dos dados.
+                            O sistema detecta automaticamente se o arquivo contém dados de estoque ou funcionários
+                            baseado nos nomes das colunas e importa os dados para as tabelas corretas.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="rounded-md bg-blue-50 p-4">
+                    <div className="flex">
+                      <div className="ml-3">
+                        <h3 className="text-sm font-medium text-blue-800">Atualização em Tempo Real</h3>
+                        <div className="mt-2 text-sm text-blue-700">
+                          <p>
+                            Após o processamento, os dados aparecem automaticamente no dashboard, 
+                            inventário e gerenciamento de funcionários sem necessidade de recarregar a página.
                           </p>
                         </div>
                       </div>
