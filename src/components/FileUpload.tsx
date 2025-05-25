@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { v4 as uuidv4 } from "uuid";
 import { processFile, ProcessingResult } from "@/utils/fileProcessor";
+import { useFirebaseAnalytics } from "@/hooks/useFirebaseAnalytics";
 
 interface ProcessedFile {
   file: File;
@@ -20,10 +21,15 @@ const FileUpload = () => {
   const [files, setFiles] = useState<ProcessedFile[]>([]);
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState(0);
+  const { trackFileUpload, trackDataProcessing } = useFirebaseAnalytics();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      const newFiles = Array.from(e.target.files).map(file => ({ file }));
+      const newFiles = Array.from(e.target.files).map(file => {
+        // Track file selection
+        trackFileUpload(file.name, file.type);
+        return { file };
+      });
       setFiles(prev => [...prev, ...newFiles]);
     }
   };
@@ -74,6 +80,14 @@ const FileUpload = () => {
         
         // Processar conteúdo do arquivo
         const processingResult = await processFile(fileData.file);
+        
+        // Track data processing with Firebase Analytics
+        if (processingResult.success && processingResult.recordsProcessed) {
+          const dataType = fileData.file.name.toLowerCase().includes('employee') || 
+                          fileData.file.name.toLowerCase().includes('funcionario') ? 
+                          'employees' : 'inventory';
+          trackDataProcessing(dataType, processingResult.recordsProcessed);
+        }
         
         // Registrar arquivo no banco
         const { data: fileRecord, error: dbError } = await supabase

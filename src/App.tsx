@@ -2,8 +2,10 @@
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { ThemeProvider } from "next-themes";
+import { useEffect } from "react";
+import { useFirebaseAnalytics } from "@/hooks/useFirebaseAnalytics";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -18,10 +20,21 @@ import NotFound from "./pages/NotFound";
 import Notifications from "./pages/Notifications";
 import N8nIntegration from "./pages/N8nIntegration";
 import AIAssistant from "./pages/AIAssistant";
-import EdgeFunctionSecrets from "./pages/EdgeFunctionSecrets";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 const queryClient = new QueryClient();
+
+// Component to track page views
+const AnalyticsTracker = () => {
+  const location = useLocation();
+  const { trackPageView } = useFirebaseAnalytics();
+
+  useEffect(() => {
+    trackPageView(location.pathname);
+  }, [location, trackPageView]);
+
+  return null;
+};
 
 function App() {
   return (
@@ -30,6 +43,7 @@ function App() {
         <TooltipProvider>
           <Toaster />
           <BrowserRouter>
+            <AnalyticsTracker />
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/login" element={<Login />} />
@@ -111,14 +125,6 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <AIAssistant />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/edge-function-secrets"
-                element={
-                  <ProtectedRoute>
-                    <EdgeFunctionSecrets />
                   </ProtectedRoute>
                 }
               />
