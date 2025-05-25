@@ -3,17 +3,16 @@ import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Send, Loader2, Bot, Trash, AlertCircle } from "lucide-react";
+import { Send, Loader2, Bot, Trash, AlertCircle, Zap } from "lucide-react";
 import NavBar from "@/components/NavBar";
-import { useLocalAssistant } from "@/hooks/useLocalAssistant";
+import { useGroqAssistant } from "@/hooks/useGroqAssistant";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
-import { toast } from "sonner";
 import { useTypewriterEffect } from "@/hooks/useTypewriterEffect";
+import { Badge } from "@/components/ui/badge";
 
 const AIAssistant = () => {
   const [prompt, setPrompt] = useState("");
-  const { messages, sendMessage, isLoading, clearMessages, error } = useLocalAssistant();
-  const [useLocalAI, setUseLocalAI] = useState(true);
+  const { messages, sendMessage, isLoading, clearMessages, error } = useGroqAssistant();
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Estado para controlar qual mensagem está sendo animada
@@ -37,10 +36,9 @@ const AIAssistant = () => {
   const currentAnimatingMessage = animatingIndex !== null ? messages[animatingIndex] : null;
   const { displayedText, isTyping } = useTypewriterEffect({
     text: currentAnimatingMessage?.content || "",
-    delay: 25,
-    speedFactor: 1.2,
+    delay: 20, // Mais rápido para mostrar a velocidade do Groq
+    speedFactor: 1.5,
     onComplete: () => {
-      // Quando terminar de digitar, marca como completa e atualiza as mensagens processadas
       setAnimatingIndex(null);
       setProcessedMessages(messages);
     }
@@ -59,9 +57,8 @@ const AIAssistant = () => {
     setPrompt("");
   };
 
-  // Determina quais mensagens mostrar, substituindo o texto animado quando aplicável
+  // Determina quais mensagens mostrar
   const displayMessages = processedMessages.map((msg, idx) => {
-    // Se esta é a mensagem sendo atualmente animada, mostra texto parcial
     if (idx === animatingIndex) {
       return { ...msg, content: displayedText };
     }
@@ -81,9 +78,15 @@ const AIAssistant = () => {
       <NavBar />
       <div className="max-w-4xl mx-auto px-4 pt-8 pb-24">
         <div className="mb-6">
-          <h1 className="text-3xl font-bold">Assistente de IA</h1>
+          <div className="flex items-center gap-3 mb-2">
+            <h1 className="text-3xl font-bold">Assistente de IA</h1>
+            <Badge variant="secondary" className="flex items-center gap-1">
+              <Zap className="h-3 w-3" />
+              Groq - Ultra Rápido
+            </Badge>
+          </div>
           <p className="text-muted-foreground">
-            Assistente local que responde com base em conhecimento pre-definido
+            Assistente inteligente powered by Groq - respostas instantâneas para análise de dados e insights de negócio
           </p>
         </div>
 
@@ -99,10 +102,11 @@ const AIAssistant = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Bot className="h-5 w-5" />
-              Assistente Local
+              Assistente Groq
             </CardTitle>
             <CardDescription>
-              Nosso assistente de IA local especializado em análise de dados e insights para negócios.
+              Assistente de IA ultrarrápido especializado em análise de dados e insights para negócios.
+              Pergunte sobre tendências, métricas, estratégias ou análises.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -111,10 +115,16 @@ const AIAssistant = () => {
                 <div className="text-center py-8">
                   <Bot className="h-12 w-12 mx-auto text-muted-foreground mb-3" />
                   <h3 className="font-medium text-lg mb-1">Como posso ajudar?</h3>
-                  <p className="text-muted-foreground text-sm max-w-md mx-auto">
-                    Pergunte sobre análise de dados, tendências de mercado, ou solicite insights 
-                    sobre seu negócio.
+                  <p className="text-muted-foreground text-sm max-w-md mx-auto mb-4">
+                    Pergunte sobre análise de dados, métricas de desempenho, tendências de mercado, 
+                    ou solicite insights sobre seu negócio.
                   </p>
+                  <div className="flex flex-wrap gap-2 justify-center">
+                    <Badge variant="outline" className="text-xs">Análise de vendas</Badge>
+                    <Badge variant="outline" className="text-xs">Gestão de estoque</Badge>
+                    <Badge variant="outline" className="text-xs">Performance de equipe</Badge>
+                    <Badge variant="outline" className="text-xs">Insights financeiros</Badge>
+                  </div>
                 </div>
               ) : (
                 <>
@@ -143,14 +153,14 @@ const AIAssistant = () => {
                           <div
                             className={`px-4 py-2 rounded-lg ${
                               msg.role === 'user'
-                                ? 'bg-accent text-accent-foreground'
-                                : 'bg-muted text-foreground'
+                                ? 'bg-primary text-primary-foreground'
+                                : 'bg-muted text-foreground border'
                             } max-w-full`}
                           >
                             <p className="text-sm whitespace-pre-wrap break-words overflow-hidden max-w-full">
                               {msg.content}
                               {index === animatingIndex && isTyping && (
-                                <span className="animate-pulse">|</span>
+                                <span className="animate-pulse text-primary">|</span>
                               )}
                             </p>
                           </div>
@@ -164,10 +174,10 @@ const AIAssistant = () => {
               
               {isLoading && animatingIndex === null && (
                 <div className="flex justify-start">
-                  <div className="bg-muted text-foreground px-4 py-3 rounded-lg">
+                  <div className="bg-muted text-foreground px-4 py-3 rounded-lg border">
                     <div className="flex items-center gap-2">
                       <Loader2 className="h-4 w-4 animate-spin" />
-                      <span className="text-sm">Pensando...</span>
+                      <span className="text-sm">Processando com Groq...</span>
                     </div>
                   </div>
                 </div>
@@ -184,7 +194,7 @@ const AIAssistant = () => {
             <Input
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
-              placeholder="Digite sua pergunta aqui..."
+              placeholder="Digite sua pergunta sobre dados, análises ou insights..."
               disabled={isLoading || isTyping}
               className="flex-1"
             />
@@ -207,4 +217,3 @@ const AIAssistant = () => {
 };
 
 export default AIAssistant;
-
