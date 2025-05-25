@@ -2,10 +2,8 @@
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "next-themes";
-import { useEffect } from "react";
-import { useFirebaseAnalytics } from "@/hooks/useFirebaseAnalytics";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -24,18 +22,6 @@ import ProtectedRoute from "./components/ProtectedRoute";
 
 const queryClient = new QueryClient();
 
-// Component to track page views
-const AnalyticsTracker = () => {
-  const location = useLocation();
-  const { trackPageView } = useFirebaseAnalytics();
-
-  useEffect(() => {
-    trackPageView(location.pathname);
-  }, [location, trackPageView]);
-
-  return null;
-};
-
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
@@ -43,7 +29,6 @@ function App() {
         <TooltipProvider>
           <Toaster />
           <BrowserRouter>
-            <AnalyticsTracker />
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/login" element={<Login />} />
