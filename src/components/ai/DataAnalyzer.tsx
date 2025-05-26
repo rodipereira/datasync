@@ -117,11 +117,11 @@ const DataAnalyzer = () => {
 
   const getColor = (type: string) => {
     switch (type) {
-      case 'insight': return 'text-blue-500';
-      case 'recommendation': return 'text-green-500';
-      case 'prediction': return 'text-purple-500';
-      case 'alert': return 'text-red-500';
-      default: return 'text-gray-500';
+      case 'insight': return 'text-blue-400';
+      case 'recommendation': return 'text-green-400';
+      case 'prediction': return 'text-purple-400';
+      case 'alert': return 'text-red-400';
+      default: return 'text-gray-400';
     }
   };
 
@@ -134,30 +134,30 @@ const DataAnalyzer = () => {
   ];
 
   return (
-    <div className="space-y-6">
-      <Card>
+    <div className="space-y-6 bg-gray-900 text-white min-h-full">
+      <Card className="bg-gray-800 border-gray-700">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+          <CardTitle className="flex items-center gap-2 text-white">
             <Brain className="h-5 w-5" />
             Analisador de Dados com IA
-            <Badge variant="secondary">Beta</Badge>
+            <Badge variant="secondary" className="bg-gray-700 text-gray-300">Beta</Badge>
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
-            <label className="text-sm font-medium mb-2 block">
+            <label className="text-sm font-medium mb-2 block text-gray-300">
               Faça uma pergunta sobre seus dados:
             </label>
             <Textarea
               placeholder="Ex: Como posso otimizar meu estoque para reduzir custos?"
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
-              className="min-h-20"
+              className="min-h-20 bg-gray-700 border-gray-600 text-white placeholder-gray-400"
             />
           </div>
           
           <div>
-            <p className="text-sm text-gray-600 mb-2">Sugestões rápidas:</p>
+            <p className="text-sm text-gray-400 mb-2">Sugestões rápidas:</p>
             <div className="flex flex-wrap gap-2">
               {predefinedQuestions.map((q, index) => (
                 <Button
@@ -165,7 +165,7 @@ const DataAnalyzer = () => {
                   variant="outline"
                   size="sm"
                   onClick={() => setQuestion(q)}
-                  className="text-xs"
+                  className="text-xs bg-gray-700 border-gray-600 text-gray-300 hover:bg-gray-600"
                 >
                   {q}
                 </Button>
@@ -176,7 +176,7 @@ const DataAnalyzer = () => {
           <Button 
             onClick={analyzeData} 
             disabled={isAnalyzing || !question.trim()}
-            className="w-full"
+            className="w-full bg-purple-600 hover:bg-purple-700"
           >
             {isAnalyzing ? (
               <>
@@ -196,40 +196,42 @@ const DataAnalyzer = () => {
       {/* Resultados da Análise */}
       {analysis.length > 0 && (
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold flex items-center gap-2">
-            <Zap className="h-5 w-5 text-yellow-500" />
+          <h3 className="text-lg font-semibold flex items-center gap-2 text-white">
+            <Zap className="h-5 w-5 text-yellow-400" />
             Resultados da Análise
           </h3>
           
           {analysis.map((result, index) => (
-            <Card key={index} className="border-l-4 border-l-primary">
+            <Card key={index} className="border-l-4 border-l-purple-500 bg-gray-800 border-gray-700">
               <CardContent className="p-4">
                 <div className="flex items-start justify-between mb-2">
                   <div className="flex items-center gap-2">
                     <span className={getColor(result.type)}>
                       {getIcon(result.type)}
                     </span>
-                    <h4 className="font-medium">{result.title}</h4>
+                    <h4 className="font-medium text-white">{result.title}</h4>
                     <Badge 
                       variant={result.impact === 'high' ? 'destructive' : 
                               result.impact === 'medium' ? 'default' : 'secondary'}
+                      className={result.impact === 'high' ? 'bg-red-600' : 
+                                result.impact === 'medium' ? 'bg-yellow-600' : 'bg-gray-600'}
                     >
                       {result.impact === 'high' ? 'Alto Impacto' : 
                        result.impact === 'medium' ? 'Médio Impacto' : 'Baixo Impacto'}
                     </Badge>
                   </div>
-                  <Badge variant="outline">
+                  <Badge variant="outline" className="border-gray-600 text-gray-300">
                     {result.confidence}% confiança
                   </Badge>
                 </div>
                 
-                <p className="text-gray-700">{result.content}</p>
+                <p className="text-gray-300">{result.content}</p>
                 
                 <div className="mt-3 flex gap-2">
-                  <Button size="sm" variant="outline">
+                  <Button size="sm" variant="outline" className="bg-gray-700 border-gray-600 text-gray-300 hover:bg-gray-600">
                     Ver Detalhes
                   </Button>
-                  <Button size="sm">
+                  <Button size="sm" className="bg-purple-600 hover:bg-purple-700">
                     Aplicar Sugestão
                   </Button>
                 </div>
@@ -241,25 +243,25 @@ const DataAnalyzer = () => {
 
       {/* Status dos Dados */}
       {businessData && (
-        <Card className="bg-gray-50">
+        <Card className="bg-gray-800 border-gray-700">
           <CardContent className="p-4">
-            <h4 className="font-medium mb-2">Status dos Dados Disponíveis:</h4>
+            <h4 className="font-medium mb-2 text-white">Status dos Dados Disponíveis:</h4>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
               <div>
-                <span className="text-gray-600">Produtos:</span>
-                <span className="ml-2 font-medium">{businessData.inventory.length}</span>
+                <span className="text-gray-400">Produtos:</span>
+                <span className="ml-2 font-medium text-white">{businessData.inventory.length}</span>
               </div>
               <div>
-                <span className="text-gray-600">Funcionários:</span>
-                <span className="ml-2 font-medium">{businessData.employees.length}</span>
+                <span className="text-gray-400">Funcionários:</span>
+                <span className="ml-2 font-medium text-white">{businessData.employees.length}</span>
               </div>
               <div>
-                <span className="text-gray-600">Valor Total:</span>
-                <span className="ml-2 font-medium">R$ {businessData.totalInventoryValue.toLocaleString()}</span>
+                <span className="text-gray-400">Valor Total:</span>
+                <span className="ml-2 font-medium text-white">R$ {businessData.totalInventoryValue.toLocaleString()}</span>
               </div>
               <div>
-                <span className="text-gray-600">Estoque Baixo:</span>
-                <span className="ml-2 font-medium text-red-500">{businessData.lowStockItems}</span>
+                <span className="text-gray-400">Estoque Baixo:</span>
+                <span className="ml-2 font-medium text-red-400">{businessData.lowStockItems}</span>
               </div>
             </div>
           </CardContent>
