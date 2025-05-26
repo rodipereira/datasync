@@ -1,5 +1,6 @@
+
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { DateRange } from "react-day-picker";
 import NavBar from "@/components/NavBar";
 import DashboardMetrics from "@/components/DashboardMetrics";
@@ -45,7 +46,16 @@ const Dashboard = () => {
   const [selectedEmployeeId, setSelectedEmployeeId] = useState<string | null>(null);
   const [activeEmployeeTab, setActiveEmployeeTab] = useState("list");
   const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
-  const [dashboardMode, setDashboardMode] = useState<"classic" | "smart">("smart");
+  const [dashboardMode, setDashboardMode] = useState<"classic" | "smart">("classic");
+
+  // Auto redirect to smart mode after 2 seconds
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDashboardMode("smart");
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleDetailedAnalysis = () => {
     navigate("/detailed-analysis");
@@ -74,9 +84,14 @@ const Dashboard = () => {
         {/* Header reorganizado e simplificado */}
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-8 gap-4">
           <div>
-            <h1 className="text-3xl font-bold accent-text">Dashboard Inteligente</h1>
+            <h1 className="text-3xl font-bold accent-text">
+              Dashboard {dashboardMode === "smart" ? "Inteligente" : "Clássico"}
+            </h1>
             <p className="text-muted-foreground mt-1">
-              Análise avançada com IA e insights personalizados - Dados em tempo real do Supabase
+              {dashboardMode === "smart" 
+                ? "Análise avançada com IA e insights personalizados - Dados em tempo real do Supabase"
+                : "Visão clássica das métricas principais - Dados em tempo real do Supabase"
+              }
             </p>
           </div>
           
