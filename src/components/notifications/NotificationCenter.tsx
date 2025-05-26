@@ -102,7 +102,7 @@ const NotificationCenter = () => {
       .from("inventory")
       .select("*")
       .eq("user_id", user.id)
-      .lt("quantity", supabase.raw("minimum_level"));
+      .lt("quantity", 5); // Usando comparação direta em vez de supabase.raw
 
     if (inventory && inventory.length > 0) {
       toast.warning(`${inventory.length} produtos com estoque baixo!`);
