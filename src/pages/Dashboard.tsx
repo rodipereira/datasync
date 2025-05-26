@@ -13,7 +13,6 @@ import StockAnalysis from "@/components/stock/StockAnalysis";
 import SmartDashboard from "@/components/dashboard/SmartDashboard";
 import NotificationCenter from "@/components/notifications/NotificationCenter";
 import DataAnalyzer from "@/components/ai/DataAnalyzer";
-import ThemeCustomizer from "@/components/theme/ThemeCustomizer";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { 
@@ -22,11 +21,8 @@ import {
   Calendar, 
   Upload, 
   Bell, 
-  Brain, 
-  Palette,
-  Sparkles,
-  Zap,
-  Settings
+  Brain,
+  Sparkles
 } from "lucide-react";
 import { ChartContainer } from "@/components/charts/ChartContainer";
 import { PresetDateRangePicker } from "@/components/ui/date-range-picker";
@@ -51,7 +47,6 @@ const Dashboard = () => {
   const [selectedEmployeeId, setSelectedEmployeeId] = useState<string | null>(null);
   const [activeEmployeeTab, setActiveEmployeeTab] = useState("list");
   const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
-  const [showThemeCustomizer, setShowThemeCustomizer] = useState(false);
   const [dashboardMode, setDashboardMode] = useState<"classic" | "smart">("smart");
 
   const handleDetailedAnalysis = () => {
@@ -77,13 +72,16 @@ const Dashboard = () => {
     <div className="min-h-screen bg-background">
       <NavBar />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header com controles aprimorados */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+        {/* Header reorganizado e simplificado */}
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-8 gap-4">
           <div>
-            <h1 className="text-2xl font-bold accent-text">Dashboard Inteligente</h1>
-            <p className="text-gray-400">Análise avançada com IA e insights personalizados</p>
+            <h1 className="text-3xl font-bold accent-text">Dashboard Inteligente</h1>
+            <p className="text-muted-foreground mt-1">
+              Análise avançada com IA e insights personalizados
+            </p>
           </div>
-          <div className="mt-4 md:mt-0 flex flex-wrap gap-2">
+          
+          <div className="flex flex-wrap gap-3">
             {/* Seletor de Modo Dashboard */}
             <div className="flex bg-secondary/20 rounded-lg p-1">
               <Button
@@ -104,55 +102,12 @@ const Dashboard = () => {
               </Button>
             </div>
 
-            {/* Central de Notificações */}
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button variant="outline" className="flex items-center relative">
-                  <Bell className="h-4 w-4 mr-2" />
-                  <span>Notificações</span>
-                  <div className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full"></div>
-                </Button>
-              </SheetTrigger>
-              <SheetContent className="w-[500px]">
-                <NotificationCenter />
-              </SheetContent>
-            </Sheet>
-
-            {/* Analisador de IA */}
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 flex items-center">
-                  <Brain className="h-4 w-4 mr-2" />
-                  <span>Analisar com IA</span>
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
-                <DialogHeader>
-                  <DialogTitle>Análise Inteligente de Dados</DialogTitle>
-                </DialogHeader>
-                <DataAnalyzer />
-              </DialogContent>
-            </Dialog>
-
-            {/* Personalizador de Tema */}
-            <Dialog open={showThemeCustomizer} onOpenChange={setShowThemeCustomizer}>
-              <DialogTrigger asChild>
-                <Button variant="outline" className="flex items-center">
-                  <Palette className="h-4 w-4 mr-2" />
-                  <span>Temas</span>
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
-                <ThemeCustomizer onClose={() => setShowThemeCustomizer(false)} />
-              </DialogContent>
-            </Dialog>
-
             {/* Filtro de Data */}
             <Sheet>
               <SheetTrigger asChild>
-                <Button variant="outline" className="flex items-center">
-                  <Calendar className="h-4 w-4 mr-2" />
-                  <span>Filtrar por Data</span>
+                <Button variant="outline" className="flex items-center gap-2">
+                  <Calendar className="h-4 w-4" />
+                  Período
                 </Button>
               </SheetTrigger>
               <SheetContent>
@@ -173,29 +128,73 @@ const Dashboard = () => {
             
             <Button 
               onClick={handleUpload}
-              className="bg-primary hover:bg-primary/90 flex items-center"
+              variant="outline"
+              className="flex items-center gap-2"
             >
-              <Upload className="h-4 w-4 mr-2" />
-              <span>Upload</span>
+              <Upload className="h-4 w-4" />
+              Upload
             </Button>
+            
             <Button 
               onClick={handleAIAssistant}
-              className="bg-primary hover:bg-primary/90 flex items-center"
+              variant="outline"
+              className="flex items-center gap-2"
             >
-              <Bot className="h-4 w-4 mr-2" />
-              <span>Assistente IA</span>
+              <Bot className="h-4 w-4" />
+              Assistente IA
             </Button>
+            
             <Button 
               onClick={handleDetailedAnalysis}
-              className="bg-primary hover:bg-primary/90 flex items-center"
+              className="flex items-center gap-2"
             >
-              <span className="mr-1">Análise Detalhada</span>
+              Análise Detalhada
               <ArrowUpRight className="h-4 w-4" />
             </Button>
           </div>
         </div>
-        
-        <div className="space-y-6">
+
+        <div className="space-y-8">
+          {/* Central de Notificações - Seção separada */}
+          <div>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-2 bg-primary/10 rounded-lg">
+                <Bell className="h-5 w-5 text-primary" />
+              </div>
+              <h2 className="text-xl font-semibold">Notificações</h2>
+            </div>
+            <NotificationCenter />
+          </div>
+
+          {/* Análise com IA - Seção melhorada */}
+          <div>
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-gradient-to-r from-purple-500/10 to-blue-500/10 rounded-lg">
+                  <Brain className="h-5 w-5 text-purple-600" />
+                </div>
+                <h2 className="text-xl font-semibold">Análise Inteligente</h2>
+              </div>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600">
+                    <Brain className="h-4 w-4 mr-2" />
+                    Abrir Analisador IA
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-6xl max-h-[85vh] overflow-y-auto">
+                  <DialogHeader>
+                    <DialogTitle className="flex items-center gap-2">
+                      <Brain className="h-5 w-5" />
+                      Análise Inteligente de Dados
+                    </DialogTitle>
+                  </DialogHeader>
+                  <DataAnalyzer />
+                </DialogContent>
+              </Dialog>
+            </div>
+          </div>
+          
           {/* Dashboard Inteligente ou Clássico */}
           {dashboardMode === "smart" ? (
             <SmartDashboard dateRange={dateRange} />
@@ -203,7 +202,8 @@ const Dashboard = () => {
             <DashboardMetrics dateRange={dateRange} />
           )}
           
-          <div className="grid gap-6 md:grid-cols-2">
+          {/* Gráficos lado a lado com melhor espaçamento */}
+          <div className="grid gap-8 lg:grid-cols-2">
             <DashboardChart />
             
             <ChartContainer 
@@ -223,25 +223,25 @@ const Dashboard = () => {
             description="Cadastre e gerencie a equipe"
           >
             <Tabs value={activeEmployeeTab} onValueChange={setActiveEmployeeTab}>
-              <TabsList className="mb-4 bg-secondary/50">
+              <TabsList className="mb-6 bg-secondary/50">
                 <TabsTrigger
                   value="list"
                   className="data-[state=active]:bg-primary/80"
                 >
-                  Lista
+                  Lista de Funcionários
                 </TabsTrigger>
                 <TabsTrigger
                   value="add"
                   className="data-[state=active]:bg-primary/80"
                 >
-                  Adicionar
+                  Adicionar Funcionário
                 </TabsTrigger>
                 <TabsTrigger
                   value="metrics"
                   className="data-[state=active]:bg-primary/80"
                   disabled={!selectedEmployeeId}
                 >
-                  Métricas
+                  Métricas Individuais
                 </TabsTrigger>
               </TabsList>
               <TabsContent value="list" className="pt-4">
@@ -264,6 +264,7 @@ const Dashboard = () => {
             </Tabs>
           </ChartContainer>
           
+          {/* Histórico de Arquivos */}
           <ChartContainer
             title="Histórico de Arquivos"
             description="Arquivos enviados e suas análises"

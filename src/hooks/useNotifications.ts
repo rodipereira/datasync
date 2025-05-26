@@ -17,51 +17,37 @@ interface Notification {
 export const useNotifications = () => {
   const queryClient = useQueryClient();
 
-  // Buscar notificações
+  // Buscar notificações do banco de dados
   const { data: notifications, isLoading } = useQuery({
     queryKey: ["notifications"],
     queryFn: async () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return [];
 
-      // Por enquanto vamos simular notificações até criar a tabela
-      const mockNotifications: Notification[] = [
-        {
-          id: "1",
-          type: "warning",
-          title: "Estoque Baixo",
-          message: "5 produtos estão com estoque abaixo do nível mínimo",
-          read: false,
-          created_at: new Date().toISOString(),
-          action_url: "/inventory"
-        },
-        {
-          id: "2",
-          type: "success",
-          title: "Meta Atingida",
-          message: "Parabéns! Você atingiu 95% da meta mensal",
-          read: false,
-          created_at: new Date(Date.now() - 3600000).toISOString()
-        },
-        {
-          id: "3",
-          type: "info",
-          title: "Novo Funcionário",
-          message: "João Silva foi adicionado à equipe",
-          read: true,
-          created_at: new Date(Date.now() - 86400000).toISOString()
-        }
-      ];
+      const { data, error } = await supabase
+        .from("notifications")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false });
 
-      return mockNotifications;
+      if (error) {
+        console.error("Erro ao buscar notificações:", error);
+        return [];
+      }
+
+      return data as Notification[];
     },
   });
 
   // Marcar como lida
   const markAsReadMutation = useMutation({
     mutationFn: async (notificationId: string) => {
-      // Aqui implementaria a atualização no banco
-      console.log("Marking as read:", notificationId);
+      const { error } = await supabase
+        .from("notifications")
+        .update({ read: true, updated_at: new Date().toISOString() })
+        .eq("id", notificationId);
+
+      if (error) throw error;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["notifications"] });
@@ -73,14 +59,30 @@ export const useNotifications = () => {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
 
-    const { data: inventory } = await supabase
-      .from("inventory")
-      .select("*")
-      .eq("user_id", user.id)
-      .lt("quantity", 5);
+    try {
+      // Chamar função do banco para criar notificações de estoque baixo
+      const { error } = await supabase.rpc('create_stock_notifications');
+      
+      if (error) {
+        console.error("Erro ao gerar alertas de estoque:", error);
+        return;
+      }
 
-    if (inventory && inventory.length > 0) {
-      toast.warning(`${inventory.length} produtos com estoque baixo!`);
+      // Invalidar cache para atualizar as notificações
+      queryClient.invalidateQueries({ queryKey: ["notifications"] });
+      
+      // Verificar se há produtos com estoque baixo
+      const { data: inventory } = await supabase
+        .from("inventory")
+        .select("*")
+        .eq("user_id", user.id)
+        .lt("quantity", "minimum_level");
+
+      if (inventory && inventory.length > 0) {
+        toast.warning(`${inventory.length} produtos com estoque baixo detectados!`);
+      }
+    } catch (error) {
+      console.error("Erro ao gerar alertas:", error);
     }
   };
 
