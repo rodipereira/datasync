@@ -34,6 +34,7 @@
     --ring: 270 75% 60%;
 
     --radius: 0.75rem;
+    --animation-duration: 0.3s;
 
     --sidebar-background: 260 25% 11%;
     --sidebar-foreground: 0 0% 98%;
@@ -94,9 +95,11 @@
 
   body {
     @apply bg-background text-foreground;
+    transition: all var(--animation-duration) ease;
   }
 }
 
+/* Estilos originais mantidos */
 .glass-card {
   @apply bg-primary/10 backdrop-blur-md border border-primary/20;
 }
@@ -109,7 +112,6 @@
   @apply p-4 rounded-lg border border-primary/20 bg-primary/5 shadow-md;
 }
 
-/* Estilo para os cards inspirado na imagem */
 .dashboard-card {
   @apply rounded-xl bg-gradient-to-br from-secondary/80 to-background border border-primary/20 shadow-xl;
 }
@@ -124,4 +126,116 @@
 
 .accent-text {
   @apply font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-[#9f7aea];
+}
+
+/* Novos estilos para temas e animações */
+.theme-transition {
+  transition: all var(--animation-duration) ease;
+}
+
+.smart-card {
+  @apply bg-gradient-to-br from-primary/5 via-background to-secondary/5 
+         border border-primary/20 rounded-xl shadow-lg 
+         hover:shadow-xl hover:border-primary/30 
+         transition-all duration-300;
+}
+
+.ai-gradient {
+  @apply bg-gradient-to-r from-purple-500 via-blue-500 to-indigo-500;
+}
+
+.notification-badge {
+  @apply absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full animate-pulse;
+}
+
+.prediction-line {
+  stroke-dasharray: 8, 8;
+  animation: dash 20s linear infinite;
+}
+
+@keyframes dash {
+  to {
+    stroke-dashoffset: -16;
+  }
+}
+
+.insight-highlight {
+  @apply bg-gradient-to-r from-blue-50 to-indigo-50 
+         border-l-4 border-l-blue-500 
+         p-4 rounded-r-lg;
+}
+
+.recommendation-highlight {
+  @apply bg-gradient-to-r from-green-50 to-emerald-50 
+         border-l-4 border-l-green-500 
+         p-4 rounded-r-lg;
+}
+
+.warning-highlight {
+  @apply bg-gradient-to-r from-yellow-50 to-orange-50 
+         border-l-4 border-l-yellow-500 
+         p-4 rounded-r-lg;
+}
+
+/* Animações aprimoradas */
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.3s ease-out;
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Responsive improvements */
+@media (max-width: 768px) {
+  .dashboard-chart {
+    @apply mx-2;
+  }
+  
+  .smart-card {
+    @apply mx-1;
+  }
+}
+
+/* Modo compacto */
+.compact-mode .dashboard-card {
+  @apply p-3;
+}
+
+.compact-mode .chart-container {
+  @apply p-2;
+}
+
+/* Alto contraste */
+.high-contrast {
+  --primary: 0 0% 0%;
+  --background: 0 0% 100%;
+  --foreground: 0 0% 0%;
+  --border: 0 0% 0%;
+}
+
+.high-contrast .dashboard-card {
+  @apply border-2 border-black;
 }
