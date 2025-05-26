@@ -30,12 +30,18 @@ const EmployeeDeleteDialog = ({
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleDeleteEmployee = async () => {
-    if (!employeeId) return;
+    if (!employeeId) {
+      console.error("ID do funcionário não fornecido");
+      toast.error("Erro: ID do funcionário não encontrado");
+      return;
+    }
     
     try {
       setIsDeleting(true);
+      console.log("Iniciando exclusão do funcionário:", employeeId);
       
       // Primeiro, verificamos se há métricas relacionadas ao funcionário e as excluímos
+      console.log("Deletando métricas do funcionário...");
       const { error: metricsError } = await supabase
         .from('employee_metrics')
         .delete()
@@ -47,22 +53,37 @@ const EmployeeDeleteDialog = ({
         return;
       }
       
+      console.log("Métricas deletadas com sucesso, deletando funcionário...");
+      
       // Em seguida, excluímos o funcionário
-      const { error } = await supabase
+      const { error: employeeError, data } = await supabase
         .from('employees')
         .delete()
-        .eq('id', employeeId);
+        .eq('id', employeeId)
+        .select();
         
-      if (error) throw error;
+      if (employeeError) {
+        console.error("Erro ao deletar funcionário:", employeeError);
+        throw employeeError;
+      }
+      
+      console.log("Funcionário deletado:", data);
+      
+      if (!data || data.length === 0) {
+        console.warn("Nenhum funcionário foi deletado - pode não existir ou não ter permissão");
+        toast.error("Funcionário não encontrado ou não foi possível excluir");
+        return;
+      }
       
       toast.success("Funcionário removido com sucesso");
       onDeleteSuccess();
+      onOpenChange(false);
+      
     } catch (error) {
       console.error("Erro ao deletar funcionário:", error);
       toast.error("Erro ao remover funcionário");
     } finally {
       setIsDeleting(false);
-      onOpenChange(false);
     }
   };
 

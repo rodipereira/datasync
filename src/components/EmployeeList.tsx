@@ -56,13 +56,24 @@ const EmployeeList = ({ onSelectEmployee }: EmployeeListProps) => {
   const fetchEmployees = async () => {
     try {
       setLoading(true);
+      console.log("Buscando funcionários...");
+      
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        console.error("Usuário não autenticado");
+        toast.error("Usuário não autenticado");
+        return;
+      }
       
       const { data, error } = await supabase
         .from('employees')
         .select('id, name, position, hire_date, created_at, avatar_url')
+        .eq('user_id', user.id)
         .order('name', { ascending: true });
         
       if (error) {
+        console.error("Erro ao buscar funcionários:", error);
         throw error;
       }
       
@@ -102,8 +113,17 @@ const EmployeeList = ({ onSelectEmployee }: EmployeeListProps) => {
   };
 
   const confirmDelete = (id: string) => {
+    console.log("Confirmando exclusão do funcionário:", id);
     setEmployeeToDelete(id);
     setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteSuccess = () => {
+    console.log("Exclusão bem-sucedida, recarregando lista...");
+    // Limpar o ID do funcionário a ser excluído
+    setEmployeeToDelete(null);
+    // Recarregar a lista de funcionários
+    fetchEmployees();
   };
 
   const handleViewMetrics = (employeeId: string) => {
@@ -187,7 +207,7 @@ const EmployeeList = ({ onSelectEmployee }: EmployeeListProps) => {
         open={deleteDialogOpen}
         onOpenChange={setDeleteDialogOpen}
         employeeId={employeeToDelete}
-        onDeleteSuccess={fetchEmployees}
+        onDeleteSuccess={handleDeleteSuccess}
       />
     </div>
   );
