@@ -1,4 +1,3 @@
-
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { DateRange } from "react-day-picker";
@@ -39,6 +38,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { MetricsSync } from "@/components/dashboard/MetricsSync";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -68,6 +68,7 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <MetricsSync />
       <NavBar />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header reorganizado e simplificado */}
@@ -75,7 +76,7 @@ const Dashboard = () => {
           <div>
             <h1 className="text-3xl font-bold accent-text">Dashboard Inteligente</h1>
             <p className="text-muted-foreground mt-1">
-              Análise avançada com IA e insights personalizados
+              Análise avançada com IA e insights personalizados - Dados em tempo real do Supabase
             </p>
           </div>
           

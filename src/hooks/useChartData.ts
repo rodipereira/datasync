@@ -22,7 +22,7 @@ export function useChartData() {
         .order("period_end", { ascending: true })
         .limit(12);
 
-      // Buscar dados do inventário para calcular estoque
+      // Buscar dados do inventário para calcular estoque atual
       const { data: inventory } = await supabase
         .from("inventory")
         .select("*")
@@ -30,27 +30,25 @@ export function useChartData() {
 
       const totalEstoque = inventory?.reduce((sum, item) => sum + item.quantity, 0) || 0;
 
-      // Se temos dados reais, usamos eles
+      // Se temos dados reais do dashboard_metrics, usamos eles
       if (dashboardMetrics && dashboardMetrics.length > 0) {
         return dashboardMetrics.map((metric) => ({
-          name: new Date(metric.period_end).toLocaleDateString('pt-BR', { month: 'short' }),
+          name: new Date(metric.period_end).toLocaleDateString('pt-BR', { 
+            month: 'short',
+            year: '2-digit'
+          }),
           vendas: Number(metric.total_sales) || 0,
           lucro: Number(metric.net_profit) || 0,
-          estoque: totalEstoque
+          estoque: Number(metric.inventory_count) || totalEstoque
         }));
       }
 
-      // Dados de fallback se não houver dados reais
-      const fallbackData = [
-        { name: "Jan", vendas: 4000, lucro: 2400, estoque: totalEstoque || 2400 },
-        { name: "Fev", vendas: 3000, lucro: 1398, estoque: totalEstoque || 2210 },
-        { name: "Mar", vendas: 2000, lucro: 9800, estoque: totalEstoque || 2290 },
-        { name: "Abr", vendas: 2780, lucro: 3908, estoque: totalEstoque || 2000 },
-        { name: "Mai", vendas: 1890, lucro: 4800, estoque: totalEstoque || 2181 },
-        { name: "Jun", vendas: 2390, lucro: 3800, estoque: totalEstoque || 2500 },
+      // Dados de fallback apenas se não houver dados reais
+      return [
+        { name: "Jan/24", vendas: 4000, lucro: 2400, estoque: totalEstoque || 150 },
+        { name: "Fev/24", vendas: 3000, lucro: 1398, estoque: totalEstoque || 180 },
+        { name: "Mar/24", vendas: 2000, lucro: 9800, estoque: totalEstoque || 200 },
       ];
-
-      return fallbackData;
     },
   });
 
@@ -58,9 +56,6 @@ export function useChartData() {
   const getFilteredData = (): ChartDataPoint[] => {
     if (!realData || realData.length === 0) return [];
 
-    const currentDate = new Date();
-    const currentMonth = currentDate.getMonth();
-    
     switch (period) {
       case "diario":
         // Para dados diários, simulamos uma semana baseada nos dados mais recentes
