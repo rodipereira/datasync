@@ -32,21 +32,79 @@ const Inventory = () => {
       const { data: { user } } = await supabase.auth.getUser();
       
       if (!user) {
+        console.log("Usuário não autenticado");
         throw new Error("Usuário não autenticado");
       }
 
-      const { data, error } = await supabase
+      console.log("Usuário autenticado:", user.id);
+
+      // Primeiro, vamos tentar buscar itens com user_id
+      const { data: userItems, error: userError } = await supabase
         .from("inventory")
         .select("*")
         .eq("user_id", user.id)
         .order("product_name", { ascending: true });
       
-      if (error) {
-        toast.error(`Erro ao buscar dados do inventário: ${error.message}`);
-        throw error;
+      if (userError) {
+        console.error("Erro ao buscar itens do usuário:", userError);
+      } else {
+        console.log("Itens do usuário encontrados:", userItems?.length || 0);
+      }
+
+      // Se não encontrarmos itens do usuário, vamos buscar itens sem user_id e atribuí-los
+      if (!userItems || userItems.length === 0) {
+        console.log("Buscando itens sem user_id para atribuir ao usuário...");
+        
+        const { data: orphanItems, error: orphanError } = await supabase
+          .from("inventory")
+          .select("*")
+          .is("user_id", null)
+          .order("product_name", { ascending: true });
+
+        if (orphanError) {
+          console.error("Erro ao buscar itens órfãos:", orphanError);
+          toast.error(`Erro ao buscar dados do inventário: ${orphanError.message}`);
+          throw orphanError;
+        }
+
+        console.log("Itens sem user_id encontrados:", orphanItems?.length || 0);
+
+        // Se encontrarmos itens sem user_id, vamos atribuí-los ao usuário atual
+        if (orphanItems && orphanItems.length > 0) {
+          console.log("Atribuindo itens órfãos ao usuário atual...");
+          
+          const { error: updateError } = await supabase
+            .from("inventory")
+            .update({ user_id: user.id })
+            .is("user_id", null);
+
+          if (updateError) {
+            console.error("Erro ao atribuir itens ao usuário:", updateError);
+            toast.error(`Erro ao atribuir itens: ${updateError.message}`);
+          } else {
+            console.log("Itens atribuídos com sucesso!");
+            toast.success("Itens do inventário foram atribuídos à sua conta");
+            
+            // Buscar novamente os dados atualizados
+            const { data: updatedItems, error: finalError } = await supabase
+              .from("inventory")
+              .select("*")
+              .eq("user_id", user.id)
+              .order("product_name", { ascending: true });
+
+            if (finalError) {
+              console.error("Erro ao buscar dados atualizados:", finalError);
+              throw finalError;
+            }
+
+            console.log("Dados finais:", updatedItems?.length || 0);
+            return updatedItems || [];
+          }
+        }
       }
       
-      return data || [];
+      console.log("Retornando dados do usuário:", userItems?.length || 0);
+      return userItems || [];
     },
   });
 
