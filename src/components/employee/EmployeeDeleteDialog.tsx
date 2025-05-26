@@ -39,6 +39,19 @@ const EmployeeDeleteDialog = ({
     try {
       setIsDeleting(true);
       console.log("Iniciando exclusão do funcionário:", employeeId);
+
+      // Primeiro, buscamos o funcionário para verificar se temos acesso a ele
+      const { data: employee, error: employeeError } = await supabase
+        .from('employees')
+        .select('id')
+        .eq('id', employeeId)
+        .single();
+
+      if (employeeError || !employee) {
+        console.error("Erro ao verificar funcionário:", employeeError);
+        toast.error("Funcionário não encontrado ou sem permissão para excluir");
+        return;
+      }
       
       // Primeiro, verificamos se há métricas relacionadas ao funcionário e as excluímos
       console.log("Deletando métricas do funcionário...");
@@ -53,28 +66,20 @@ const EmployeeDeleteDialog = ({
         return;
       }
       
-      console.log("Métricas deletadas com sucesso, deletando funcionário...");
-      
       // Em seguida, excluímos o funcionário
-      const { error: employeeError, data } = await supabase
+      console.log("Métricas deletadas com sucesso, deletando funcionário...");
+      const { error: deleteError } = await supabase
         .from('employees')
         .delete()
-        .eq('id', employeeId)
-        .select();
+        .eq('id', employeeId);
         
-      if (employeeError) {
-        console.error("Erro ao deletar funcionário:", employeeError);
-        throw employeeError;
-      }
-      
-      console.log("Funcionário deletado:", data);
-      
-      if (!data || data.length === 0) {
-        console.warn("Nenhum funcionário foi deletado - pode não existir ou não ter permissão");
-        toast.error("Funcionário não encontrado ou não foi possível excluir");
+      if (deleteError) {
+        console.error("Erro ao deletar funcionário:", deleteError);
+        toast.error("Erro ao excluir funcionário");
         return;
       }
       
+      console.log("Funcionário deletado com sucesso");
       toast.success("Funcionário removido com sucesso");
       onDeleteSuccess();
       onOpenChange(false);
