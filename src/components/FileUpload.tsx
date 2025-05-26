@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -141,15 +140,15 @@ const FileUpload = () => {
   };
 
   return (
-    <Card className="w-full">
+    <Card className="w-full dashboard-card border-green-500/15">
       <CardHeader>
-        <CardTitle>Upload e Processamento Automático</CardTitle>
-        <CardDescription>
+        <CardTitle className="text-white">Upload e Processamento Automático</CardTitle>
+        <CardDescription className="text-white/70">
           Envie arquivos de planilha (Excel, CSV) para importação automática de dados de estoque e funcionários
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-primary transition-colors">
+        <div className="border-2 border-dashed border-green-500/30 rounded-lg p-8 text-center cursor-pointer hover:border-green-400/50 transition-colors bg-green-500/5">
           <Input
             type="file"
             id="file-upload"
@@ -161,13 +160,13 @@ const FileUpload = () => {
           />
           <label htmlFor="file-upload" className="cursor-pointer">
             <div className="space-y-2">
-              <div className="mx-auto w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center">
-                <FileUp className="h-6 w-6 text-primary" />
+              <div className="mx-auto w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center">
+                <FileUp className="h-6 w-6 text-green-400" />
               </div>
-              <p className="text-sm font-medium">
+              <p className="text-sm font-medium text-white">
                 Clique para selecionar ou arraste arquivos aqui
               </p>
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-white/60">
                 Suporta arquivos Excel e CSV com dados de estoque ou funcionários
               </p>
             </div>
@@ -176,36 +175,36 @@ const FileUpload = () => {
 
         {files.length > 0 && (
           <div className="space-y-2">
-            <p className="text-sm font-medium">Arquivos ({files.length}):</p>
+            <p className="text-sm font-medium text-white">Arquivos ({files.length}):</p>
             <div className="space-y-2 max-h-64 overflow-y-auto">
               {files.map((fileData, index) => (
-                <div key={index} className="flex items-center justify-between bg-blue-50 rounded p-3">
+                <div key={index} className="flex items-center justify-between bg-secondary/30 border border-green-500/20 rounded p-3">
                   <div className="flex items-center space-x-3 flex-1">
                     <div className="flex-shrink-0">
                       {fileData.uploading ? (
-                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary"></div>
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-green-400"></div>
                       ) : fileData.result ? (
                         fileData.result.success ? (
-                          <CheckCircle className="h-4 w-4 text-green-500" />
+                          <CheckCircle className="h-4 w-4 text-green-400" />
                         ) : (
-                          <AlertCircle className="h-4 w-4 text-red-500" />
+                          <AlertCircle className="h-4 w-4 text-red-400" />
                         )
                       ) : null}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm truncate font-medium">{fileData.file.name}</p>
+                      <p className="text-sm truncate font-medium text-white">{fileData.file.name}</p>
                       {fileData.result && (
-                        <p className={`text-xs ${fileData.result.success ? 'text-green-600' : 'text-red-600'}`}>
+                        <p className={`text-xs ${fileData.result.success ? 'text-green-400' : 'text-red-400'}`}>
                           {fileData.result.message}
                         </p>
                       )}
                       {fileData.uploading && (
-                        <p className="text-xs text-blue-600">Processando...</p>
+                        <p className="text-xs text-blue-400">Processando...</p>
                       )}
                     </div>
                   </div>
                   {!uploading && (
-                    <Button variant="ghost" size="sm" onClick={() => removeFile(index)}>
+                    <Button variant="ghost" size="sm" onClick={() => removeFile(index)} className="text-white/60 hover:text-white">
                       <X className="h-4 w-4" />
                     </Button>
                   )}
@@ -217,30 +216,30 @@ const FileUpload = () => {
 
         {uploading && (
           <div className="space-y-2">
-            <div className="flex justify-between text-sm">
+            <div className="flex justify-between text-sm text-white">
               <span>Progresso do processamento</span>
               <span>{progress}%</span>
             </div>
-            <Progress value={progress} />
+            <Progress value={progress} className="bg-secondary/30" />
           </div>
         )}
       </CardContent>
       <CardFooter className="flex flex-col gap-4">
         <Button 
-          className="w-full" 
+          className="w-full bg-green-600 hover:bg-green-700 text-white" 
           onClick={handleUpload} 
           disabled={files.length === 0 || uploading}
         >
           {uploading ? "Processando arquivos..." : "Enviar e Processar Arquivos"}
         </Button>
         
-        <div className="text-xs text-center text-muted-foreground space-y-2">
+        <div className="text-xs text-center text-white/60 space-y-2">
           <p>Os arquivos serão processados automaticamente e os dados importados para o sistema</p>
-          <div className="bg-blue-50 p-3 rounded text-left">
-            <p className="font-medium text-blue-800 mb-1">Formatos suportados:</p>
-            <ul className="text-blue-700 space-y-1">
-              <li>• <strong>Estoque:</strong> Colunas: product/produto, quantity/quantidade, minimum/mínimo, category/categoria</li>
-              <li>• <strong>Funcionários:</strong> Colunas: name/nome, position/cargo, hire_date/contratação</li>
+          <div className="bg-secondary/20 border border-green-500/20 p-3 rounded text-left">
+            <p className="font-medium text-green-300 mb-1">Formatos suportados:</p>
+            <ul className="text-white/70 space-y-1">
+              <li>• <strong className="text-green-400">Estoque:</strong> Colunas: product/produto, quantity/quantidade, minimum/mínimo, category/categoria</li>
+              <li>• <strong className="text-blue-400">Funcionários:</strong> Colunas: name/nome, position/cargo, hire_date/contratação</li>
             </ul>
           </div>
         </div>

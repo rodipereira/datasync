@@ -12,7 +12,7 @@ const Upload = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
           <h1 className="text-2xl font-bold accent-text">Upload e Processamento de Dados</h1>
-          <p className="text-gray-400">
+          <p className="text-muted-foreground">
             Envie seus arquivos para importação automática de dados de estoque e funcionários
           </p>
         </div>
@@ -27,65 +27,57 @@ const Upload = () => {
             <div className="grid gap-8 md:grid-cols-2">
               <FileUpload />
               
-              <Card className="dashboard-card">
+              <Card className="dashboard-card border-green-500/15">
                 <CardHeader>
-                  <CardTitle>Como Funciona o Processamento</CardTitle>
-                  <CardDescription>
+                  <CardTitle className="text-white">Como Funciona o Processamento</CardTitle>
+                  <CardDescription className="text-white/70">
                     O sistema identifica automaticamente o tipo de dados e importa para as tabelas corretas
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <div className="space-y-3">
-                    <h3 className="font-medium text-green-600">✅ Dados de Estoque</h3>
-                    <div className="bg-green-50 p-3 rounded-lg">
-                      <p className="text-sm text-green-800 mb-2">Colunas reconhecidas:</p>
-                      <ul className="text-xs text-green-700 space-y-1">
-                        <li>• <strong>product_name / produto:</strong> Nome do produto</li>
-                        <li>• <strong>quantity / quantidade:</strong> Quantidade em estoque</li>
-                        <li>• <strong>minimum / mínimo:</strong> Nível mínimo</li>
-                        <li>• <strong>category / categoria:</strong> Categoria do produto</li>
+                    <h3 className="font-medium text-green-400 flex items-center gap-2">
+                      ✅ Dados de Estoque
+                    </h3>
+                    <div className="bg-green-500/10 border border-green-500/20 p-4 rounded-lg">
+                      <p className="text-sm text-green-300 mb-2 font-medium">Colunas reconhecidas:</p>
+                      <ul className="text-sm text-green-200 space-y-1">
+                        <li>• <strong className="text-green-300">product_name / produto:</strong> Nome do produto</li>
+                        <li>• <strong className="text-green-300">quantity / quantidade:</strong> Quantidade em estoque</li>
+                        <li>• <strong className="text-green-300">minimum / mínimo:</strong> Nível mínimo</li>
+                        <li>• <strong className="text-green-300">category / categoria:</strong> Categoria do produto</li>
                       </ul>
                     </div>
                   </div>
                   
                   <div className="space-y-3">
-                    <h3 className="font-medium text-blue-600">👥 Dados de Funcionários</h3>
-                    <div className="bg-blue-50 p-3 rounded-lg">
-                      <p className="text-sm text-blue-800 mb-2">Colunas reconhecidas:</p>
-                      <ul className="text-xs text-blue-700 space-y-1">
-                        <li>• <strong>name / nome:</strong> Nome do funcionário</li>
-                        <li>• <strong>position / cargo:</strong> Cargo/posição</li>
-                        <li>• <strong>hire_date / contratação:</strong> Data de contratação</li>
+                    <h3 className="font-medium text-blue-400 flex items-center gap-2">
+                      👥 Dados de Funcionários
+                    </h3>
+                    <div className="bg-blue-500/10 border border-blue-500/20 p-4 rounded-lg">
+                      <p className="text-sm text-blue-300 mb-2 font-medium">Colunas reconhecidas:</p>
+                      <ul className="text-sm text-blue-200 space-y-1">
+                        <li>• <strong className="text-blue-300">name / nome:</strong> Nome do funcionário</li>
+                        <li>• <strong className="text-blue-300">position / cargo:</strong> Cargo/posição</li>
+                        <li>• <strong className="text-blue-300">hire_date / contratação:</strong> Data de contratação</li>
                       </ul>
                     </div>
                   </div>
                   
-                  <div className="rounded-md bg-amber-50 p-4">
-                    <div className="flex">
-                      <div className="ml-3">
-                        <h3 className="text-sm font-medium text-amber-800">Processamento Inteligente</h3>
-                        <div className="mt-2 text-sm text-amber-700">
-                          <p>
-                            O sistema detecta automaticamente se o arquivo contém dados de estoque ou funcionários
-                            baseado nos nomes das colunas e importa os dados para as tabelas corretas.
-                          </p>
-                        </div>
-                      </div>
-                    </div>
+                  <div className="bg-amber-500/10 border border-amber-500/20 p-4 rounded-lg">
+                    <h3 className="text-sm font-medium text-amber-300 mb-2">Processamento Inteligente</h3>
+                    <p className="text-sm text-amber-200">
+                      O sistema detecta automaticamente se o arquivo contém dados de estoque ou funcionários
+                      baseado nos nomes das colunas e importa os dados para as tabelas corretas.
+                    </p>
                   </div>
                   
-                  <div className="rounded-md bg-blue-50 p-4">
-                    <div className="flex">
-                      <div className="ml-3">
-                        <h3 className="text-sm font-medium text-blue-800">Atualização em Tempo Real</h3>
-                        <div className="mt-2 text-sm text-blue-700">
-                          <p>
-                            Após o processamento, os dados aparecem automaticamente no dashboard, 
-                            inventário e gerenciamento de funcionários sem necessidade de recarregar a página.
-                          </p>
-                        </div>
-                      </div>
-                    </div>
+                  <div className="bg-blue-500/10 border border-blue-500/20 p-4 rounded-lg">
+                    <h3 className="text-sm font-medium text-blue-300 mb-2">Atualização em Tempo Real</h3>
+                    <p className="text-sm text-blue-200">
+                      Após o processamento, os dados aparecem automaticamente no dashboard, 
+                      inventário e gerenciamento de funcionários sem necessidade de recarregar a página.
+                    </p>
                   </div>
                 </CardContent>
               </Card>
