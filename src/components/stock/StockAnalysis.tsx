@@ -20,13 +20,20 @@ interface StockAnalysisProps {
 }
 
 const StockAnalysis: React.FC<StockAnalysisProps> = ({ className }) => {
-  // Fetch stock data from Supabase
+  // Fetch stock data from Supabase for the current user
   const { data: stockData, isLoading, error } = useQuery({
     queryKey: ["stockData"],
     queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        throw new Error("Usuário não autenticado");
+      }
+
       const { data, error } = await supabase
         .from("inventory")
-        .select("*") as { data: StockItem[] | null, error: Error | null };
+        .select("*")
+        .eq("user_id", user.id) as { data: StockItem[] | null, error: Error | null };
       
       if (error) {
         throw new Error(`Erro ao buscar dados do estoque: ${error.message}`);

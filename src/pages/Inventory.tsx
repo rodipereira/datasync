@@ -16,6 +16,7 @@ export interface InventoryItem {
   quantity: number;
   minimum_level: number;
   category: string;
+  user_id?: string;
   created_at?: string;
   updated_at?: string;
 }
@@ -24,13 +25,20 @@ const Inventory = () => {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<InventoryItem | null>(null);
 
-  // Buscar dados de inventário
+  // Buscar dados de inventário do usuário logado
   const { data: inventoryData, isLoading, error, refetch } = useQuery({
     queryKey: ["inventoryData"],
     queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        throw new Error("Usuário não autenticado");
+      }
+
       const { data, error } = await supabase
         .from("inventory")
         .select("*")
+        .eq("user_id", user.id)
         .order("product_name", { ascending: true });
       
       if (error) {
@@ -69,8 +77,14 @@ const Inventory = () => {
     setEditingItem(null);
   };
 
-  const handleFormSubmit = async (formData: Omit<InventoryItem, "id" | "created_at" | "updated_at">) => {
+  const handleFormSubmit = async (formData: Omit<InventoryItem, "id" | "created_at" | "updated_at" | "user_id">) => {
     try {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        throw new Error("Usuário não autenticado");
+      }
+
       if (editingItem) {
         // Atualizar item existente
         const { error } = await supabase
@@ -82,7 +96,8 @@ const Inventory = () => {
             category: formData.category,
             updated_at: new Date().toISOString()
           })
-          .eq("id", editingItem.id);
+          .eq("id", editingItem.id)
+          .eq("user_id", user.id); // Garantir que só atualiza itens do próprio usuário
 
         if (error) {
           throw error;
@@ -97,7 +112,8 @@ const Inventory = () => {
             product_name: formData.product_name,
             quantity: formData.quantity,
             minimum_level: formData.minimum_level,
-            category: formData.category
+            category: formData.category,
+            user_id: user.id // Definir o user_id para o usuário logado
           });
 
         if (error) {
@@ -121,7 +137,7 @@ const Inventory = () => {
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
           <div>
             <h1 className="text-2xl font-bold accent-text">Gerenciamento de Inventário</h1>
-            <p className="text-gray-400">Adicione, edite e remova itens do estoque</p>
+            <p className="text-gray-400">Adicione, edite e remova itens do seu estoque pessoal</p>
           </div>
           <div className="mt-4 md:mt-0">
             <Button 
@@ -136,9 +152,9 @@ const Inventory = () => {
         
         <Card className="dashboard-chart">
           <CardHeader>
-            <CardTitle className="text-lg font-semibold text-white">Itens em Estoque</CardTitle>
+            <CardTitle className="text-lg font-semibold text-white">Seus Itens em Estoque</CardTitle>
             <CardDescription className="text-gray-300">
-              Listagem completa do inventário
+              Listagem completa do seu inventário pessoal
             </CardDescription>
           </CardHeader>
           <CardContent>
