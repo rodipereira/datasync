@@ -5,91 +5,93 @@
 
 @layer base {
   :root {
-    /* Paleta de cores fixa - tons de roxo/azul com gradientes */
-    --background: 15 23% 4%;
-    --foreground: 0 0% 98%;
+    /* Paleta de cores orgânica - tons terrosos e naturais */
+    --background: 25 15% 8%;
+    --foreground: 30 12% 95%;
 
-    --card: 15 23% 4%;
-    --card-foreground: 0 0% 98%;
+    --card: 25 15% 8%;
+    --card-foreground: 30 12% 95%;
 
-    --popover: 15 23% 4%;
-    --popover-foreground: 0 0% 98%;
+    --popover: 25 15% 8%;
+    --popover-foreground: 30 12% 95%;
 
-    --primary: 262 83% 58%;
+    --primary: 142 76% 36%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 217 33% 17%;
-    --secondary-foreground: 0 0% 98%;
+    --secondary: 33 25% 18%;
+    --secondary-foreground: 30 12% 95%;
 
-    --muted: 217 33% 17%;
-    --muted-foreground: 215 20.2% 65%;
+    --muted: 33 25% 18%;
+    --muted-foreground: 30 8% 65%;
 
-    --accent: 262 83% 58%;
-    --accent-foreground: 0 0% 98%;
+    --accent: 142 76% 36%;
+    --accent-foreground: 30 12% 95%;
 
-    --destructive: 0 62.8% 30.6%;
+    --destructive: 0 62.8% 40%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 217 33% 17%;
-    --input: 217 33% 17%;
-    --ring: 262 83% 58%;
+    --border: 33 25% 18%;
+    --input: 33 25% 18%;
+    --ring: 142 76% 36%;
 
     --radius: 0.75rem;
     --animation-duration: 0.3s;
 
-    --sidebar-background: 15 23% 4%;
-    --sidebar-foreground: 0 0% 98%;
-    --sidebar-primary: 262 83% 58%;
+    --sidebar-background: 25 15% 8%;
+    --sidebar-foreground: 30 12% 95%;
+    --sidebar-primary: 142 76% 36%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 217 33% 17%;
-    --sidebar-accent-foreground: 0 0% 98%;
-    --sidebar-border: 217 33% 17%;
-    --sidebar-ring: 262 83% 58%;
+    --sidebar-accent: 33 25% 18%;
+    --sidebar-accent-foreground: 30 12% 95%;
+    --sidebar-border: 33 25% 18%;
+    --sidebar-ring: 142 76% 36%;
 
-    /* Gradientes personalizados */
-    --gradient-primary: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 50%, #06b6d4 100%);
-    --gradient-secondary: linear-gradient(135deg, #1e293b 0%, #374151 100%);
-    --gradient-accent: linear-gradient(135deg, #7c3aed 0%, #2563eb 50%, #0891b2 100%);
-    --gradient-dark: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+    /* Gradientes orgânicos e naturais */
+    --gradient-primary: linear-gradient(135deg, #22c55e 0%, #16a34a 50%, #15803d 100%);
+    --gradient-secondary: linear-gradient(135deg, #44403c 0%, #57534e 100%);
+    --gradient-accent: linear-gradient(135deg, #34d399 0%, #10b981 50%, #059669 100%);
+    --gradient-dark: linear-gradient(135deg, #1c1917 0%, #292524 50%, #44403c 100%);
+    --gradient-earth: linear-gradient(135deg, #a3a3a3 0%, #78716c 50%, #57534e 100%);
+    --gradient-forest: linear-gradient(135deg, #16a34a 0%, #15803d 50%, #14532d 100%);
   }
 
   .light {
-    --background: 0 0% 100%;
-    --foreground: 15 23% 4%;
+    --background: 30 15% 97%;
+    --foreground: 25 15% 8%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 15 23% 4%;
+    --card: 30 15% 97%;
+    --card-foreground: 25 15% 8%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 15 23% 4%;
+    --popover: 30 15% 97%;
+    --popover-foreground: 25 15% 8%;
 
-    --primary: 262 83% 58%;
+    --primary: 142 76% 36%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 96%;
-    --secondary-foreground: 15 23% 4%;
+    --secondary: 30 8% 92%;
+    --secondary-foreground: 25 15% 8%;
 
-    --muted: 210 40% 96%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 30 8% 92%;
+    --muted-foreground: 25 8% 45%;
 
-    --accent: 262 83% 58%;
+    --accent: 142 76% 36%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 262 83% 58%;
+    --border: 30 8% 85%;
+    --input: 30 8% 85%;
+    --ring: 142 76% 36%;
 
-    --sidebar-background: 15 23% 4%;
-    --sidebar-foreground: 0 0% 98%;
-    --sidebar-primary: 262 83% 58%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 217 33% 17%;
-    --sidebar-accent-foreground: 0 0% 98%;
-    --sidebar-border: 217 33% 17%;
-    --sidebar-ring: 262 83% 58%;
+    --sidebar-background: 25 15% 8%;
+    --sidebar-foreground: 30 12% 95%;
+    --sidebar-primary: 142 76% 36%;
+    --sidebar-primary-foreground: 30 12% 95%;
+    --sidebar-accent: 33 25% 18%;
+    --sidebar-accent-foreground: 30 12% 95%;
+    --sidebar-border: 33 25% 18%;
+    --sidebar-ring: 142 76% 36%;
   }
 }
 
@@ -105,31 +107,31 @@
   }
 }
 
-/* Estilos com gradientes fixos */
+/* Estilos com gradientes orgânicos */
 .glass-card {
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%);
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(22, 163, 74, 0.05) 100%);
   backdrop-filter: blur(16px);
-  border: 1px solid rgba(139, 92, 246, 0.2);
+  border: 1px solid rgba(34, 197, 94, 0.2);
 }
 
 .metrics-card {
   background: var(--gradient-primary);
-  @apply shadow-2xl hover:shadow-purple-500/25 transition-all duration-300 border-0;
+  @apply shadow-2xl hover:shadow-green-500/25 transition-all duration-300 border-0;
 }
 
 .chart-container {
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(6, 182, 212, 0.05) 100%);
-  @apply p-6 rounded-xl border border-purple-500/20 shadow-xl;
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(52, 211, 153, 0.05) 100%);
+  @apply p-6 rounded-xl border border-green-500/20 shadow-xl;
 }
 
 .dashboard-card {
-  background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%);
-  @apply rounded-xl border border-purple-500/20 shadow-2xl backdrop-blur-sm;
+  background: linear-gradient(135deg, rgba(68, 64, 60, 0.8) 0%, rgba(28, 25, 23, 0.9) 100%);
+  @apply rounded-xl border border-green-500/20 shadow-2xl backdrop-blur-sm;
 }
 
 .dashboard-chart {
-  background: linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.8) 100%);
-  @apply border border-purple-500/30 rounded-xl shadow-2xl backdrop-blur-md;
+  background: linear-gradient(135deg, rgba(68, 64, 60, 0.6) 0%, rgba(28, 25, 23, 0.8) 100%);
+  @apply border border-green-500/30 rounded-xl shadow-2xl backdrop-blur-md;
 }
 
 .accent-gradient {
@@ -144,36 +146,36 @@
 /* Gradientes para botões e componentes interativos */
 .btn-primary {
   background: var(--gradient-primary);
-  @apply text-white border-0 shadow-lg hover:shadow-purple-500/30 transition-all duration-300;
+  @apply text-white border-0 shadow-lg hover:shadow-green-500/30 transition-all duration-300;
 }
 
 .btn-secondary {
   background: var(--gradient-secondary);
-  @apply text-white border border-purple-500/30 hover:border-purple-400/50 transition-all duration-300;
+  @apply text-white border border-green-500/30 hover:border-green-400/50 transition-all duration-300;
 }
 
 /* Cards com gradientes específicos */
 .ai-card {
-  background: linear-gradient(135deg, rgba(124, 58, 237, 0.15) 0%, rgba(37, 99, 235, 0.1) 50%, rgba(8, 145, 178, 0.05) 100%);
-  @apply border border-purple-500/30 rounded-xl shadow-xl backdrop-blur-sm;
+  background: linear-gradient(135deg, rgba(52, 211, 153, 0.15) 0%, rgba(16, 185, 129, 0.1) 50%, rgba(5, 150, 105, 0.05) 100%);
+  @apply border border-green-500/30 rounded-xl shadow-xl backdrop-blur-sm;
 }
 
 .notification-card {
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(30, 41, 59, 0.8) 100%);
-  @apply border border-purple-400/20 rounded-lg shadow-lg;
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(68, 64, 60, 0.8) 100%);
+  @apply border border-green-400/20 rounded-lg shadow-lg;
 }
 
 /* Navbar com gradiente */
 .navbar-gradient {
-  background: linear-gradient(90deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.9) 50%, rgba(51, 65, 85, 0.95) 100%);
+  background: linear-gradient(90deg, rgba(28, 25, 23, 0.95) 0%, rgba(41, 37, 36, 0.9) 50%, rgba(68, 64, 60, 0.95) 100%);
   backdrop-filter: blur(20px);
-  @apply border-b border-purple-500/20;
+  @apply border-b border-green-500/20;
 }
 
 /* Sidebar com gradiente */
 .sidebar-gradient {
   background: var(--gradient-dark);
-  @apply border-r border-purple-500/20;
+  @apply border-r border-green-500/20;
 }
 
 /* Animações aprimoradas com gradientes */
@@ -182,8 +184,8 @@
 }
 
 .smart-card {
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(15, 23, 42, 0.9) 50%, rgba(30, 41, 59, 0.8) 100%);
-  @apply border border-purple-500/20 rounded-xl shadow-xl hover:shadow-purple-500/20 hover:border-purple-400/30 transition-all duration-300;
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.08) 0%, rgba(28, 25, 23, 0.9) 50%, rgba(68, 64, 60, 0.8) 100%);
+  @apply border border-green-500/20 rounded-xl shadow-xl hover:shadow-green-500/20 hover:border-green-400/30 transition-all duration-300;
 }
 
 .ai-gradient {
@@ -192,7 +194,7 @@
 
 .notification-badge {
   @apply absolute -top-1 -right-1 h-3 w-3 rounded-full animate-pulse;
-  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
 }
 
 .prediction-line {
@@ -207,10 +209,10 @@
   }
 }
 
-/* Highlights com gradientes */
+/* Highlights com gradientes orgânicos */
 .insight-highlight {
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(37, 99, 235, 0.05) 100%);
-  @apply border-l-4 border-l-blue-500 p-4 rounded-r-lg;
+  background: linear-gradient(135deg, rgba(52, 211, 153, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
+  @apply border-l-4 border-l-emerald-500 p-4 rounded-r-lg;
 }
 
 .recommendation-highlight {
@@ -220,7 +222,7 @@
 
 .warning-highlight {
   background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(217, 119, 6, 0.05) 100%);
-  @apply border-l-4 border-l-yellow-500 p-4 rounded-r-lg;
+  @apply border-l-4 border-l-amber-500 p-4 rounded-r-lg;
 }
 
 /* Animações com gradientes */
@@ -262,66 +264,86 @@
 .hover-gradient:hover {
   background: var(--gradient-primary);
   transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(139, 92, 246, 0.3);
+  box-shadow: 0 10px 25px rgba(34, 197, 94, 0.3);
 }
 
 /* Footer com gradiente */
 .footer-gradient {
-  background: linear-gradient(135deg, rgba(15, 23, 42, 0.98) 0%, rgba(30, 41, 59, 0.95) 100%);
-  @apply border-t border-purple-500/20;
+  background: linear-gradient(135deg, rgba(28, 25, 23, 0.98) 0%, rgba(68, 64, 60, 0.95) 100%);
+  @apply border-t border-green-500/20;
 }
 
 /* Responsive improvements com gradientes consistentes */
 @media (max-width: 768px) {
   .dashboard-chart {
     @apply mx-2;
-    background: linear-gradient(135deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.9) 100%);
+    background: linear-gradient(135deg, rgba(68, 64, 60, 0.7) 0%, rgba(28, 25, 23, 0.9) 100%);
   }
   
   .smart-card {
     @apply mx-1;
-    background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(15, 23, 42, 0.95) 100%);
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(28, 25, 23, 0.95) 100%);
   }
 }
 
 /* Modo compacto com gradientes */
 .compact-mode .dashboard-card {
   @apply p-3;
-  background: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.95) 100%);
+  background: linear-gradient(135deg, rgba(68, 64, 60, 0.9) 0%, rgba(28, 25, 23, 0.95) 100%);
 }
 
 .compact-mode .chart-container {
   @apply p-2;
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(6, 182, 212, 0.03) 100%);
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.08) 0%, rgba(52, 211, 153, 0.03) 100%);
 }
 
 /* Alto contraste mantendo gradientes sutis */
 .high-contrast {
-  --primary: 262 83% 70%;
+  --primary: 142 76% 45%;
   --background: 0 0% 0%;
   --foreground: 0 0% 100%;
-  --border: 262 83% 70%;
+  --border: 142 76% 45%;
 }
 
 .high-contrast .dashboard-card {
   @apply border-2;
   border-color: hsl(var(--primary));
-  background: linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(30, 41, 59, 0.8) 100%);
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(68, 64, 60, 0.8) 100%);
 }
 
 /* Gradientes para elementos específicos da UI */
 .popover-gradient {
-  background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.9) 100%);
+  background: linear-gradient(135deg, rgba(28, 25, 23, 0.95) 0%, rgba(68, 64, 60, 0.9) 100%);
   backdrop-filter: blur(20px);
-  @apply border border-purple-500/30;
+  @apply border border-green-500/30;
 }
 
 .modal-gradient {
-  background: linear-gradient(135deg, rgba(15, 23, 42, 0.98) 0%, rgba(30, 41, 59, 0.95) 100%);
+  background: linear-gradient(135deg, rgba(28, 25, 23, 0.98) 0%, rgba(68, 64, 60, 0.95) 100%);
   backdrop-filter: blur(24px);
 }
 
 .input-gradient {
-  background: linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(51, 65, 85, 0.4) 100%);
-  @apply border border-purple-500/30 focus:border-purple-400/60;
+  background: linear-gradient(135deg, rgba(68, 64, 60, 0.6) 0%, rgba(87, 83, 78, 0.4) 100%);
+  @apply border border-green-500/30 focus:border-green-400/60;
+}
+
+/* Novos gradientes terrosos */
+.earth-gradient {
+  background: var(--gradient-earth);
+}
+
+.forest-gradient {
+  background: var(--gradient-forest);
+}
+
+/* Cards com tons naturais */
+.nature-card {
+  background: linear-gradient(135deg, rgba(168, 162, 158, 0.1) 0%, rgba(120, 113, 108, 0.05) 100%);
+  @apply border border-stone-500/20 rounded-xl shadow-lg backdrop-blur-sm;
+}
+
+.wood-card {
+  background: linear-gradient(135deg, rgba(120, 113, 108, 0.2) 0%, rgba(87, 83, 78, 0.1) 100%);
+  @apply border border-stone-600/30 rounded-xl shadow-xl;
 }
