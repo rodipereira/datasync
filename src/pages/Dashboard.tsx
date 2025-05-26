@@ -11,7 +11,6 @@ import EmployeeForm from "@/components/EmployeeForm";
 import EmployeeMetrics from "@/components/EmployeeMetrics";
 import StockAnalysis from "@/components/stock/StockAnalysis";
 import SmartDashboard from "@/components/dashboard/SmartDashboard";
-import NotificationCenter from "@/components/notifications/NotificationCenter";
 import DataAnalyzer from "@/components/ai/DataAnalyzer";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -20,7 +19,6 @@ import {
   Bot, 
   Calendar, 
   Upload, 
-  Bell, 
   Brain,
   Sparkles
 } from "lucide-react";
@@ -155,17 +153,6 @@ const Dashboard = () => {
         </div>
 
         <div className="space-y-8">
-          {/* Central de Notificações - Seção separada */}
-          <div>
-            <div className="flex items-center gap-3 mb-4">
-              <div className="p-2 bg-primary/10 rounded-lg">
-                <Bell className="h-5 w-5 text-primary" />
-              </div>
-              <h2 className="text-xl font-semibold">Notificações</h2>
-            </div>
-            <NotificationCenter />
-          </div>
-
           {/* Análise com IA - Seção melhorada */}
           <div>
             <div className="flex items-center justify-between mb-4">

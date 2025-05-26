@@ -2,13 +2,21 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { LogOut, Menu, X, Users, Package } from "lucide-react";
+import { LogOut, Menu, X, Users, Package, Bell } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { useNotifications } from "@/hooks/useNotifications";
+import CompactNotificationTabs from "./notifications/CompactNotificationTabs";
 
 const NavBar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [notificationOpen, setNotificationOpen] = useState(false);
   const navigate = useNavigate();
+  
+  const { notifications, isLoading, markAsRead } = useNotifications();
+  const unreadCount = notifications?.filter(n => !n.read).length || 0;
 
   const handleLogout = async () => {
     try {
@@ -57,6 +65,32 @@ const NavBar = () => {
             <Link to="/profile" className="text-gray-700 hover:text-primary px-3 py-2 rounded-md text-sm font-medium">
               Perfil
             </Link>
+            
+            {/* Notificações Popover */}
+            <Popover open={notificationOpen} onOpenChange={setNotificationOpen}>
+              <PopoverTrigger asChild>
+                <Button variant="ghost" size="sm" className="relative">
+                  <Bell className="h-4 w-4" />
+                  {unreadCount > 0 && (
+                    <Badge 
+                      variant="destructive" 
+                      className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs"
+                    >
+                      {unreadCount}
+                    </Badge>
+                  )}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-96 p-0 bg-white border shadow-lg" align="end">
+                <CompactNotificationTabs
+                  notifications={notifications || []}
+                  isLoading={isLoading}
+                  unreadCount={unreadCount}
+                  onMarkAsRead={markAsRead}
+                />
+              </PopoverContent>
+            </Popover>
+            
             <Button variant="outline" size="sm" className="ml-4" onClick={handleLogout}>
               <LogOut className="h-4 w-4 mr-2" />
               Sair
@@ -64,6 +98,31 @@ const NavBar = () => {
           </div>
           
           <div className="md:hidden flex items-center">
+            {/* Notificações para mobile */}
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="ghost" size="sm" className="relative mr-2">
+                  <Bell className="h-4 w-4" />
+                  {unreadCount > 0 && (
+                    <Badge 
+                      variant="destructive" 
+                      className="absolute -top-1 -right-1 h-4 w-4 flex items-center justify-center p-0 text-xs"
+                    >
+                      {unreadCount}
+                    </Badge>
+                  )}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-80 p-0 bg-white border shadow-lg" align="end">
+                <CompactNotificationTabs
+                  notifications={notifications || []}
+                  isLoading={isLoading}
+                  unreadCount={unreadCount}
+                  onMarkAsRead={markAsRead}
+                />
+              </PopoverContent>
+            </Popover>
+            
             <Button variant="ghost" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
               {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </Button>
