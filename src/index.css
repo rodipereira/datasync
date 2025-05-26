@@ -5,86 +5,91 @@
 
 @layer base {
   :root {
-    --background: 260 25% 11%;
+    /* Paleta de cores fixa - tons de roxo/azul com gradientes */
+    --background: 15 23% 4%;
     --foreground: 0 0% 98%;
 
-    --card: 260 25% 11%;
+    --card: 15 23% 4%;
     --card-foreground: 0 0% 98%;
 
-    --popover: 260 25% 11%;
+    --popover: 15 23% 4%;
     --popover-foreground: 0 0% 98%;
 
-    --primary: 270 75% 60%;
+    --primary: 262 83% 58%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 260 15% 25%;
+    --secondary: 217 33% 17%;
     --secondary-foreground: 0 0% 98%;
 
-    --muted: 260 15% 25%;
-    --muted-foreground: 215 20.2% 80%;
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20.2% 65%;
 
-    --accent: 260 25% 30%;
+    --accent: 262 83% 58%;
     --accent-foreground: 0 0% 98%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 260 15% 25%;
-    --input: 260 15% 25%;
-    --ring: 270 75% 60%;
+    --border: 217 33% 17%;
+    --input: 217 33% 17%;
+    --ring: 262 83% 58%;
 
     --radius: 0.75rem;
     --animation-duration: 0.3s;
 
-    --sidebar-background: 260 25% 11%;
+    --sidebar-background: 15 23% 4%;
     --sidebar-foreground: 0 0% 98%;
-    --sidebar-primary: 270 75% 60%;
+    --sidebar-primary: 262 83% 58%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 260 25% 20%;
+    --sidebar-accent: 217 33% 17%;
     --sidebar-accent-foreground: 0 0% 98%;
-    --sidebar-border: 260 25% 20%;
-    --sidebar-ring: 270 75% 60%;
+    --sidebar-border: 217 33% 17%;
+    --sidebar-ring: 262 83% 58%;
+
+    /* Gradientes personalizados */
+    --gradient-primary: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 50%, #06b6d4 100%);
+    --gradient-secondary: linear-gradient(135deg, #1e293b 0%, #374151 100%);
+    --gradient-accent: linear-gradient(135deg, #7c3aed 0%, #2563eb 50%, #0891b2 100%);
+    --gradient-dark: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
   }
 
   .light {
-    --background: 210 45% 98%;
-    --foreground: 222.2 84% 4.9%;
+    --background: 0 0% 100%;
+    --foreground: 15 23% 4%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 15 23% 4%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 15 23% 4%;
 
-    --primary: 270 75% 60%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 262 83% 58%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 15 23% 4%;
 
-    --muted: 210 40% 96.1%;
+    --muted: 210 40% 96%;
     --muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 262 83% 58%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 0 0% 100%;
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 270 75% 60%;
+    --ring: 262 83% 58%;
 
-    --radius: 0.5rem;
-
-    --sidebar-background: 222 47% 11%;
-    --sidebar-foreground: 210 40% 98%;
-    --sidebar-primary: 270 75% 60%;
+    --sidebar-background: 15 23% 4%;
+    --sidebar-foreground: 0 0% 98%;
+    --sidebar-primary: 262 83% 58%;
     --sidebar-primary-foreground: 0 0% 98%;
     --sidebar-accent: 217 33% 17%;
-    --sidebar-accent-foreground: 210 40% 98%;
-    --sidebar-border: 216 34% 17%;
-    --sidebar-ring: 270 75% 60%;
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-border: 217 33% 17%;
+    --sidebar-ring: 262 83% 58%;
   }
 }
 
@@ -95,62 +100,105 @@
 
   body {
     @apply bg-background text-foreground;
+    background: var(--gradient-dark);
     transition: all var(--animation-duration) ease;
   }
 }
 
-/* Estilos originais mantidos */
+/* Estilos com gradientes fixos */
 .glass-card {
-  @apply bg-primary/10 backdrop-blur-md border border-primary/20;
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(59, 130, 246, 0.05) 100%);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(139, 92, 246, 0.2);
 }
 
 .metrics-card {
-  @apply bg-gradient-to-br from-primary/20 to-primary/5 shadow-lg hover:shadow-xl transition-shadow border border-primary/10;
+  background: var(--gradient-primary);
+  @apply shadow-2xl hover:shadow-purple-500/25 transition-all duration-300 border-0;
 }
 
 .chart-container {
-  @apply p-4 rounded-lg border border-primary/20 bg-primary/5 shadow-md;
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(6, 182, 212, 0.05) 100%);
+  @apply p-6 rounded-xl border border-purple-500/20 shadow-xl;
 }
 
 .dashboard-card {
-  @apply rounded-xl bg-gradient-to-br from-secondary/80 to-background border border-primary/20 shadow-xl;
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%);
+  @apply rounded-xl border border-purple-500/20 shadow-2xl backdrop-blur-sm;
 }
 
 .dashboard-chart {
-  @apply bg-gradient-to-br from-secondary/30 to-background border border-primary/20 rounded-xl shadow-xl;
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.8) 100%);
+  @apply border border-purple-500/30 rounded-xl shadow-2xl backdrop-blur-md;
 }
 
 .accent-gradient {
-  @apply bg-gradient-to-r from-primary to-[#9f7aea];
+  background: var(--gradient-accent);
 }
 
 .accent-text {
-  @apply font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-[#9f7aea];
+  @apply font-bold text-transparent bg-clip-text;
+  background-image: var(--gradient-accent);
 }
 
-/* Novos estilos para temas e animações */
+/* Gradientes para botões e componentes interativos */
+.btn-primary {
+  background: var(--gradient-primary);
+  @apply text-white border-0 shadow-lg hover:shadow-purple-500/30 transition-all duration-300;
+}
+
+.btn-secondary {
+  background: var(--gradient-secondary);
+  @apply text-white border border-purple-500/30 hover:border-purple-400/50 transition-all duration-300;
+}
+
+/* Cards com gradientes específicos */
+.ai-card {
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.15) 0%, rgba(37, 99, 235, 0.1) 50%, rgba(8, 145, 178, 0.05) 100%);
+  @apply border border-purple-500/30 rounded-xl shadow-xl backdrop-blur-sm;
+}
+
+.notification-card {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(30, 41, 59, 0.8) 100%);
+  @apply border border-purple-400/20 rounded-lg shadow-lg;
+}
+
+/* Navbar com gradiente */
+.navbar-gradient {
+  background: linear-gradient(90deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.9) 50%, rgba(51, 65, 85, 0.95) 100%);
+  backdrop-filter: blur(20px);
+  @apply border-b border-purple-500/20;
+}
+
+/* Sidebar com gradiente */
+.sidebar-gradient {
+  background: var(--gradient-dark);
+  @apply border-r border-purple-500/20;
+}
+
+/* Animações aprimoradas com gradientes */
 .theme-transition {
   transition: all var(--animation-duration) ease;
 }
 
 .smart-card {
-  @apply bg-gradient-to-br from-primary/5 via-background to-secondary/5 
-         border border-primary/20 rounded-xl shadow-lg 
-         hover:shadow-xl hover:border-primary/30 
-         transition-all duration-300;
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(15, 23, 42, 0.9) 50%, rgba(30, 41, 59, 0.8) 100%);
+  @apply border border-purple-500/20 rounded-xl shadow-xl hover:shadow-purple-500/20 hover:border-purple-400/30 transition-all duration-300;
 }
 
 .ai-gradient {
-  @apply bg-gradient-to-r from-purple-500 via-blue-500 to-indigo-500;
+  background: var(--gradient-accent);
 }
 
 .notification-badge {
-  @apply absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full animate-pulse;
+  @apply absolute -top-1 -right-1 h-3 w-3 rounded-full animate-pulse;
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
 }
 
 .prediction-line {
   stroke-dasharray: 8, 8;
   animation: dash 20s linear infinite;
+  stroke: url(#gradient-line);
 }
 
 @keyframes dash {
@@ -159,25 +207,23 @@
   }
 }
 
+/* Highlights com gradientes */
 .insight-highlight {
-  @apply bg-gradient-to-r from-blue-50 to-indigo-50 
-         border-l-4 border-l-blue-500 
-         p-4 rounded-r-lg;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(37, 99, 235, 0.05) 100%);
+  @apply border-l-4 border-l-blue-500 p-4 rounded-r-lg;
 }
 
 .recommendation-highlight {
-  @apply bg-gradient-to-r from-green-50 to-emerald-50 
-         border-l-4 border-l-green-500 
-         p-4 rounded-r-lg;
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(22, 163, 74, 0.05) 100%);
+  @apply border-l-4 border-l-green-500 p-4 rounded-r-lg;
 }
 
 .warning-highlight {
-  @apply bg-gradient-to-r from-yellow-50 to-orange-50 
-         border-l-4 border-l-yellow-500 
-         p-4 rounded-r-lg;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(217, 119, 6, 0.05) 100%);
+  @apply border-l-4 border-l-yellow-500 p-4 rounded-r-lg;
 }
 
-/* Animações aprimoradas */
+/* Animações com gradientes */
 .animate-fade-in-up {
   animation: fadeInUp 0.6s ease-out;
 }
@@ -208,34 +254,74 @@
   }
 }
 
-/* Responsive improvements */
+/* Gradientes para hover states */
+.hover-gradient {
+  transition: all 0.3s ease;
+}
+
+.hover-gradient:hover {
+  background: var(--gradient-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(139, 92, 246, 0.3);
+}
+
+/* Footer com gradiente */
+.footer-gradient {
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.98) 0%, rgba(30, 41, 59, 0.95) 100%);
+  @apply border-t border-purple-500/20;
+}
+
+/* Responsive improvements com gradientes consistentes */
 @media (max-width: 768px) {
   .dashboard-chart {
     @apply mx-2;
+    background: linear-gradient(135deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.9) 100%);
   }
   
   .smart-card {
     @apply mx-1;
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(15, 23, 42, 0.95) 100%);
   }
 }
 
-/* Modo compacto */
+/* Modo compacto com gradientes */
 .compact-mode .dashboard-card {
   @apply p-3;
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.95) 100%);
 }
 
 .compact-mode .chart-container {
   @apply p-2;
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(6, 182, 212, 0.03) 100%);
 }
 
-/* Alto contraste */
+/* Alto contraste mantendo gradientes sutis */
 .high-contrast {
-  --primary: 0 0% 0%;
-  --background: 0 0% 100%;
-  --foreground: 0 0% 0%;
-  --border: 0 0% 0%;
+  --primary: 262 83% 70%;
+  --background: 0 0% 0%;
+  --foreground: 0 0% 100%;
+  --border: 262 83% 70%;
 }
 
 .high-contrast .dashboard-card {
-  @apply border-2 border-black;
+  @apply border-2;
+  border-color: hsl(var(--primary));
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(30, 41, 59, 0.8) 100%);
+}
+
+/* Gradientes para elementos específicos da UI */
+.popover-gradient {
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.9) 100%);
+  backdrop-filter: blur(20px);
+  @apply border border-purple-500/30;
+}
+
+.modal-gradient {
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.98) 0%, rgba(30, 41, 59, 0.95) 100%);
+  backdrop-filter: blur(24px);
+}
+
+.input-gradient {
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(51, 65, 85, 0.4) 100%);
+  @apply border border-purple-500/30 focus:border-purple-400/60;
 }
