@@ -13,12 +13,15 @@ Este sistema é uma aplicação web desenvolvida para gestão empresarial, ofere
 - **Backend**: Supabase (autenticação, banco de dados e armazenamento)
 - **Gerenciamento de Estado**: React Context API e TanStack Query
 - **Roteamento**: React Router Dom
+- **Exportação**: jsPDF e XLSX para geração de relatórios
 
 ## Estrutura do Projeto
 
 ### Principais Diretórios
 
 - **src/components**: Componentes reutilizáveis da interface
+  - **src/components/employee**: Componentes específicos para gerenciamento de funcionários
+  - **src/components/ui**: Componentes de interface do usuário (shadcn/ui)
 - **src/hooks**: Hooks personalizados para lógica de negócio
 - **src/pages**: Componentes de página para diferentes rotas
 - **src/data**: Dados estáticos e configurações
@@ -46,11 +49,27 @@ O sistema utiliza diferentes tipos de visualizações:
 
 #### Gerenciamento de Funcionários
 
-Interface para:
-- Listar funcionários
+O sistema de gerenciamento de funcionários foi refatorado em componentes menores e mais organizados:
+
+##### Componentes de Interface
+- **EmployeeListHeader**: Cabeçalho com título, contador e botões de ação
+- **EmployeeSearch**: Componente de busca por nome ou cargo
+- **EmployeeGrid**: Grid responsivo para exibição dos cartões de funcionários
+- **EmployeeCard**: Cartão individual de funcionário com avatar, informações e ações
+- **EmployeeEmptyState**: Estado vazio quando não há funcionários cadastrados
+- **EmployeeDeleteDialog**: Modal de confirmação para exclusão de funcionários
+
+##### Hooks Personalizados
+- **useEmployeeData**: Gerencia carregamento e estado dos dados de funcionários
+- **useEmployeeActions**: Gerencia ações como exportação e visualização de métricas
+
+##### Funcionalidades
+- Listar funcionários em grid responsivo
+- Buscar funcionários por nome ou cargo
 - Adicionar novos funcionários
 - Visualizar métricas de desempenho de funcionários
-- Exportar dados de desempenho
+- Exportar dados de funcionários em PDF e Excel
+- Excluir funcionários com confirmação
 
 #### Upload e Análise de Arquivos
 
@@ -98,17 +117,44 @@ Componente reutilizável que encapsula os gráficos com um visual consistente:
 </ChartContainer>
 ```
 
-### EmployeeList e EmployeeMetrics
+### Sistema de Funcionários
 
-Componentes para gerenciamento de funcionários:
-- Tabela de listagem com ações
-- Métricas de desempenho individual
-- Formulário para adição de novos funcionários
+Os componentes de funcionários foram organizados de forma modular:
 
 ```typescript
-// Exemplo de uso
-<EmployeeList onSelectEmployee={handleSelectEmployee} />
-<EmployeeMetrics employeeId={selectedEmployeeId} />
+// Exemplo de uso dos componentes de funcionários
+import EmployeeGrid from '@/components/employee/EmployeeGrid';
+import EmployeeSearch from '@/components/employee/EmployeeSearch';
+import { useEmployeeData } from '@/hooks/useEmployeeData';
+
+const EmployeeManagement = () => {
+  const { employees, loading } = useEmployeeData();
+  
+  return (
+    <div>
+      <EmployeeSearch searchTerm={searchTerm} onSearchChange={setSearchTerm} />
+      <EmployeeGrid employees={filteredEmployees} onViewMetrics={handleViewMetrics} />
+    </div>
+  );
+};
+```
+
+### ExportButton
+
+Componente reutilizável para exportação de dados:
+- Suporte a PDF e Excel
+- Menu dropdown para seleção de formato
+- Indicador de carregamento durante exportação
+
+```typescript
+// Exemplo de uso do ExportButton
+<ExportButton
+  exportData={{
+    columns: ['Nome', 'Cargo', 'Data de Contratação'],
+    data: employees,
+    title: 'Lista de Funcionários'
+  }}
+/>
 ```
 
 ## Hooks Personalizados
@@ -125,7 +171,47 @@ Hook que gerencia os dados e estados dos gráficos:
 const { period, setPeriod, chartType, setChartType, displayData } = useChartData();
 ```
 
+### useEmployeeData
+
+Hook para gerenciamento de dados de funcionários:
+- Carregamento automático dos funcionários
+- Estado de loading
+- Função para recarregar dados
+
+```typescript
+// Exemplo de uso
+const { employees, loading, refetchEmployees } = useEmployeeData();
+```
+
+### useEmployeeActions
+
+Hook para gerenciamento de ações de funcionários:
+- Exportação de dados
+- Navegação para métricas
+- Estado de carregamento das ações
+
+```typescript
+// Exemplo de uso
+const { exporting, handleExportData, handleViewMetrics } = useEmployeeActions({
+  employees,
+  onSelectEmployee
+});
+```
+
 ## Tipos de Dados
+
+### Employee
+
+```typescript
+interface Employee {
+  id: string;
+  name: string;
+  position: string;
+  hire_date: string;
+  created_at: string;
+  avatar_url?: string | null;
+}
+```
 
 ### ChartDataPoint
 
@@ -145,33 +231,107 @@ type ChartPeriod = "diario" | "mensal" | "trimestral" | "anual";
 type ChartType = "line" | "bar";
 ```
 
+### ExportData
+
+```typescript
+interface ExportData {
+  columns: string[];
+  data: any[];
+  title: string;
+}
+```
+
 ## Fluxo de Autenticação
 
 1. Usuário acessa a página de login
 2. Insere credenciais que são validadas pelo Supabase Auth
 3. Após autenticação, um token JWT é armazenado localmente
 4. Rotas protegidas verificam a presença do token válido
+5. Row Level Security (RLS) garante que os dados sejam filtrados por usuário
 
 ## Integração com Supabase
 
 O sistema utiliza o Supabase para:
 - Autenticação de usuários
-- Armazenamento de dados em tabelas PostgreSQL
+- Armazenamento de dados em tabelas PostgreSQL com RLS
 - Armazenamento de arquivos
+- Políticas de segurança a nível de linha
+
+### Tabelas Principais
+- **employees**: Dados dos funcionários
+- **employee_metrics**: Métricas de desempenho dos funcionários
+- **profiles**: Perfis dos usuários (se implementado)
+
+## Segurança
+
+- Row Level Security (RLS) implementado em todas as tabelas
+- Políticas de acesso baseadas no usuário autenticado
+- Validação de permissões antes de operações de CRUD
+- Verificação de propriedade dos dados antes de exclusão
 
 ## Desenvolvimento e Manutenção
+
+### Padrões de Arquitetura
+
+O projeto segue os seguintes padrões:
+- **Componentes pequenos e focados**: Cada componente tem uma responsabilidade específica
+- **Hooks personalizados**: Lógica de negócio separada dos componentes de UI
+- **Organização por feature**: Componentes relacionados agrupados em diretórios específicos
+- **Reutilização**: Componentes genéricos para funcionalidades comuns
 
 ### Adicionando Novas Funcionalidades
 
 Para adicionar novas funcionalidades ao sistema:
-1. Crie componentes reutilizáveis em `src/components`
+1. Crie componentes reutilizáveis em `src/components` (organizados por feature)
 2. Adicione novos hooks se necessário em `src/hooks`
-3. Integre os componentes nas páginas existentes ou crie novas páginas
-4. Atualize as rotas em `App.tsx` se necessário
+3. Implemente políticas RLS no Supabase se envolver dados
+4. Integre os componentes nas páginas existentes ou crie novas páginas
+5. Atualize as rotas em `App.tsx` se necessário
+6. Documente as mudanças neste arquivo
 
-### Dicas de Manutenção
+### Refatoração e Manutenção
 
-- Mantenha os componentes pequenos e focados
-- Utilize TypeScript para garantir segurança de tipos
-- Aproveite os componentes da biblioteca shadcn/ui para manter consistência visual
-- Utilize o sistema de classes do Tailwind CSS para estilização
+- **Mantenha componentes pequenos**: Se um componente passar de ~50 linhas, considere refatorá-lo
+- **Use TypeScript**: Aproveite a tipagem para evitar erros
+- **Aproveit componentes shadcn/ui**: Para manter consistência visual
+- **Utilize Tailwind CSS**: Para estilização consistente
+- **Implemente testes**: Para garantir qualidade (quando necessário)
+
+### Convenções de Código
+
+- **Nomes de arquivos**: PascalCase para componentes, camelCase para hooks
+- **Organização de imports**: Externos primeiro, depois internos
+- **Props interfaces**: Sempre tipadas e documentadas quando necessário
+- **Estados loading**: Implementar feedback visual para operações assíncronas
+- **Error handling**: Tratar erros e mostrar mensagens apropriadas ao usuário
+
+### Exportação e Relatórios
+
+O sistema possui funcionalidades robustas de exportação:
+- **PDF**: Usando jsPDF com tabelas formatadas
+- **Excel**: Usando biblioteca XLSX
+- **Componente reutilizável**: ExportButton para implementação consistente
+- **Dados estruturados**: Interface ExportData para padronização
+
+## Estrutura de Componentes de Funcionários
+
+```
+src/components/employee/
+├── EmployeeCard.tsx          # Cartão individual de funcionário
+├── EmployeeDeleteDialog.tsx  # Modal de confirmação de exclusão
+├── EmployeeEmptyState.tsx    # Estado vazio
+├── EmployeeGrid.tsx          # Grid responsivo de funcionários
+├── EmployeeListHeader.tsx    # Cabeçalho com ações
+├── EmployeeSearch.tsx        # Componente de busca
+└── ...                       # Outros componentes relacionados
+```
+
+## Performance e Otimização
+
+- **Lazy loading**: Componentes carregados conforme necessário
+- **Memoização**: Uso de React.memo em componentes apropriados
+- **Queries otimizadas**: Apenas dados necessários são carregados
+- **Debounce**: Implementado na busca para evitar requisições excessivas
+- **Grid responsivo**: Adaptação automática para diferentes tamanhos de tela
+
+Esta documentação será atualizada conforme o sistema evolui e novas funcionalidades são adicionadas.
