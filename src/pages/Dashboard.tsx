@@ -1,6 +1,6 @@
 
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { DateRange } from "react-day-picker";
 import NavBar from "@/components/NavBar";
 import DashboardMetrics from "@/components/DashboardMetrics";
@@ -47,15 +47,6 @@ const Dashboard = () => {
   const [activeEmployeeTab, setActiveEmployeeTab] = useState("list");
   const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
   const [dashboardMode, setDashboardMode] = useState<"classic" | "smart">("classic");
-
-  // Auto redirect to smart mode after 2 seconds
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setDashboardMode("smart");
-    }, 2000);
-
-    return () => clearTimeout(timer);
-  }, []);
 
   const handleDetailedAnalysis = () => {
     navigate("/detailed-analysis");
