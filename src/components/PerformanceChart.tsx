@@ -38,6 +38,24 @@ const PerformanceChart = ({ metrics }: PerformanceChartProps) => {
       }));
   };
 
+  const CustomTooltip = ({ active, payload, label }: any) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-white dark:bg-gray-800 p-3 rounded-lg border shadow-lg">
+          <p className="font-medium text-gray-900 dark:text-white">{`${label}`}</p>
+          {payload.map((entry: any, index: number) => (
+            <p key={index} style={{ color: entry.color }} className="text-sm">
+              {`${entry.name}: ${entry.name === 'Receita (R$)' 
+                ? `R$ ${entry.value.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}` 
+                : entry.value}`}
+            </p>
+          ))}
+        </div>
+      );
+    }
+    return null;
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -49,44 +67,111 @@ const PerformanceChart = ({ metrics }: PerformanceChartProps) => {
             <LineChart
               data={formatChartData()}
               margin={{
-                top: 10,
+                top: 20,
                 right: 30,
                 left: 20,
                 bottom: 5,
               }}
             >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" stroke="#888" />
-              <YAxis yAxisId="left" stroke="#888" />
+              <CartesianGrid 
+                strokeDasharray="3 3" 
+                stroke="rgba(156, 163, 175, 0.3)"
+                horizontal={true}
+                vertical={false}
+              />
+              <XAxis 
+                dataKey="name" 
+                stroke="#6B7280"
+                fontSize={12}
+                tickLine={false}
+                axisLine={false}
+              />
+              <YAxis 
+                yAxisId="left" 
+                stroke="#6B7280"
+                fontSize={12}
+                tickLine={false}
+                axisLine={false}
+                tickFormatter={(value) => `R$ ${(value / 1000).toFixed(0)}k`}
+              />
               <YAxis
                 yAxisId="right"
                 orientation="right"
                 domain={[0, "dataMax + 1"]}
-                stroke="#888"
+                stroke="#6B7280"
+                fontSize={12}
+                tickLine={false}
+                axisLine={false}
               />
-              <Tooltip contentStyle={{ backgroundColor: "#fff", color: "#333" }} />
-              <Legend wrapperStyle={{ color: "#888" }} />
+              <Tooltip content={<CustomTooltip />} />
+              <Legend 
+                wrapperStyle={{ 
+                  paddingTop: '20px',
+                  color: '#6B7280'
+                }}
+              />
               <Line
                 yAxisId="left"
                 type="monotone"
                 dataKey="receita"
                 name="Receita (R$)"
-                stroke="#8884d8"
-                activeDot={{ r: 8 }}
+                stroke="#3B82F6"
+                strokeWidth={3}
+                dot={{ 
+                  fill: "#3B82F6", 
+                  strokeWidth: 2,
+                  r: 5
+                }}
+                activeDot={{ 
+                  r: 7, 
+                  fill: "#3B82F6",
+                  strokeWidth: 2,
+                  stroke: "#fff"
+                }}
+                connectNulls={true}
+                tension={0.4}
               />
               <Line
                 yAxisId="right"
                 type="monotone"
                 dataKey="clientes"
                 name="Clientes"
-                stroke="#82ca9d"
+                stroke="#10B981"
+                strokeWidth={3}
+                dot={{ 
+                  fill: "#10B981", 
+                  strokeWidth: 2,
+                  r: 5
+                }}
+                activeDot={{ 
+                  r: 7, 
+                  fill: "#10B981",
+                  strokeWidth: 2,
+                  stroke: "#fff"
+                }}
+                connectNulls={true}
+                tension={0.4}
               />
               <Line
                 yAxisId="right"
                 type="monotone"
                 dataKey="funcionarios"
                 name="Funcionários"
-                stroke="#ffc658"
+                stroke="#F59E0B"
+                strokeWidth={3}
+                dot={{ 
+                  fill: "#F59E0B", 
+                  strokeWidth: 2,
+                  r: 5
+                }}
+                activeDot={{ 
+                  r: 7, 
+                  fill: "#F59E0B",
+                  strokeWidth: 2,
+                  stroke: "#fff"
+                }}
+                connectNulls={true}
+                tension={0.4}
               />
             </LineChart>
           </ResponsiveContainer>
