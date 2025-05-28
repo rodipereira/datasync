@@ -129,7 +129,6 @@ const PerformanceChart = ({ metrics }: PerformanceChartProps) => {
                   stroke: "#fff"
                 }}
                 connectNulls={true}
-                tension={0.4}
               />
               <Line
                 yAxisId="right"
@@ -150,7 +149,6 @@ const PerformanceChart = ({ metrics }: PerformanceChartProps) => {
                   stroke: "#fff"
                 }}
                 connectNulls={true}
-                tension={0.4}
               />
               <Line
                 yAxisId="right"
@@ -171,7 +169,6 @@ const PerformanceChart = ({ metrics }: PerformanceChartProps) => {
                   stroke: "#fff"
                 }}
                 connectNulls={true}
-                tension={0.4}
               />
             </LineChart>
           </ResponsiveContainer>
