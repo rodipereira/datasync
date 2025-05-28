@@ -1,7 +1,7 @@
 
 import * as XLSX from 'xlsx';
 import { jsPDF } from 'jspdf';
-import 'jspdf-autotable';
+import autoTable from 'jspdf-autotable';
 
 /**
  * Exporta dados para um arquivo Excel
@@ -53,10 +53,10 @@ export const exportToPDF = async (data: any[], fileName: string): Promise<void> 
   
   // Preparar dados para tabela
   const headers = Object.keys(data[0] || {});
-  const rows = data.map(item => headers.map(key => item[key]));
+  const rows = data.map(item => headers.map(key => String(item[key] || '')));
   
-  // @ts-ignore - jspdf-autotable não tem tipagem correta
-  doc.autoTable({
+  // Usar autoTable corretamente
+  autoTable(doc, {
     head: [headers],
     body: rows,
     startY: 40,

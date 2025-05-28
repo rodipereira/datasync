@@ -47,7 +47,7 @@ export function ExportButton({ exportData, className }: ExportButtonProps) {
       // Add table
       autoTable(doc, {
         head: [columns],
-        body: data.map(row => columns.map(col => row[col] || '')),
+        body: data.map(row => columns.map(col => String(row[col] || ''))),
         startY: 35,
         theme: 'striped',
         headStyles: {
