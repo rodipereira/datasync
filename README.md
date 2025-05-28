@@ -30,10 +30,6 @@ Este sistema foi desenvolvido como parte do Trabalho de Conclusão de Curso (TCC
 
 ## 🛠️ Como Utilizar
 
-### Edição via Lovable
-
-Acesse o [Projeto no Lovable](https://lovable.dev/projects/d742390e-2a03-47a4-8a84-746bdeacd5bd) e comece a interagir imediatamente. Todas as alterações feitas serão automaticamente sincronizadas com o repositório.
-
 ### Desenvolvimento Local
 
 Para executar o projeto em seu ambiente local, siga estes passos:
