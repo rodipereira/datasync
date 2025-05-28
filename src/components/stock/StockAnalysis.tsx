@@ -105,36 +105,49 @@ const StockAnalysis: React.FC<StockAnalysisProps> = ({ className }) => {
   const isEmpty = !isLoading && (!stockData || stockData.length === 0);
   
   return (
-    <div className="w-full h-full flex flex-col text-white">
-      <Tabs defaultValue="niveis" className={`w-full h-full flex-1 flex flex-col ${className}`}>
-        <TabsList className="mb-4 w-full bg-secondary/50">
-          <TabsTrigger
-            value="niveis"
-            className="text-white data-[state=active]:bg-primary/80"
-          >
-            Níveis
-          </TabsTrigger>
-          <TabsTrigger
-            value="categorias"
-            className="text-white data-[state=active]:bg-primary/80"
-          >
-            Categorias
-          </TabsTrigger>
-        </TabsList>
-        
-        <StockStateDisplay loading={isLoading} isEmpty={isEmpty} error={!!error} />
-        
-        {!isLoading && !isEmpty && stockData && (
-          <>
-            <TabsContent value="niveis" className="text-white flex-1">
-              <StockLevels stockData={stockData as StockItem[]} />
-            </TabsContent>
-            <TabsContent value="categorias" className="text-white flex-1">
-              <StockCategories stockData={stockData as StockItem[]} />
-            </TabsContent>
-          </>
-        )}
-      </Tabs>
+    <div className={`w-full h-full flex flex-col ${className}`}>
+      <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-lg p-6 h-full">
+        <div className="mb-6">
+          <h3 className="text-xl font-bold text-white mb-2">Análise de Estoque</h3>
+          <p className="text-gray-300 text-sm">Visualização detalhada dos níveis de inventário</p>
+        </div>
+
+        <Tabs defaultValue="niveis" className="w-full h-[calc(100%-80px)] flex flex-col">
+          <TabsList className="mb-6 w-full bg-gray-700/50 p-1">
+            <TabsTrigger
+              value="niveis"
+              className="flex-1 text-white data-[state=active]:bg-blue-600 data-[state=active]:text-white transition-all duration-200"
+            >
+              Níveis de Estoque
+            </TabsTrigger>
+            <TabsTrigger
+              value="categorias"
+              className="flex-1 text-white data-[state=active]:bg-blue-600 data-[state=active]:text-white transition-all duration-200"
+            >
+              Por Categorias
+            </TabsTrigger>
+          </TabsList>
+          
+          <div className="flex-1 overflow-hidden">
+            <StockStateDisplay loading={isLoading} isEmpty={isEmpty} error={!!error} />
+            
+            {!isLoading && !isEmpty && stockData && (
+              <>
+                <TabsContent value="niveis" className="h-full mt-0">
+                  <div className="bg-gray-700/30 rounded-lg p-4 h-full">
+                    <StockLevels stockData={stockData as StockItem[]} />
+                  </div>
+                </TabsContent>
+                <TabsContent value="categorias" className="h-full mt-0">
+                  <div className="bg-gray-700/30 rounded-lg p-4 h-full">
+                    <StockCategories stockData={stockData as StockItem[]} />
+                  </div>
+                </TabsContent>
+              </>
+            )}
+          </div>
+        </Tabs>
+      </div>
     </div>
   );
 };
