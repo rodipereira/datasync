@@ -41,9 +41,16 @@ const Index = () => {
         <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-background pointer-events-none" />
         <div className="container mx-auto px-4 py-20 relative z-10">
           <div className="max-w-4xl mx-auto text-center mb-16">
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 accent-text">
-              DataSync
-            </h1>
+            <div className="flex justify-center items-center mb-6">
+              <img 
+                src="/lovable-uploads/59fb42cd-50d4-460f-955d-12355746e9ce.png" 
+                alt="DataSync Logo" 
+                className="w-20 h-20 mr-4"
+              />
+              <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold accent-text">
+                DataSync
+              </h1>
+            </div>
             <p className="text-xl md:text-2xl mb-10 text-foreground/80">
               Aplicação para automação de organização de arquivos e análise 
               de desempenho de negócios
