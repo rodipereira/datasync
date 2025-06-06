@@ -1,3 +1,7 @@
+# Alunos:
+Rodrigo Pereira de Almeida
+Álvaro Nóbrega Marques Rolim
+
 
 # Documentação do Sistema de Gestão de Negócios DataSync
 
