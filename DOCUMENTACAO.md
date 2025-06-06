@@ -1,237 +1,277 @@
 
-# Documentação do Sistema de Gestão de Negócios
+# Documentação do Sistema de Gestão de Negócios DataSync
 
 ## Visão Geral
 
-Este sistema é uma aplicação web desenvolvida para gestão empresarial, oferecendo recursos para monitoramento de métricas de negócio, análise de dados, gerenciamento de funcionários e controle de estoque. A interface é intuitiva e responsiva, permitindo acesso fácil a informações críticas do negócio.
+O DataSync é uma aplicação web completa desenvolvida para gestão empresarial, oferecendo recursos avançados para monitoramento de métricas de negócio, análise de dados, gerenciamento de funcionários, controle de estoque e sistema de notificações em tempo real. A interface é moderna, intuitiva e totalmente responsiva, permitindo acesso fácil a informações críticas do negócio.
 
 ## Tecnologias Utilizadas
 
-- **Frontend**: React, TypeScript, Tailwind CSS
-- **Componentes UI**: shadcn/ui (biblioteca de componentes baseada em Radix UI e Tailwind)
-- **Gráficos**: Recharts (biblioteca para visualização de dados)
-- **Backend**: Supabase (autenticação, banco de dados e armazenamento)
-- **Gerenciamento de Estado**: React Context API e TanStack Query
-- **Roteamento**: React Router Dom
-- **Exportação**: jsPDF e XLSX para geração de relatórios
+### Frontend
+- **React 18.3.1**: Biblioteca JavaScript para construção de interfaces de usuário
+- **TypeScript**: Superset do JavaScript que adiciona tipagem estática
+- **Tailwind CSS**: Framework CSS utility-first para estilização
+- **Vite**: Ferramenta de build rápida e moderna
+
+### Componentes UI
+- **shadcn/ui**: Biblioteca de componentes baseada em Radix UI e Tailwind CSS
+- **Radix UI**: Primitivos de componentes acessíveis
+- **Lucide React**: Biblioteca de ícones moderna e consistente
+
+### Visualização de Dados
+- **Recharts 2.12.7**: Biblioteca para criação de gráficos e visualizações interativas
+
+### Backend e Banco de Dados
+- **Supabase**: Plataforma backend completa com:
+  - Autenticação e autorização
+  - Banco de dados PostgreSQL
+  - Row Level Security (RLS)
+  - Real-time subscriptions
+  - Edge Functions
+  - Armazenamento de arquivos
+
+### Gerenciamento de Estado
+- **TanStack Query 5.56.2**: Gerenciamento de estado assíncrono e cache
+- **React Context API**: Gerenciamento de estado local
+
+### Roteamento e Navegação
+- **React Router Dom 6.26.2**: Roteamento declarativo para React
+
+### Exportação e Relatórios
+- **jsPDF 3.0.1**: Geração de documentos PDF
+- **jsPDF AutoTable 5.0.2**: Criação de tabelas em PDFs
+- **XLSX 0.18.5**: Manipulação de planilhas Excel
+
+### Outras Dependências
+- **date-fns 3.6.0**: Manipulação e formatação de datas
+- **Framer Motion 12.12.1**: Animações fluidas
+- **Sonner 1.5.0**: Sistema de notificações toast
+- **UUID 11.1.0**: Geração de identificadores únicos
+- **Zod 3.23.8**: Validação de esquemas TypeScript
 
 ## Estrutura do Projeto
 
-### Principais Diretórios
+### Diretórios Principais
 
-- **src/components**: Componentes reutilizáveis da interface
-  - **src/components/employee**: Componentes específicos para gerenciamento de funcionários
-  - **src/components/ui**: Componentes de interface do usuário (shadcn/ui)
-- **src/hooks**: Hooks personalizados para lógica de negócio
-- **src/pages**: Componentes de página para diferentes rotas
-- **src/data**: Dados estáticos e configurações
-- **src/types**: Definições de tipos TypeScript
-- **src/utils**: Funções utilitárias
-- **src/integrations**: Integrações com serviços externos (Supabase)
-
-### Componentes Principais
-
-#### Dashboard
-
-O dashboard é a página principal do sistema, exibindo:
-- Métricas de desempenho do negócio
-- Gráficos de análise de vendas, lucro e estoque
-- Lista de funcionários
-- Histórico de arquivos
-
-#### Gráficos
-
-O sistema utiliza diferentes tipos de visualizações:
-- **DashboardChart**: Gráfico principal para análise de desempenho
-- **LineChartDisplay**: Visualização em formato de linha
-- **BarChartDisplay**: Visualização em formato de barras
-- **StockAnalysis**: Análise de estoque com visualização por níveis e categorias
-
-#### Gerenciamento de Funcionários
-
-O sistema de gerenciamento de funcionários foi refatorado em componentes menores e mais organizados:
-
-##### Componentes de Interface
-- **EmployeeListHeader**: Cabeçalho com título, contador e botões de ação
-- **EmployeeSearch**: Componente de busca por nome ou cargo
-- **EmployeeGrid**: Grid responsivo para exibição dos cartões de funcionários
-- **EmployeeCard**: Cartão individual de funcionário com avatar, informações e ações
-- **EmployeeEmptyState**: Estado vazio quando não há funcionários cadastrados
-- **EmployeeDeleteDialog**: Modal de confirmação para exclusão de funcionários
-
-##### Hooks Personalizados
-- **useEmployeeData**: Gerencia carregamento e estado dos dados de funcionários
-- **useEmployeeActions**: Gerencia ações como exportação e visualização de métricas
-
-##### Funcionalidades
-- Listar funcionários em grid responsivo
-- Buscar funcionários por nome ou cargo
-- Adicionar novos funcionários
-- Visualizar métricas de desempenho de funcionários
-- Exportar dados de funcionários em PDF e Excel
-- Excluir funcionários com confirmação
-
-#### Upload e Análise de Arquivos
-
-Sistema para:
-- Upload de arquivos
-- Visualização do histórico de arquivos enviados
-- Análise detalhada dos dados dos arquivos
-
-### Fluxo de Dados
-
-1. Os dados são armazenados no Supabase (banco de dados PostgreSQL)
-2. Os dados são requisitados através de hooks personalizados utilizando TanStack Query
-3. Os componentes consomem esses dados e renderizam a interface
-4. Ações do usuário atualizam o estado local ou enviam atualizações para o banco de dados
-
-## Componentes em Detalhes
-
-### DashboardChart
-
-Componente responsável por exibir gráficos de análise de desempenho com as seguintes características:
-- Seletor de período (diário, mensal, trimestral, anual)
-- Alternância entre visualização de linha e barras
-- Exibição de múltiplas métricas (vendas, lucro, estoque)
-
-```typescript
-// Exemplo de uso do DashboardChart
-<DashboardChart />
+```
+src/
+├── components/           # Componentes reutilizáveis
+│   ├── ui/              # Componentes de UI (shadcn/ui)
+│   ├── employee/        # Componentes de funcionários
+│   ├── notifications/   # Sistema de notificações
+│   ├── dashboard/       # Componentes do dashboard
+│   ├── charts/          # Componentes de gráficos
+│   ├── inventory/       # Componentes de inventário
+│   └── ...
+├── hooks/               # Hooks personalizados
+├── pages/               # Componentes de página/rotas
+├── data/                # Dados estáticos e configurações
+├── types/               # Definições de tipos TypeScript
+├── utils/               # Funções utilitárias
+├── integrations/        # Integrações (Supabase)
+└── lib/                 # Bibliotecas e configurações
 ```
 
-### ChartContainer
+## Recursos e Funcionalidades
 
-Componente reutilizável que encapsula os gráficos com um visual consistente:
-- Título e descrição
-- Conteúdo personalizado no cabeçalho
-- Estilo consistente
+### 1. Dashboard Inteligente
+- **Dashboard Clássico**: Visualização tradicional com métricas essenciais
+- **Dashboard Inteligente**: Análise avançada com IA e recomendações automáticas
+- **Métricas em Tempo Real**: Atualizações automáticas dos dados
+- **Filtros de Data**: Seleção de períodos personalizados
+- **Gráficos Interativos**: Visualizações responsivas e dinâmicas
 
+### 2. Sistema de Notificações
+O sistema de notificações foi completamente redesenhado com:
+- **Interface Unificada**: Botão de notificações padronizado com design consistente
+- **Badge de Contagem**: Indicador visual para notificações não lidas
+- **Abas Organizadas**: Separação por tipos (todas, avisos, informações)
+- **Notificações em Tempo Real**: Atualizações instantâneas
+- **Ações Contextuais**: Links diretos para páginas relevantes
+- **Estado de Leitura**: Marcação automática ao visualizar
+
+#### Tipos de Notificação
+- **warning**: Alertas importantes (estoque baixo, prazos)
+- **info**: Informações gerais do sistema
+- **success**: Confirmações de ações realizadas
+- **error**: Alertas de erro que requerem atenção
+
+### 3. Gerenciamento de Funcionários
+Sistema completo e modular para gestão de recursos humanos:
+
+#### Componentes Principais
+- **EmployeeListHeader**: Cabeçalho com título, contador e ações rápidas
+- **EmployeeSearch**: Busca avançada por nome, cargo ou outros critérios
+- **EmployeeGrid**: Layout responsivo em grid para visualização
+- **EmployeeCard**: Cartões individuais com foto, informações e ações
+- **EmployeeTable**: Visualização em tabela para análise detalhada
+- **EmployeeDeleteDialog**: Modal de confirmação para exclusões
+- **EmployeeEmptyState**: Estado vazio elegante quando não há dados
+
+#### Funcionalidades
+- ✅ Cadastro completo de funcionários
+- ✅ Upload de fotos/avatares
+- ✅ Busca e filtros avançados
+- ✅ Métricas de desempenho individuais
+- ✅ Exportação em PDF e Excel
+- ✅ Histórico de alterações
+- ✅ Integração com sistema de notificações
+
+### 4. Controle de Inventário
+- **Cadastro de Produtos**: Informações completas com categorização
+- **Níveis de Estoque**: Controle de mínimos e máximos
+- **Alertas Automáticos**: Notificações para reposição
+- **Análise por Categoria**: Visualizações segmentadas
+- **Relatórios de Movimentação**: Histórico detalhado
+
+### 5. Upload e Análise de Arquivos
+- **Múltiplos Formatos**: Suporte a Excel, CSV, PDF, JSON, XML
+- **Processamento Automático**: Análise e organização dos dados
+- **Histórico Completo**: Rastreamento de todos os uploads
+- **Validação de Dados**: Verificação de integridade
+- **Visualização Prévia**: Preview antes do processamento
+
+### 6. Assistente de IA
+- **Análise Automatizada**: Processamento inteligente de dados
+- **Recomendações**: Sugestões baseadas em padrões
+- **Relatórios Personalizados**: Geração automática de insights
+- **Interface Conversacional**: Chat natural para consultas
+
+## Arquitetura de Componentes
+
+### Padrões de Design
+- **Componentização Modular**: Cada funcionalidade em componentes focados
+- **Reutilização**: Componentes genéricos para uso em múltiplos contextos
+- **Composição**: Combinação de componentes menores para funcionalidades complexas
+- **Responsividade**: Design adaptável para todos os dispositivos
+
+### Hooks Personalizados
+
+#### useNotifications
 ```typescript
-// Exemplo de uso do ChartContainer
-<ChartContainer
-  title="Título do Gráfico"
-  description="Descrição detalhada do gráfico"
-  headerContent={<ComponenteAdicional />}
->
-  {/* Conteúdo do gráfico */}
-</ChartContainer>
+const { notifications, isLoading, unreadCount, markAsRead } = useNotifications();
 ```
+- Gerencia estado completo das notificações
+- Atualizações em tempo real via Supabase
+- Cache inteligente com TanStack Query
 
-### Sistema de Funcionários
-
-Os componentes de funcionários foram organizados de forma modular:
-
+#### useEmployeeData
 ```typescript
-// Exemplo de uso dos componentes de funcionários
-import EmployeeGrid from '@/components/employee/EmployeeGrid';
-import EmployeeSearch from '@/components/employee/EmployeeSearch';
-import { useEmployeeData } from '@/hooks/useEmployeeData';
-
-const EmployeeManagement = () => {
-  const { employees, loading } = useEmployeeData();
-  
-  return (
-    <div>
-      <EmployeeSearch searchTerm={searchTerm} onSearchChange={setSearchTerm} />
-      <EmployeeGrid employees={filteredEmployees} onViewMetrics={handleViewMetrics} />
-    </div>
-  );
-};
-```
-
-### ExportButton
-
-Componente reutilizável para exportação de dados:
-- Suporte a PDF e Excel
-- Menu dropdown para seleção de formato
-- Indicador de carregamento durante exportação
-
-```typescript
-// Exemplo de uso do ExportButton
-<ExportButton
-  exportData={{
-    columns: ['Nome', 'Cargo', 'Data de Contratação'],
-    data: employees,
-    title: 'Lista de Funcionários'
-  }}
-/>
-```
-
-## Hooks Personalizados
-
-### useChartData
-
-Hook que gerencia os dados e estados dos gráficos:
-- Gerenciamento do período selecionado
-- Gerenciamento do tipo de gráfico
-- Filtragem de dados baseada no período
-
-```typescript
-// Exemplo de uso
-const { period, setPeriod, chartType, setChartType, displayData } = useChartData();
-```
-
-### useEmployeeData
-
-Hook para gerenciamento de dados de funcionários:
-- Carregamento automático dos funcionários
-- Estado de loading
-- Função para recarregar dados
-
-```typescript
-// Exemplo de uso
 const { employees, loading, refetchEmployees } = useEmployeeData();
 ```
+- Carregamento otimizado de dados de funcionários
+- Integração com sistema de busca e filtros
 
-### useEmployeeActions
-
-Hook para gerenciamento de ações de funcionários:
-- Exportação de dados
-- Navegação para métricas
-- Estado de carregamento das ações
-
+#### useEmployeeActions
 ```typescript
-// Exemplo de uso
 const { exporting, handleExportData, handleViewMetrics } = useEmployeeActions({
   employees,
   onSelectEmployee
 });
 ```
+- Gerencia ações complexas como exportação
+- Estados de loading centralizados
 
-## Tipos de Dados
-
-### Employee
-
+#### useChartData
 ```typescript
-interface Employee {
-  id: string;
-  name: string;
-  position: string;
-  hire_date: string;
-  created_at: string;
-  avatar_url?: string | null;
-}
+const { period, setPeriod, chartType, setChartType, displayData } = useChartData();
+```
+- Controle de períodos e tipos de gráficos
+- Processamento de dados para visualização
+
+## Banco de Dados (Supabase)
+
+### Tabelas Principais
+
+#### employees
+```sql
+- id: uuid (PK)
+- user_id: uuid (FK para auth.users)
+- name: text
+- position: text
+- hire_date: date
+- avatar_url: text (opcional)
+- created_at: timestamp
+- updated_at: timestamp
 ```
 
-### ChartDataPoint
-
-```typescript
-type ChartDataPoint = {
-  name: string;
-  vendas: number;
-  lucro: number;
-  estoque: number;
-};
+#### notifications
+```sql
+- id: uuid (PK)
+- user_id: uuid (FK para auth.users)
+- type: text (warning, info, success, error)
+- title: text
+- message: text
+- read: boolean (default: false)
+- action_url: text (opcional)
+- created_at: timestamp
+- updated_at: timestamp
 ```
 
-### ChartPeriod e ChartType
-
-```typescript
-type ChartPeriod = "diario" | "mensal" | "trimestral" | "anual";
-type ChartType = "line" | "bar";
+#### inventory
+```sql
+- id: uuid (PK)
+- user_id: uuid (FK para auth.users)
+- product_name: text
+- category: text
+- quantity: integer
+- minimum_level: integer
+- created_at: timestamp
+- updated_at: timestamp
 ```
 
-### ExportData
+#### employee_metrics
+```sql
+- id: uuid (PK)
+- employee_id: uuid (FK para employees)
+- month: date
+- revenue: numeric
+- clients_acquired: integer
+- employees_hired: integer
+- created_at: timestamp
+- updated_at: timestamp
+```
+
+### Segurança e RLS (Row Level Security)
+
+Todas as tabelas implementam políticas RLS que garantem:
+- **Isolamento de Dados**: Usuários só acessam seus próprios dados
+- **Operações Seguras**: CRUD operations protegidas por nível de linha
+- **Auditoria**: Logs automáticos de alterações
+
+Exemplo de política RLS:
+```sql
+CREATE POLICY "Users can view their own notifications" 
+  ON public.notifications 
+  FOR SELECT 
+  USING (auth.uid() = user_id);
+```
+
+### Funções do Banco
+
+#### create_stock_notifications()
+- **Propósito**: Cria notificações automáticas para produtos com estoque baixo
+- **Execução**: Pode ser chamada via cron job ou trigger
+- **Lógica**: Verifica produtos abaixo do nível mínimo e cria alertas
+
+## Sistema de Autenticação
+
+### Implementação
+- **Supabase Auth**: Sistema completo de autenticação
+- **JWT Tokens**: Autenticação stateless e segura
+- **Proteção de Rotas**: Middleware para rotas protegidas
+- **Persistência**: Sessões mantidas entre recargas
+
+### Fluxo de Autenticação
+1. **Login**: Validação de credenciais via Supabase
+2. **Token JWT**: Geração e armazenamento local
+3. **RLS**: Aplicação automática de políticas de segurança
+4. **Renovação**: Refresh automático de tokens expirados
+
+## Exportação e Relatórios
+
+### Componente ExportButton
+Interface unificada para exportação em múltiplos formatos:
 
 ```typescript
 interface ExportData {
@@ -241,97 +281,208 @@ interface ExportData {
 }
 ```
 
-## Fluxo de Autenticação
+### Formatos Suportados
+- **PDF**: Documentos formatados com tabelas profissionais
+- **Excel**: Planilhas com dados estruturados e formatação
+- **CSV**: Dados tabulares para análise externa
 
-1. Usuário acessa a página de login
-2. Insere credenciais que são validadas pelo Supabase Auth
-3. Após autenticação, um token JWT é armazenado localmente
-4. Rotas protegidas verificam a presença do token válido
-5. Row Level Security (RLS) garante que os dados sejam filtrados por usuário
-
-## Integração com Supabase
-
-O sistema utiliza o Supabase para:
-- Autenticação de usuários
-- Armazenamento de dados em tabelas PostgreSQL com RLS
-- Armazenamento de arquivos
-- Políticas de segurança a nível de linha
-
-### Tabelas Principais
-- **employees**: Dados dos funcionários
-- **employee_metrics**: Métricas de desempenho dos funcionários
-- **profiles**: Perfis dos usuários (se implementado)
-
-## Segurança
-
-- Row Level Security (RLS) implementado em todas as tabelas
-- Políticas de acesso baseadas no usuário autenticado
-- Validação de permissões antes de operações de CRUD
-- Verificação de propriedade dos dados antes de exclusão
-
-## Desenvolvimento e Manutenção
-
-### Padrões de Arquitetura
-
-O projeto segue os seguintes padrões:
-- **Componentes pequenos e focados**: Cada componente tem uma responsabilidade específica
-- **Hooks personalizados**: Lógica de negócio separada dos componentes de UI
-- **Organização por feature**: Componentes relacionados agrupados em diretórios específicos
-- **Reutilização**: Componentes genéricos para funcionalidades comuns
-
-### Adicionando Novas Funcionalidades
-
-Para adicionar novas funcionalidades ao sistema:
-1. Crie componentes reutilizáveis em `src/components` (organizados por feature)
-2. Adicione novos hooks se necessário em `src/hooks`
-3. Implemente políticas RLS no Supabase se envolver dados
-4. Integre os componentes nas páginas existentes ou crie novas páginas
-5. Atualize as rotas em `App.tsx` se necessário
-6. Documente as mudanças neste arquivo
-
-### Refatoração e Manutenção
-
-- **Mantenha componentes pequenos**: Se um componente passar de ~50 linhas, considere refatorá-lo
-- **Use TypeScript**: Aproveite a tipagem para evitar erros
-- **Aproveit componentes shadcn/ui**: Para manter consistência visual
-- **Utilize Tailwind CSS**: Para estilização consistente
-- **Implemente testes**: Para garantir qualidade (quando necessário)
-
-### Convenções de Código
-
-- **Nomes de arquivos**: PascalCase para componentes, camelCase para hooks
-- **Organização de imports**: Externos primeiro, depois internos
-- **Props interfaces**: Sempre tipadas e documentadas quando necessário
-- **Estados loading**: Implementar feedback visual para operações assíncronas
-- **Error handling**: Tratar erros e mostrar mensagens apropriadas ao usuário
-
-### Exportação e Relatórios
-
-O sistema possui funcionalidades robustas de exportação:
-- **PDF**: Usando jsPDF com tabelas formatadas
-- **Excel**: Usando biblioteca XLSX
-- **Componente reutilizável**: ExportButton para implementação consistente
-- **Dados estruturados**: Interface ExportData para padronização
-
-## Estrutura de Componentes de Funcionários
-
-```
-src/components/employee/
-├── EmployeeCard.tsx          # Cartão individual de funcionário
-├── EmployeeDeleteDialog.tsx  # Modal de confirmação de exclusão
-├── EmployeeEmptyState.tsx    # Estado vazio
-├── EmployeeGrid.tsx          # Grid responsivo de funcionários
-├── EmployeeListHeader.tsx    # Cabeçalho com ações
-├── EmployeeSearch.tsx        # Componente de busca
-└── ...                       # Outros componentes relacionados
-```
+### Funcionalidades Avançadas
+- **Templates Personalizados**: Layouts específicos por tipo de relatório
+- **Filtros de Data**: Exportação de períodos específicos
+- **Agrupamento**: Organização automática por categorias
+- **Gráficos em PDF**: Inclusão de visualizações nos relatórios
 
 ## Performance e Otimização
 
-- **Lazy loading**: Componentes carregados conforme necessário
-- **Memoização**: Uso de React.memo em componentes apropriados
-- **Queries otimizadas**: Apenas dados necessários são carregados
-- **Debounce**: Implementado na busca para evitar requisições excessivas
-- **Grid responsivo**: Adaptação automática para diferentes tamanhos de tela
+### Estratégias Implementadas
+- **Lazy Loading**: Carregamento sob demanda de componentes
+- **Code Splitting**: Divisão do código por rotas
+- **Memoização**: React.memo em componentes críticos
+- **Query Optimization**: Cache inteligente com TanStack Query
+- **Debounced Search**: Redução de requisições em buscas
+- **Virtual Scrolling**: Listas grandes otimizadas
 
-Esta documentação será atualizada conforme o sistema evolui e novas funcionalidades são adicionadas.
+### Métricas de Performance
+- **First Contentful Paint**: < 1.5s
+- **Largest Contentful Paint**: < 2.5s
+- **Time to Interactive**: < 3.5s
+- **Bundle Size**: Otimizado com tree-shaking
+
+## Padrões de Desenvolvimento
+
+### Convenções de Código
+- **Nomenclatura**: PascalCase para componentes, camelCase para funções
+- **Estrutura de Arquivos**: Organização por funcionalidade
+- **Imports**: Externos primeiro, depois internos
+- **TypeScript**: Tipagem rigorosa em todas as interfaces
+- **Props**: Sempre tipadas com interfaces dedicadas
+
+### Boas Práticas
+- **Componentes Pequenos**: Máximo 50-100 linhas por componente
+- **Single Responsibility**: Cada componente com propósito único
+- **Error Boundaries**: Tratamento de erros em nível de componente
+- **Loading States**: Feedback visual para operações assíncronas
+- **Accessibility**: Suporte completo a leitores de tela
+
+## Testes e Qualidade
+
+### Estratégias de Teste (Recomendadas)
+- **Unit Tests**: Jest + Testing Library para componentes
+- **Integration Tests**: Cypress para fluxos completos
+- **E2E Tests**: Playwright para cenários críticos
+- **Visual Regression**: Chromatic para componentes UI
+
+### Ferramentas de Qualidade
+- **ESLint**: Análise estática de código
+- **Prettier**: Formatação automática
+- **TypeScript**: Verificação de tipos em tempo de compilação
+- **Husky**: Git hooks para qualidade
+
+## Monitoramento e Analytics
+
+### Métricas Coletadas
+- **User Engagement**: Tempo na aplicação, páginas visitadas
+- **Feature Usage**: Funcionalidades mais utilizadas
+- **Performance**: Tempos de carregamento e erros
+- **Business Metrics**: KPIs específicos do negócio
+
+### Ferramentas Recomendadas
+- **Sentry**: Monitoramento de erros em produção
+- **Google Analytics**: Análise de comportamento de usuário
+- **Supabase Analytics**: Métricas de banco de dados
+- **Vercel Analytics**: Performance e Web Vitals
+
+## Deployment e DevOps
+
+### Ambientes
+- **Development**: Ambiente local com hot reload
+- **Staging**: Ambiente de testes com dados de produção
+- **Production**: Ambiente final otimizado
+
+### CI/CD Pipeline (Recomendado)
+1. **Code Push**: Trigger automático no Git
+2. **Quality Checks**: Linting, testes, build
+3. **Preview Deploy**: Deploy automático de preview
+4. **Production Deploy**: Deploy manual com aprovação
+5. **Monitoring**: Verificação automática de saúde
+
+### Infraestrutura
+- **Frontend**: Vercel/Netlify para hospedagem estática
+- **Backend**: Supabase para infraestrutura completa
+- **CDN**: Distribuição global de assets
+- **SSL**: Certificados automáticos
+
+## Segurança
+
+### Medidas Implementadas
+- **Authentication**: Supabase Auth com JWT
+- **Authorization**: RLS policies no banco de dados
+- **Input Validation**: Zod schemas para validação
+- **HTTPS**: Conexões criptografadas obrigatórias
+- **CSP**: Content Security Policy configurada
+- **Rate Limiting**: Proteção contra ataques de força bruta
+
+### Auditoria e Compliance
+- **Logs de Acesso**: Registro de todas as operações
+- **Data Encryption**: Dados sensíveis criptografados
+- **Backup Strategy**: Backups automáticos do Supabase
+- **GDPR Compliance**: Controles de privacidade implementados
+
+## Roadmap e Futuras Implementações
+
+### Próximas Funcionalidades
+- **Dashboard Mobile App**: Aplicativo nativo React Native
+- **Advanced Analytics**: ML para predições de negócio
+- **Multi-tenant**: Suporte para múltiplas empresas
+- **Workflow Automation**: Automação de processos
+- **API Pública**: Endpoints para integrações externas
+
+### Melhorias Planejadas
+- **Performance**: Otimizações adicionais de bundle
+- **UX**: Melhorias na experiência do usuário
+- **Accessibility**: Compliance total com WCAG 2.1
+- **Internacionalização**: Suporte a múltiplos idiomas
+- **Dark Mode**: Tema escuro completo
+
+## Troubleshooting
+
+### Problemas Comuns
+
+#### Erro de Autenticação
+```
+Error: Invalid JWT token
+```
+**Solução**: Verificar configuração do Supabase e renovar token
+
+#### Falha na Exportação
+```
+Error: Failed to generate PDF
+```
+**Solução**: Verificar dependências jsPDF e dados de entrada
+
+#### Lentidão no Dashboard
+**Solução**: Implementar paginação e lazy loading nos gráficos
+
+### Logs e Debugging
+- **Console Logs**: Informações detalhadas no desenvolvimento
+- **Supabase Logs**: Monitoramento de queries e errors
+- **Network Tab**: Análise de requisições HTTP
+- **React DevTools**: Debug de componentes e estado
+
+## Contribuição e Manutenção
+
+### Processo de Contribuição
+1. **Fork**: Criar fork do repositório
+2. **Feature Branch**: Branch específica para funcionalidade
+3. **Development**: Implementação seguindo padrões
+4. **Testing**: Testes locais completos
+5. **Pull Request**: Submissão com descrição detalhada
+6. **Code Review**: Revisão por outros desenvolvedores
+7. **Merge**: Integração após aprovação
+
+### Manutenção Regular
+- **Dependency Updates**: Atualizações de segurança mensais
+- **Database Maintenance**: Limpeza e otimização trimestral
+- **Performance Audits**: Análise semestral de performance
+- **Security Reviews**: Auditoria de segurança anual
+
+## Contato e Suporte
+
+### Equipe de Desenvolvimento
+- **Rodrigo Pereira de Almeida**: Desenvolvedor Principal e Arquiteto
+- **Alvaro Nobrega**: Co-desenvolvedor e Especialista em Frontend
+
+### Documentação Técnica
+- **Código Fonte**: Repositório Git com documentação inline
+- **API Documentation**: Swagger/OpenAPI specs
+- **Component Library**: Storybook para componentes UI
+- **Architecture Decisions**: ADRs documentados
+
+### Recursos de Aprendizado
+- **Onboarding Guide**: Guia para novos desenvolvedores
+- **Best Practices**: Documentação de padrões internos
+- **Troubleshooting Guide**: Soluções para problemas comuns
+- **Video Tutorials**: Screencast de funcionalidades principais
+
+---
+
+## Changelog
+
+### v2.0.0 (Atual)
+- ✅ Sistema de notificações redesenhado
+- ✅ Interface unificada de exportação
+- ✅ Dashboard inteligente com IA
+- ✅ Componentes de funcionários refatorados
+- ✅ Performance otimizada
+- ✅ Documentação atualizada
+
+### v1.0.0 (Release Inicial)
+- ✅ Sistema base de gestão
+- ✅ Autenticação com Supabase
+- ✅ Dashboard clássico
+- ✅ CRUD de funcionários e inventário
+- ✅ Exportação básica de relatórios
+
+---
+
+*Esta documentação é mantida pela equipe de desenvolvimento e atualizada regularmente conforme o sistema evolui. Para sugestões ou correções, entre em contato com a equipe.*
