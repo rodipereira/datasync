@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { LogOut, Menu, X, Users, Package, Bell } from "lucide-react";
+import { LogOut, Menu, X, Users, Package, Bell, FileText, Target, Workflow } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { toast } from "sonner";
@@ -32,8 +32,8 @@ const NavBar = () => {
       
       // Redirect to login page
       navigate("/login");
-    } catch (error: any) {
-      toast.error(error.message || "Erro ao fazer logout");
+    } catch (error: unknown) {
+      toast.error(error instanceof Error ? error.message : "Erro ao fazer logout");
     }
   };
 
@@ -61,6 +61,18 @@ const NavBar = () => {
             <Link to="/inventory" className="text-gray-700 hover:text-primary px-3 py-2 rounded-md text-sm font-medium flex items-center gap-2">
               <Package className="h-4 w-4" />
               Inventário
+            </Link>
+            <Link to="/reports" className="text-gray-700 hover:text-primary px-3 py-2 rounded-md text-sm font-medium flex items-center gap-2">
+              <FileText className="h-4 w-4" />
+              Relatórios
+            </Link>
+            <Link to="/goals" className="text-gray-700 hover:text-primary px-3 py-2 rounded-md text-sm font-medium flex items-center gap-2">
+              <Target className="h-4 w-4" />
+              Metas
+            </Link>
+            <Link to="/workflow" className="text-gray-700 hover:text-primary px-3 py-2 rounded-md text-sm font-medium flex items-center gap-2">
+              <Workflow className="h-4 w-4" />
+              Workflows
             </Link>
             <Link to="/profile" className="text-gray-700 hover:text-primary px-3 py-2 rounded-md text-sm font-medium">
               Perfil
@@ -148,6 +160,18 @@ const NavBar = () => {
             <Link to="/inventory" className="text-gray-700 hover:bg-gray-100 flex items-center gap-2 px-3 py-2 rounded-md text-base font-medium">
               <Package className="h-4 w-4" />
               Inventário
+            </Link>
+            <Link to="/reports" className="text-gray-700 hover:bg-gray-100 flex items-center gap-2 px-3 py-2 rounded-md text-base font-medium">
+              <FileText className="h-4 w-4" />
+              Relatórios
+            </Link>
+            <Link to="/goals" className="text-gray-700 hover:bg-gray-100 flex items-center gap-2 px-3 py-2 rounded-md text-base font-medium">
+              <Target className="h-4 w-4" />
+              Metas
+            </Link>
+            <Link to="/workflow" className="text-gray-700 hover:bg-gray-100 flex items-center gap-2 px-3 py-2 rounded-md text-base font-medium">
+              <Workflow className="h-4 w-4" />
+              Workflows
             </Link>
             <Link to="/profile" className="text-gray-700 hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium">
               Perfil

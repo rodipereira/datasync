@@ -29,7 +29,7 @@ const Login = () => {
     checkSession();
   }, [navigate]);
 
-  const handleLogin = async (data: any) => {
+  const handleLogin = async (data: { email: string; password: string }) => {
     setIsLoading(true);
     
     try {
@@ -46,8 +46,8 @@ const Login = () => {
       // Success
       toast.success("Login realizado com sucesso!");
       navigate("/dashboard");
-    } catch (error: any) {
-      toast.error(error.message || "Erro ao fazer login");
+    } catch (error: unknown) {
+      toast.error(error instanceof Error ? error.message : "Erro ao fazer login");
     } finally {
       setIsLoading(false);
     }

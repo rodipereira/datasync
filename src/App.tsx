@@ -18,6 +18,9 @@ import NotFound from "./pages/NotFound";
 import Notifications from "./pages/Notifications";
 import N8nIntegration from "./pages/N8nIntegration";
 import AIAssistant from "./pages/AIAssistant";
+import Reports from './pages/Reports';
+import Goals from './pages/Goals';
+import WorkflowManagement from './pages/WorkflowManagement';
 import ProtectedRoute from "./components/ProtectedRoute";
 
 const queryClient = new QueryClient();
@@ -110,6 +113,30 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <AIAssistant />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/reports"
+                element={
+                  <ProtectedRoute>
+                    <Reports />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/goals"
+                element={
+                  <ProtectedRoute>
+                    <Goals />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/workflow"
+                element={
+                  <ProtectedRoute>
+                    <WorkflowManagement />
                   </ProtectedRoute>
                 }
               />
