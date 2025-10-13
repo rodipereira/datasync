@@ -1,12 +1,15 @@
 
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { DateRange } from "react-day-picker";
 import { supabase } from "@/integrations/supabase/client";
 import SmartMetricCard from "./SmartMetricCard";
 import InsightsPanel from "./InsightsPanel";
 import PredictiveChart from "./PredictiveChart";
 import DistributionChart from "./DistributionChart";
 import AIRecommendations from "./AIRecommendations";
+import BusinessIntelligence from "./BusinessIntelligence";
+import RealTimeAnalytics from "./RealTimeAnalytics";
 
 interface SmartMetric {
   id: string;
@@ -19,7 +22,7 @@ interface SmartMetric {
 }
 
 interface SmartDashboardProps {
-  dateRange?: any;
+  dateRange?: DateRange | undefined;
 }
 
 const SmartDashboard: React.FC<SmartDashboardProps> = ({ dateRange }) => {
@@ -152,6 +155,12 @@ const SmartDashboard: React.FC<SmartDashboardProps> = ({ dateRange }) => {
 
       {/* Recomendações da IA */}
       <AIRecommendations />
+
+      {/* Real-time Analytics */}
+      <RealTimeAnalytics />
+      
+      {/* Business Intelligence */}
+      <BusinessIntelligence />
     </div>
   );
 };
