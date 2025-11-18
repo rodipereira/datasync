@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { LogOut, Menu, X, Users, Package, Bell, FileText, Target, Workflow } from "lucide-react";
+import { LogOut, Menu, X, Users, Package, Bell, FileText, Target, Workflow, BookOpen } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { toast } from "sonner";
@@ -73,6 +73,10 @@ const NavBar = () => {
             <Link to="/workflow" className="text-gray-700 hover:text-primary px-3 py-2 rounded-md text-sm font-medium flex items-center gap-2">
               <Workflow className="h-4 w-4" />
               Workflows
+            </Link>
+            <Link to="/documentation" className="text-gray-700 hover:text-primary px-3 py-2 rounded-md text-sm font-medium flex items-center gap-2">
+              <BookOpen className="h-4 w-4" />
+              Docs
             </Link>
             <Link to="/profile" className="text-gray-700 hover:text-primary px-3 py-2 rounded-md text-sm font-medium">
               Perfil
@@ -172,6 +176,10 @@ const NavBar = () => {
             <Link to="/workflow" className="text-gray-700 hover:bg-gray-100 flex items-center gap-2 px-3 py-2 rounded-md text-base font-medium">
               <Workflow className="h-4 w-4" />
               Workflows
+            </Link>
+            <Link to="/documentation" className="text-gray-700 hover:bg-gray-100 flex items-center gap-2 px-3 py-2 rounded-md text-base font-medium">
+              <BookOpen className="h-4 w-4" />
+              Documentação
             </Link>
             <Link to="/profile" className="text-gray-700 hover:bg-gray-100 block px-3 py-2 rounded-md text-base font-medium">
               Perfil
