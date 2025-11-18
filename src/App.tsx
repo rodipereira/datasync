@@ -21,6 +21,7 @@ import AIAssistant from "./pages/AIAssistant";
 import Reports from './pages/Reports';
 import Goals from './pages/Goals';
 import WorkflowManagement from './pages/WorkflowManagement';
+import Documentation from './pages/Documentation';
 import ProtectedRoute from "./components/ProtectedRoute";
 
 const queryClient = new QueryClient();
@@ -137,6 +138,14 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <WorkflowManagement />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/documentation"
+                element={
+                  <ProtectedRoute>
+                    <Documentation />
                   </ProtectedRoute>
                 }
               />
